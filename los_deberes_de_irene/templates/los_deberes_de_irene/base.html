@@ -4,11 +4,14 @@
     <title>Los deberes de Irene</title>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no" />
+    <link href='https://fonts.googleapis.com/css?family=Montserrat' rel='stylesheet'>
     <link rel="stylesheet" href="{% static 'css/main.css' %}" />
   </head>
   <body>
-    {% block content %}
-    {% endblock %}
+    <div class="main-container">
+      {% block content %}
+      {% endblock %}
+    </div>
 
     <!-- Scripts -->
     <script src="{% static 'js/main.js' %}"></script>
