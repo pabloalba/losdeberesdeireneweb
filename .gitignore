@@ -136,3 +136,6 @@ dmypy.json
 # local settings
 /**/settings/local.py
 
+# Uploaded media files
+media/*
+
