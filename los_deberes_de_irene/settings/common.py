@@ -10,6 +10,7 @@ For the full list of settings and their values, see
 https://docs.djangoproject.com/en/3.2/ref/settings/
 """
 
+import os
 from pathlib import Path
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
@@ -25,6 +26,7 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'pwa',
     'los_deberes_de_irene',
     'homework',
 ]
@@ -84,7 +86,46 @@ AUTH_PASSWORD_VALIDATORS = [
 
 STATIC_URL = '/static/'
 
+STATICFILES_DIRS = [
+    os.path.join(BASE_DIR, 'static'),
+]
+
 # Default primary key field type
 # https://docs.djangoproject.com/en/3.2/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+
+
+# Progressive web app configuration
+
+PWA_APP_NAME = 'Los deberes de Irene'
+PWA_APP_DESCRIPTION = 'Para que los niños con movilidad reducida puedan hacer sus deberes del cole'
+PWA_APP_THEME_COLOR = '#54C6EB'
+PWA_APP_BACKGROUND_COLOR = '#0A0302'
+PWA_APP_DISPLAY = 'fullscreen'
+PWA_APP_SCOPE = '/'
+PWA_APP_ORIENTATION = 'any'
+PWA_APP_START_URL = '/'
+PWA_APP_STATUS_BAR_COLOR = 'default'
+PWA_APP_ICONS = [
+    {
+        'src': '/static/img/logo.png',
+        'sizes': '289x289'
+    }
+]
+PWA_APP_ICONS_APPLE = [
+    {
+        'src': '/static/img/logo.png',
+        'sizes': '289x289'
+    }
+]
+# PWA_APP_SPLASH_SCREEN = [
+#     {
+#         'src': '/static/images/icons/splash-640x1136.png',
+#         'media': '(device-width: 320px) and (device-height: 568px) and (-webkit-device-pixel-ratio: 2)'
+#     }
+# ]
+PWA_APP_DIR = 'ltr'
+PWA_APP_LANG = 'es-ES'
+PWA_APP_DEBUG_MODE = True
+
