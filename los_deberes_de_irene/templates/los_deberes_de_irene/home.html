@@ -3,10 +3,10 @@
 {% load static %}
 
 {% block content %}
-<a href="/browser"><h1 class="home-title"><span>Los deberes de Irene</span></h1></a>
-<a class="special-button" href="/settings">
-  <img src="{% static 'img/settings.svg' %}" alt="" />
-  Opciones
-</a>
+  <a href="{% url 'browser' %}"><h1 class="home-title"><span>Los deberes de Irene</span></h1></a>
+  <a class="special-button" href="/settings">
+    <img src="{% static 'img/settings.svg' %}" alt="" />
+    Opciones
+  </a>
 {% endblock %}
 

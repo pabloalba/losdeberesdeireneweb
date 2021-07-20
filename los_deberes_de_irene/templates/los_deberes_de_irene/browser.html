@@ -1,0 +1,13 @@
+{% extends "los_deberes_de_irene/base.html" %}
+
+{% load static %}
+
+{% block content %}
+  {% for folder in folders %}
+    <div>{{ folder.name }}</div>
+  {% endfor %}
+  {% for page in pages %}
+    <div>{{ page.name }}</div>
+  {% endfor %}
+{% endblock %}
+

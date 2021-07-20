@@ -25,4 +25,5 @@ urlpatterns = [
     path('admin/', admin.site.urls),
     url('', include('pwa.urls')),
     url(r"^$", views.HomeView.as_view(), name='home'),
+    url(r"^browser$", views.BrowserView.as_view(), name='browser'),
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

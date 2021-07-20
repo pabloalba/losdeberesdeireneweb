@@ -1,6 +1,12 @@
 from django.db import models
 
 class PageFolder(models.Model):
+    parent = models.ForeignKey(
+        "PageFolder",
+        null = True,
+        on_delete = models.CASCADE,
+        verbose_name = "carpeta padre"
+    )
     name = models.CharField(
         blank=False,
         null=False,
