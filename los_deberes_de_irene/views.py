@@ -1,3 +1,5 @@
+from django.contrib.auth import authenticate, login
+from django.contrib.auth.forms import AuthenticationForm
 from django.http import JsonResponse
 from django.http import HttpResponse
 from django.utils.decorators import method_decorator
@@ -6,7 +8,42 @@ from django.views.decorators.csrf import csrf_exempt
 from django.core import serializers
 from homework.models import *
 from django.db import IntegrityError
+from .forms import NewUserForm
+from django.contrib import messages
+from django.shortcuts import render, redirect
 import json
+
+
+def register_request(request):
+    if request.method == "POST":
+        form = NewUserForm(request.POST)
+        if form.is_valid():
+            user = form.save()
+            login(request, user)
+            messages.success(request, "Registration successful.")
+            return redirect("home")
+        messages.error(request, "Unsuccessful registration. Invalid information.")
+    form = NewUserForm()
+    return render(request=request, template_name="los_deberes_de_irene/register.html", context={"register_form": form})
+
+
+def login_request(request):
+    if request.method == "POST":
+        form = AuthenticationForm(request, data=request.POST)
+        if form.is_valid():
+            username = form.cleaned_data.get('username')
+            password = form.cleaned_data.get('password')
+            user = authenticate(username=username, password=password)
+            if user is not None:
+                login(request, user)
+                messages.info(request, f"You are now logged in as {username}.")
+                return redirect("home")
+            else:
+                messages.error(request, "Invalid username or password.")
+        else:
+            messages.error(request, "Invalid username or password.")
+    form = AuthenticationForm()
+    return render(request=request, template_name="los_deberes_de_irene/login.html", context={"login_form": form})
 
 
 class HomeView(generic.TemplateView):
@@ -35,7 +72,6 @@ class LabelView(generic.View):
         raw_data = serializers.serialize('python', labels)
         actual_data = [d['fields'] for d in raw_data]
         return JsonResponse(actual_data, safe=False)
-
 
     def post(self, request, page_id):
         body = json.loads(request.body.decode("utf-8"))

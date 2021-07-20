@@ -27,4 +27,6 @@ urlpatterns = [
     url(r"^$", views.HomeView.as_view(), name='home'),
     url(r"^browser$", views.BrowserView.as_view(), name='browser'),
     path('pages/<int:page_id>/labels/', views.LabelView.as_view(), name='labels'),
+    path("register", views.register_request, name="register"),
+    path("login", views.login_request, name="login")
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
