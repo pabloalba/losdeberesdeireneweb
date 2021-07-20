@@ -26,4 +26,5 @@ urlpatterns = [
     url('', include('pwa.urls')),
     url(r"^$", views.HomeView.as_view(), name='home'),
     url(r"^browser$", views.BrowserView.as_view(), name='browser'),
+    path('pages/<int:page_id>/labels/', views.LabelView.as_view(), name='labels'),
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

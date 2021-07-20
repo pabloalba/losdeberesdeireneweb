@@ -1,11 +1,12 @@
 from django.db import models
 
+
 class PageFolder(models.Model):
     parent = models.ForeignKey(
         "PageFolder",
-        null = True,
-        on_delete = models.CASCADE,
-        verbose_name = "carpeta padre"
+        null=True,
+        on_delete=models.CASCADE,
+        verbose_name="carpeta padre"
     )
     name = models.CharField(
         blank=False,
@@ -31,9 +32,10 @@ class PageFolder(models.Model):
 class Page(models.Model):
     folder = models.ForeignKey(
         PageFolder,
-        null = True,
-        on_delete = models.CASCADE,
-        verbose_name = "carpeta"
+        null=True,
+        blank=True,
+        on_delete=models.CASCADE,
+        verbose_name="carpeta"
     )
     name = models.CharField(
         blank=False,
@@ -55,3 +57,48 @@ class Page(models.Model):
         verbose_name_plural = "Páginas"
         ordering = ["folder__name", "name"]
 
+
+class Label(models.Model):
+    page = models.ForeignKey(
+        Page,
+        null=False,
+        on_delete=models.CASCADE,
+        verbose_name="página"
+    )
+    text = models.TextField(
+        blank=False,
+        null=False,
+        verbose_name="texto"
+    )
+    x = models.PositiveSmallIntegerField(
+        null=False,
+        verbose_name="x"
+    )
+    y = models.PositiveSmallIntegerField(
+        null=False,
+        verbose_name="y"
+    )
+    color = models.CharField(
+        blank=False,
+        null=False,
+        max_length=7,
+        verbose_name="color"
+    )
+    font_name = models.CharField(
+        blank=False,
+        null=False,
+        max_length=100,
+        verbose_name="fuente"
+    )
+    font_size = models.PositiveSmallIntegerField(
+        null=False,
+        verbose_name="tamaño de fuente"
+    )
+
+    def __str__(self):
+        return self.text
+
+    class Meta:
+        verbose_name = "Etiqueta"
+        verbose_name_plural = "Etiquetas"
+        ordering = ["page__id", "y", "x"]
