@@ -1,52 +1,40 @@
 {% extends "los_deberes_de_irene/base.html" %}
 
 {% load static %}
-{% block extra_head %}
-<link rel="stylesheet" href="{% static 'css/login.css' %}" />
-{% endblock %}
+
+{% block main-class %}home{% endblock %}
 
 {% block content %}
-  <div class="login-container">
+  <h1 class="home-title"><span>Los deberes de Irene</span></h1>
 
+  <form class="main-form" method="POST">
+    {% csrf_token %}
+    <div class="entry">
+      <label for="id_username">Usuario</label>
+      <input type="text" name="username" maxlength="150" autofocus="" required=""
+             id="id_username" placeholder="Introducir nombre de usuario">
+    </div>
 
-	  <h1 class="home-title"><span>Los deberes de Irene</span></h1>
+    <div class="entry">
+      <label for="id_password">Contraseña</label>
+      <input type="password" name="password" autocomplete="password" required=""
+             id="id_password" placeholder="De al menos 8 caracteres">
+    </div>
 
+    {% if messages %}
+      <ul class="messages">
+      {% for message in messages %}
+        <li {% if message.tags %} class="{{ message.tags }}"{% endif %}>{{ message }}</li>
+      {% endfor %}
+      </ul>
+    {% endif %}
 
-	  <form method="POST">
-		{% csrf_token %}
-		<div class="data-container">
-			<label for="id_username">Usuario</label>
-			<input type="text" name="username" maxlength="150" autofocus="" required="" id="id_username" placeholder="Introducir nombre de usuario">
+    <button type="submit" class="special-button-login">
+      <img src="{% static 'img/settings.svg' %}" alt="" />
+      Entrar
+    </button>
+  </form>
 
-			<label for="id_password1">Contraseña</label>
-			  <input type="password" name="password1" autocomplete="new-password" required="" id="id_password1" placeholder="De al menos 8 caracteres">
-
-			{% if messages %}
-			  <ul class="messages">
-				{% for message in messages %}
-					<li {% if message.tags %} class="{{ message.tags }}"{% endif %}>{{ message }}</li>
-				{% endfor %}
-			  </ul>
-			{% endif %}
-
-		</div>
-		  <div class="line-container">
-			  <a class="special-button-login" href="#" onclick="this.closest('form').submit();return false;">
-				<img src="{% static 'img/settings.svg' %}" alt="" />
-				Entrar
-			  </a>
-		  </div>
-	</form>
-
-	  <div class="line-container">
-		  <label>¿Todavía no tienes cuenta?  <a href="{% url 'register' %}">Registrate</a></label>
-	  </div>
-
-
-
-
-
-
-</div>
+  <label>¿Todavía no tienes cuenta? <a href="{% url 'register' %}">Registrate</a></label>
 {% endblock %}
 

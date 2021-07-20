@@ -1,0 +1,88 @@
+body {
+  font-family: Montserrat;
+}
+
+a {
+  text-decoration: none;
+}
+
+.main-container {
+  align-items: center;
+  background: url("/static/img/spiral-middle.png") repeat-y;
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  padding-left: 58px;
+  position: relative;
+  max-width: calc(1920px - 58px);
+  margin: 0 auto;
+}
+
+.main-container.home {
+  background-color: #D0EFF9;
+  justify-content: center;
+}
+
+.main-container.browser-root {
+  background-color: #F3FCFF;
+}
+
+.main-container.browser-folder {
+  background-color: #FFFFFF;
+}
+
+.main-container::before {
+  background: url("/static/img/spiral-top.png");
+  content: "";
+  position: absolute;
+  height: 25px;
+  left: 0;
+  top: 0;
+  width: 58px;
+}
+
+.main-container::after {
+  background: url("/static/img/spiral-bottom.png");
+  content: "";
+  position: absolute;
+  height: 25px;
+  left: 0;
+  bottom: 0;
+  width: 58px;
+}
+
+.header {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  height: 64px;
+  width: 100%;
+}
+
+.header.root {
+}
+
+.header.folder {
+  border-bottom: 5px solid #F2484B;
+}
+
+.header-logo {
+  height: 17px;
+  margin-left: calc(200px - 58px);
+  float: left;
+}
+
+.header-title {
+  font-size: 35px;
+  flex-grow: 1;
+  text-align: center;
+}
+
+.header-button {
+  background-color: #54C6EB;
+  border-radius: 10px;
+  color: #FFFFFF;
+  font-size: 25px;
+  padding: 10px 15px;
+}
+
