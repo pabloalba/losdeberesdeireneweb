@@ -5,6 +5,7 @@ class PageFolder(models.Model):
     parent = models.ForeignKey(
         "PageFolder",
         null=True,
+        blank=True,
         on_delete=models.CASCADE,
         verbose_name="carpeta padre"
     )

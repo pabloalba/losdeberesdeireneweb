@@ -10,7 +10,7 @@
     {% block extra_head %}{% endblock %}
   </head>
   <body>
-    <div class="main-container">
+    <div class="main-container {% block main-class %}{% endblock %}">
       {% block content %}
       {% endblock %}
     </div>

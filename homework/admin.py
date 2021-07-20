@@ -6,11 +6,11 @@ class PageInline(admin.TabularInline):
     model = Page
 
 class PageFolderAdmin(admin.ModelAdmin):
-    list_display = ["parent", "name"]
+    list_display = ["name", "parent"]
     inlines = [PageInline,]
 
 class PageAdmin(admin.ModelAdmin):
-    list_display = ["folder", "name"]
+    list_display = ["name", "folder"]
 
 admin.site.register(PageFolder, PageFolderAdmin)
 admin.site.register(Page, PageAdmin)

@@ -1,15 +1,31 @@
 @import url(normalize.css);
 
+/* Main layout */
+
 .main-container {
   align-items: center;
-  background: url("/static/img/spiral-middle.png") #D0EFF9 repeat-y;
+  background: url("/static/img/spiral-middle.png") repeat-y;
   display: flex;
   flex-direction: column;
+  font-family: Montserrat;
   height: 100%;
-  justify-content: center;
+  padding-left: 58px;
   position: relative;
-  max-width: 1920px;
+  max-width: calc(1920px - 58px);
   margin: 0 auto;
+}
+
+.main-container.home {
+  background-color: #D0EFF9;
+  justify-content: center;
+}
+
+.main-container.browser-root {
+  background-color: #F3FCFF;
+}
+
+.main-container.browser-folder {
+  background-color: #FFFFFF;
 }
 
 .main-container::before {
@@ -32,6 +48,13 @@
   width: 58px;
 }
 
+a {
+  text-decoration: none;
+}
+
+
+/* Home screen */
+
 .home-title {
   background: url("/static/img/logo-deberes-de-irene.svg");
   width: 717px;
@@ -47,7 +70,6 @@
   border-radius: 10px;
   bottom: 5rem;
   color: white;
-  font-family: Montserrat;
   font-size: 24px;
   position: absolute;
   right: 5rem;
@@ -60,4 +82,98 @@
   padding-right: 15px;
   vertical-align: middle;
   width: 30px;
+}
+
+
+/* Browser screen */
+
+.header {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  height: 64px;
+  width: 100%;
+}
+
+.header.root {
+}
+
+.header.folder {
+  border-bottom: 5px solid #F2484B;
+}
+
+.header-logo {
+  height: 17px;
+  margin-left: calc(200px - 58px);
+  float: left;
+}
+
+.header-title {
+  font-size: 35px;
+  flex-grow: 1;
+  text-align: center;
+}
+
+.header-button {
+  background-color: #54C6EB;
+  border-radius: 10px;
+  color: #FFFFFF;
+  font-size: 25px;
+  padding: 10px 15px;
+}
+
+.page-grid {
+  align-items: center;
+  display: flex;
+  flex-flow: row wrap;
+  flex-grow: 1;
+  justify-content: space-between;
+}
+
+.page-grid .grid-item {
+  border-radius: 10px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  height: 280px;
+  width: 280px;
+}
+
+.page-grid .grid-item:not(:first-child) {
+  margin-left: 40px;
+}
+
+.page-grid.big .grid-item {
+  width: 400px;
+  height: 400px;
+}
+
+.page-grid .grid-item.folder {
+  background-color: #54C6EB;
+}
+
+.page-grid .grid-item.page {
+  background-color: #FFFFFF;
+  border: 5px solid #54C6EB;
+}
+
+.page-grid .grid-item img {
+  height: 175px;
+}
+
+.page-grid .grid-item span {
+  margin-top: 25px;
+}
+
+.page-grid .grid-item span a {
+  font-size: 30px;
+}
+
+.page-grid .grid-item.folder span a {
+  color: #FFFFFF;
+}
+
+.page-grid .grid-item.page span a {
+  color: #000000;
 }

@@ -2,12 +2,44 @@
 
 {% load static %}
 
+{% block main-class %}
+  {% if parent_folder %}browser-folder{% else %}browser-root{% endif %}
+{% endblock %}
+
 {% block content %}
-  {% for folder in folders %}
-    <div>{{ folder.name }}</div>
-  {% endfor %}
-  {% for page in pages %}
-    <div>{{ page.name }}</div>
-  {% endfor %}
+  {% if parent_folder %}
+    <div class="header folder">
+      <a href="{% url 'browser' %}">
+        <img class="header-logo" src="{% static 'img/logo-deberes-de-irene.svg' %}" />
+      </a>
+      <div class="header-title">{{ parent_folder.name }}</div>
+      {% if back_folder %}
+        <a class="header-button" href="{% url 'browser' back_folder %}">Atrás</a>
+      {% else %}
+        <a class="header-button" href="{% url 'browser' %}">Atrás</a>
+      {% endif %}
+    </div>
+  {% else %}
+    <div class="header root">
+      <a href="{% url 'browser' %}">
+        <img class="header-logo" src="{% static 'img/logo-deberes-de-irene.svg' %}" />
+      </a>
+    </div>
+  {% endif %}
+
+  <div class="page-grid {% if big_grid %}big{% endif %}">
+    {% for folder in folders %}
+      <div class="grid-item folder">
+        <a href="{% url 'browser' folder.id %}"><img src="{{ folder.icon.url }}" /></a>
+        <span><a href="{% url 'browser' folder.id %}">{{ folder.name }}</a><span>
+      </div>
+    {% endfor %}
+    {% for page in pages %}
+      <div class="grid-item page">
+        <a href=""><img src="{{ page.image.url }}" /></a>
+        <span><a href="">{{ page.name }}</a></span>
+      </div>
+    {% endfor %}
+  </div>
 {% endblock %}
 

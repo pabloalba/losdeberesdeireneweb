@@ -53,12 +53,25 @@ class HomeView(generic.TemplateView):
 class BrowserView(generic.TemplateView):
     template_name = "los_deberes_de_irene/browser.html"
 
-    def get_context_data(self, **kwargs):
+    def get_context_data(self, folder_id=None, **kwargs):
         context = super().get_context_data(**kwargs)
 
-        folders = PageFolder.objects.filter(parent=None)
-        pages = Page.objects.filter(folder=None)
+        if folder_id:
+            parent_folder = PageFolder.objects.get(pk=folder_id)
+        else:
+            parent_folder = None
 
+        folders = PageFolder.objects.filter(parent=folder_id)
+        pages = Page.objects.filter(folder=folder_id)
+
+        if parent_folder and parent_folder.parent:
+            back_folder = parent_folder.parent.id
+        else:
+            back_folder = None
+
+        context["big_grid"] = (len(folders) + len(pages) <= 2)
+        context["parent_folder"] = parent_folder
+        context["back_folder"] = back_folder
         context["folders"] = folders
         context["pages"] = pages
 
