@@ -15,10 +15,19 @@
     <div class="header-title">{{ page.name }}</div>
     <a class="header-button" href="{% url 'browser' %}">Atrás</a>
   </div>
-  <div class="page-viewport">
-    <svg xmlns="http://www.w3.org/2000/svg" width="1800" height="1253" viewBox="0 0 1800 1253">
-      <image x="0" y="0" width="1800" height="1800" href="{{ page.image.url }}"></image>
+  <div id="page-viewport">
+    <svg xmlns="http://www.w3.org/2000/svg" width="1000" height="1000"
+        viewBox="0 0 {{ page.image.width }} {{ page.image.height }}">
+      <image x="0" y="0" width="{{ page.image.width }}" height="{{ page.image.height }}"
+          href="{{ page.image.url }}"></image>
     </svg>
   </div>
+{% endblock %}
+
+{% block extra_scripts %}
+  <script type="module">
+    import { setupPage } from "{% static '/js/page.js' %}";
+    setupPage({{ page.image.width }}, {{ page.image.height }});
+  </script>
 {% endblock %}
 
