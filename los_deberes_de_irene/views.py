@@ -94,6 +94,21 @@ class BrowserView(generic.TemplateView):
         return context
 
 
+class PageView(generic.TemplateView):
+    template_name = "los_deberes_de_irene/page.html"
+
+    def get_context_data(self, page_id, **kwargs):
+        context = super().get_context_data(**kwargs
+                                           )
+        page = Page.objects.get(pk=page_id)
+        back_folder = Page.folder
+
+        context["page"] = page
+        context["back_folder"] = back_folder
+
+        return context
+
+
 class TeacherView(generic.TemplateView):
     template_name = "los_deberes_de_irene/teacher.html"
 
@@ -174,3 +189,4 @@ def _generate_code():
 
 def _is_teacher(user):
     return user.groups.filter(name='teachers').exists()
+

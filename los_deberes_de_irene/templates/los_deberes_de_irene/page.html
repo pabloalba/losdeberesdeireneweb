@@ -1,0 +1,24 @@
+{% extends "los_deberes_de_irene/base.html" %}
+
+{% load static %}
+
+{% block main-class %}page{% endblock %}
+
+{% block content %}
+  <div class="sidebar">
+    <p>tamaño</p>
+  </div>
+  <div class="header page">
+    <a href="{% url 'browser' %}">
+      <img class="header-logo" src="{% static 'img/logo-deberes-de-irene.svg' %}" />
+    </a>
+    <div class="header-title">{{ page.name }}</div>
+    <a class="header-button" href="{% url 'browser' %}">Atrás</a>
+  </div>
+  <div class="page-viewport">
+    <svg xmlns="http://www.w3.org/2000/svg" width="1800" height="1253" viewBox="0 0 1800 1253">
+      <image x="0" y="0" width="1800" height="1800" href="{{ page.image.url }}"></image>
+    </svg>
+  </div>
+{% endblock %}
+

@@ -22,15 +22,15 @@ from django.urls import path
 from . import views
 
 urlpatterns = [
-    path('admin/', admin.site.urls),
     url('', include('pwa.urls')),
-    url(r"^$", views.HomeView.as_view(), name='home'),
-    url(r"^browser/(?P<folder_id>\d+)", views.BrowserView.as_view(), name='browser'),
-    url(r"^browser$", views.BrowserView.as_view(), name='browser'),
-    url(r"browser", views.BrowserView.as_view(), name='browser'),
+    path('admin/', admin.site.urls),
+    path("", views.HomeView.as_view(), name='home'),
+    path("browser/<int:folder_id>", views.BrowserView.as_view(), name='browser'),
+    path("browser", views.BrowserView.as_view(), name='browser'),
     url(r"teacher", views.TeacherView.as_view(), name='teacher'),
     url(r"student", views.StudentView.as_view(), name='student'),
-    path('pages/<int:page_id>/labels/', views.LabelView.as_view(), name='labels'),
+    path("pages/<int:page_id>", views.PageView.as_view(), name='page'),
+    path('pages/<int:page_id>/labels', views.LabelView.as_view(), name='labels'),
     path("register", views.register_request, name="register"),
     path("login", views.login_request, name="login")
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

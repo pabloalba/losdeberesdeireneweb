@@ -1,0 +1,21 @@
+.sidebar {
+  align-items: center;
+  background-color: #F3FCFF;
+  border-right: 5px solid #6DA8D6;
+  color: #185F8D;
+  display: flex;
+  flex-direction: column;
+  font-size: 14px;
+  font-weight: bold;
+  height: 100%;
+  left: 0;
+  position: absolute;
+  top: 0;
+  width: 115px;
+}
+
+.page-viewport {
+  height: 100%;
+  width: 100%;
+}
+

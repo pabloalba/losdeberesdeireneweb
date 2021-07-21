@@ -42,8 +42,8 @@
     {% endfor %}
     {% for page in pages %}
       <div class="grid-item page">
-        <a href=""><img src="{{ page.image.url }}" /></a>
-        <span><a href="">{{ page.name }}</a></span>
+        <a href="{% url 'page' page.id %}"><img src="{{ page.image.url }}" /></a>
+        <span><a href="{% url 'page' page.id %}">{{ page.name }}</a></span>
       </div>
     {% endfor %}
   </div>
