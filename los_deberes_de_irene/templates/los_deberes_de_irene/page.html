@@ -6,15 +6,51 @@
 
 {% block content %}
   <div class="sidebar">
-    <p>tamaño</p>
+    <p class="heading">tamaño</p>
+    <div class="options">
+      <button class="option selected">
+        <object type="image/svg+xml" data="{% static 'img/font-size-small-selected.svg' %}"></object>
+      </button>
+      <button class="option">
+        <object type="image/svg+xml" data="{% static 'img/font-size-medium.svg' %}"></object>
+      </button>
+      <button class="option">
+        <object type="image/svg+xml" data="{% static 'img/font-size-big.svg' %}"></object>
+      </button>
+    </div>
+
+    <div class="separator"></div>
+
+    <p class="heading">color</p>
+    <div class="options">
+      <button class="option selected">
+        <object type="image/svg+xml" data="{% static 'img/font-color-1.svg' %}"></object>
+      </button>
+      <button class="option">
+        <object type="image/svg+xml" data="{% static 'img/font-color-2.svg' %}"></object>
+      </button>
+      <button class="option">
+        <object type="image/svg+xml" data="{% static 'img/font-color-3.svg' %}"></object>
+      </button>
+    </div>
+
+    <div class="separator"></div>
+
+    <div class="options">
+      <a class="option" href="{% url 'browser' back_folder %}">
+        <object type="image/svg+xml" data="{% static 'img/back-button.svg' %}"></object>
+      </a>
+    </div>
   </div>
+
   <div class="header page">
     <a href="{% url 'browser' %}">
       <img class="header-logo" src="{% static 'img/logo-deberes-de-irene.svg' %}" />
     </a>
     <div class="header-title">{{ page.name }}</div>
-    <a class="header-button" href="{% url 'browser' %}">Atrás</a>
+    <a class="header-button" href="{% url 'browser' back_folder %}">Volver</a>
   </div>
+
   <div id="page-viewport">
     <svg xmlns="http://www.w3.org/2000/svg" width="1000" height="1000"
         viewBox="0 0 {{ page.image.width }} {{ page.image.height }}">
@@ -28,6 +64,7 @@
       {% endfor %}
     </svg>
   </div>
+
 {% endblock %}
 
 {% block extra_scripts %}

@@ -17,6 +17,7 @@
 .special-button {
   background-color: #54C6EB;
   border-radius: 10px;
+  box-shadow: 4px 4px 4px rgba(0, 155, 202, 0.5);
   bottom: 5rem;
   color: white;
   font-size: 24px;
@@ -79,6 +80,7 @@
   background-color: #54C6EB;
   border-radius: 10px;
   border-width: 0;
+  box-shadow: 4px 4px 4px rgba(0, 155, 202, 0.5);
   color: white;
   font-size: 36px;
   font-weight: 400;

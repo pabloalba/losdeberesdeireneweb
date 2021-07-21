@@ -99,7 +99,7 @@ class PageView(generic.TemplateView):
         context = super().get_context_data(**kwargs
                                            )
         page = Page.objects.get(pk=page_id)
-        back_folder = Page.folder
+        back_folder = page.folder.id
         labels = Label.objects.filter(page=page)
 
         context["page"] = page
