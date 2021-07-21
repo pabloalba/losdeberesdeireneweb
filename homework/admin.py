@@ -15,4 +15,5 @@ class PageAdmin(admin.ModelAdmin):
 admin.site.register(PageFolder, PageFolderAdmin)
 admin.site.register(Page, PageAdmin)
 admin.site.register(Label)
+admin.site.register(Profile)
 

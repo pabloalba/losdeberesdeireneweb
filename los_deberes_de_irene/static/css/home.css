@@ -66,6 +66,15 @@
   width: 100%;
 }
 
+.main-form select {
+  border: none;
+  display: block;
+  font-size: 18px;
+  outline: none;
+  padding: 15px 20px;
+  width: 100%;
+}
+
 .special-button-login {
   background-color: #54C6EB;
   border-radius: 10px;
@@ -75,6 +84,7 @@
   font-weight: 400;
   padding: 10px 17px;
   margin-top: 50px;
+  cursor: pointer;
 }
 
 .special-button-login.register {

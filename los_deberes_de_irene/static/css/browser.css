@@ -61,3 +61,7 @@
 .page-grid .grid-item.page span a {
   color: #000000;
 }
+
+.code {
+    font-weight: bold;
+}

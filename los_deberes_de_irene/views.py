@@ -2,6 +2,7 @@ from django.contrib.auth import authenticate, login
 from django.contrib.auth.forms import AuthenticationForm
 from django.http import JsonResponse
 from django.http import HttpResponse
+from django.contrib.auth.models import Group
 from django.utils.decorators import method_decorator
 from django.views import generic
 from django.views.decorators.csrf import csrf_exempt
@@ -9,9 +10,10 @@ from django.core import serializers
 from homework.models import *
 from django.db import IntegrityError
 from .forms import NewUserForm
-from django.contrib import messages
+from django.contrib import messages, auth
 from django.shortcuts import render, redirect
 import json
+import random
 
 
 def register_request(request):
@@ -20,6 +22,12 @@ def register_request(request):
         if form.is_valid():
             user = form.save()
             login(request, user)
+            print(form.cleaned_data.get('user_type'))
+            if 'teacher' == form.cleaned_data.get('user_type'):
+                teacher_group = Group.objects.get(name='teachers')
+                teacher_group.user_set.add(user)
+                teacher_group.save()
+            Profile.objects.create(owner=user, code=_generate_code())
             messages.success(request, "Registration successful.")
             return redirect("home")
         messages.error(request, "Unsuccessful registration. Invalid information.")
@@ -33,13 +41,13 @@ def login_request(request):
         if form.is_valid():
             username = form.cleaned_data.get('username')
             password = form.cleaned_data.get('password')
-            print(username)
-            print(password)
             user = authenticate(username=username, password=password)
             if user is not None:
                 login(request, user)
-                messages.info(request, f"You are now logged in as {username}.")
-                return redirect("home")
+                if _is_teacher(user):
+                    return redirect("teacher")
+                else:
+                    return redirect("home")
             else:
                 messages.error(request, "Invalid username or password.")
         else:
@@ -50,6 +58,12 @@ def login_request(request):
 
 class HomeView(generic.TemplateView):
     template_name = "los_deberes_de_irene/home.html"
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context["is_teacher"] = _is_teacher(self.request.user)
+
+        return context
 
 
 class BrowserView(generic.TemplateView):
@@ -80,6 +94,51 @@ class BrowserView(generic.TemplateView):
         return context
 
 
+class TeacherView(generic.TemplateView):
+    template_name = "los_deberes_de_irene/teacher.html"
+
+    def get(self, request):
+        if not _is_teacher(self.request.user):
+            return redirect("home")
+        return super().get(request)
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+
+        students = []
+        for user in User.objects.all():
+            if not _is_teacher(user):
+                students.append(user)
+
+        profile = Profile.objects.filter(owner=self.request.user).first()
+        context["code"] = profile.code
+        context["students_list"] = students
+
+        return context
+
+
+class StudentView(generic.TemplateView):
+    template_name = "los_deberes_de_irene/student.html"
+
+    def get(self, request):
+        if _is_teacher(self.request.user):
+            return redirect("home")
+        return super().get(request)
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+
+        teachers = []
+        for user in User.objects.all():
+            if _is_teacher(user):
+                teachers.append(user)
+
+        profile = Profile.objects.filter(owner=self.request.user).first()
+
+        context["teachers_list"] = teachers
+
+        return context
+
 @method_decorator(csrf_exempt, name='dispatch')
 class LabelView(generic.View):
     def get(self, request, page_id):
@@ -99,3 +158,19 @@ class LabelView(generic.View):
             return JsonResponse(data, safe=False)
         except IntegrityError as e:
             return HttpResponse(status=404)
+
+
+def _generate_code():
+    characters = ['c', 'd', 'e', 'f', 'h', 'j', 'k', 'm', 'n', 'p', 'r', 't', 'v', 'w', 'x', 'y', '2', '3', '4', '5',
+                  '6', '9']
+    ok = False
+    while not ok:
+        code = ''
+        while len(code) < 5:
+            code += random.choice(characters)
+        ok = Profile.objects.filter(code=code).count() == 0
+
+    return code
+
+def _is_teacher(user):
+    return user.groups.filter(name='teachers').exists()

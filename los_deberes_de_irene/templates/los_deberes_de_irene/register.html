@@ -33,6 +33,14 @@
              id="id_password2" placeholder="De al menos 8 caracteres">
     </div>
 
+    <div class="entry">
+      <label for="id_username">Soy un</label>
+      <select name="user_type" id="id_user_type">
+        <option value="student" selected>Alumno</option>
+        <option value="teacher">Profesor</option>
+      </select>
+    </div>
+
     {% if messages %}
       <ul class="messages">
       {% for message in messages %}

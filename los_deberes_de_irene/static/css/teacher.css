@@ -1,0 +1,28 @@
+.students-grid {
+  width: 100%;
+  text-align: left;
+  border-collapse: collapse;
+  margin-top: 30px;
+  color: #4C485A;
+  font-size: 14px;
+}
+
+.students-grid tr.student{
+  border-bottom: 1px solid #D0EFF9;
+  height: 50px;
+  cursor: pointer;
+}
+
+.students-grid tr.student:hover, .students-grid tr.teacher:hover{
+    background-color: #D0EFF9;
+}
+
+.students-grid tr.teacher{
+  border-bottom: 1px solid #D0EFF9;
+  height: 50px;
+}
+
+.student-number{
+    width: 188px;
+    text-align: center;
+}

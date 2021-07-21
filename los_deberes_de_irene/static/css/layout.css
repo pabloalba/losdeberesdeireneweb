@@ -31,6 +31,10 @@ a {
   background-color: #FFFFFF;
 }
 
+.main-container.students {
+  background: #FFFFFF;
+}
+
 .main-container::before {
   background: url("/static/img/spiral-top.png");
   content: "";
@@ -51,6 +55,13 @@ a {
   width: 58px;
 }
 
+.main-container.students::before {
+    background: #FFFFFF;
+}
+.main-container.students::after {
+    background: #FFFFFF;
+}
+
 .header {
   display: flex;
   flex-direction: row;
@@ -66,10 +77,24 @@ a {
   border-bottom: 5px solid #F2484B;
 }
 
+.header.students {
+  flex-direction: column;
+  align-items: start;
+  height: 101px;
+  border-bottom: 5px solid #54C6EB;
+  margin-left: 62px;
+  margin-right: 62px;
+}
+
 .header-logo {
   height: 17px;
   margin-left: calc(200px - 58px);
   float: left;
+}
+
+.header.students .header-logo{
+  height: 17px;
+  margin: 23px auto 10px;
 }
 
 .header-title {
@@ -86,3 +111,26 @@ a {
   padding: 10px 15px;
 }
 
+.header.students .tabs-title-container{
+  height: 46px;
+}
+
+.header.students .tabs-title-item {
+  display: inline-block;
+  width: 200px;
+  height: 100%;
+  border-bottom: 5px solid #FFFFFF;
+  text-align: center;
+  color: #54C6EB;
+  font-size: 18px;
+  line-height: 55px;
+}
+
+.header.students .tabs-title-item.selected{
+  border-bottom: 5px solid #D0EFF9;
+}
+
+.header.students .tabs-title-item.code{
+  position: absolute;
+  right:0;
+}

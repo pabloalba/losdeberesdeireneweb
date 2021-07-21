@@ -37,7 +37,7 @@
     {% for folder in folders %}
       <div class="grid-item folder">
         <a href="{% url 'browser' folder.id %}"><img src="{{ folder.icon.url }}" /></a>
-        <span><a href="{% url 'browser' folder.id %}">{{ folder.name }}</a><span>
+        <span><a href="{% url 'browser' folder.id %}">{{ folder.name }}</a></span>
       </div>
     {% endfor %}
     {% for page in pages %}

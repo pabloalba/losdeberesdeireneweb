@@ -1,0 +1,44 @@
+{% extends "los_deberes_de_irene/base.html" %}
+
+{% load static %}
+
+{% block main-class %}
+  students
+{% endblock %}
+
+{% block content %}
+    <div class="header students">
+      <img class="header-logo" src="{% static 'img/logo-deberes-de-irene.svg' %}" />
+      <div class="tabs-title-container">
+        <div class="tabs-title-item selected">Alumnos</div>
+        <div class="tabs-title-item">Grupos</div>
+        <div class="tabs-title-item code">
+          Tu código: {{ code }}
+        </div>
+      </div>
+
+    </div>
+
+
+
+<table class="students-grid">
+    <tr>
+      <th class="student-number"></th>
+      <th class="student-name">Nombre</th>
+      <th class="student-actions"></th>
+    </tr>
+  {% for student in students_list %}
+    <tr class="student" onclick="document.location='{% url 'browser' student.id %}'">
+      <td class="student-number">
+        {{ forloop.counter }}.
+      </td>
+      <td>
+        {{ student.username }}
+      </td>
+      <td></td>
+    </tr>
+    {% endfor %}
+</table>
+
+{% endblock %}
+
