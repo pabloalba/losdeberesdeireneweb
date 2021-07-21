@@ -28,6 +28,12 @@
   {% endif %}
 
   <div class="page-grid {% if big_grid %}big{% endif %}">
+    {% if folders.count == 0 and pages.count == 0 %}
+      <div class="empty-block">
+        <img src="{% static 'img/nocontent.png' %}" />
+        <p>Aquí no hay deberes todavía</p>
+      </div>
+    {% endif %}
     {% for folder in folders %}
       <div class="grid-item folder">
         <a href="{% url 'browser' folder.id %}"><img src="{{ folder.icon.url }}" /></a>
