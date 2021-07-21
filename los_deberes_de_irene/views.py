@@ -2,7 +2,6 @@ from django.contrib.auth import authenticate, login
 from django.contrib.auth.forms import AuthenticationForm
 from django.http import JsonResponse
 from django.http import HttpResponse
-from django.contrib.auth.models import Group
 from django.utils.decorators import method_decorator
 from django.views import generic
 from django.views.decorators.csrf import csrf_exempt
@@ -22,14 +21,13 @@ def register_request(request):
         if form.is_valid():
             user = form.save()
             login(request, user)
-            print(form.cleaned_data.get('user_type'))
-            if 'teacher' == form.cleaned_data.get('user_type'):
-                teacher_group = Group.objects.get(name='teachers')
-                teacher_group.user_set.add(user)
-                teacher_group.save()
-            Profile.objects.create(owner=user, code=_generate_code())
+            is_teacher = 'teacher' == form.cleaned_data.get('user_type')
+            Profile.objects.create(owner=user, code=_generate_code(), is_teacher=is_teacher)
             messages.success(request, "Registration successful.")
-            return redirect("home")
+            if is_teacher:
+                return redirect("teacher")
+            else:
+                return redirect("home")
         messages.error(request, "Unsuccessful registration. Invalid information.")
     form = NewUserForm()
     return render(request=request, template_name="los_deberes_de_irene/register.html", context={"register_form": form})
@@ -120,10 +118,8 @@ class TeacherView(generic.TemplateView):
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
 
-        students = []
-        for user in User.objects.all():
-            if not _is_teacher(user):
-                students.append(user)
+        student_teachers = StudentTeacher.objects.filter(teacher=self.request.user).all()
+        students = [st.student for st in student_teachers]
 
         profile = Profile.objects.filter(owner=self.request.user).first()
         context["code"] = profile.code
@@ -140,13 +136,22 @@ class StudentView(generic.TemplateView):
             return redirect("home")
         return super().get(request)
 
+    def post(self, request):
+        if _is_teacher(self.request.user):
+            return redirect("home")
+        code = request.POST.get('code')
+        if code:
+            profile = Profile.objects.filter(code=code).first()
+            if profile and _is_teacher(profile.owner):
+                StudentTeacher.objects.create(student=self.request.user, teacher=profile.owner)
+
+        return super().get(request)
+
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
 
-        teachers = []
-        for user in User.objects.all():
-            if _is_teacher(user):
-                teachers.append(user)
+        student_teachers = StudentTeacher.objects.filter(student=self.request.user).all()
+        teachers = [st.teacher for st in student_teachers]
 
         profile = Profile.objects.filter(owner=self.request.user).first()
 
@@ -188,5 +193,5 @@ def _generate_code():
     return code
 
 def _is_teacher(user):
-    return user.groups.filter(name='teachers').exists()
+    return user.profile.is_teacher
 

@@ -16,7 +16,12 @@
 
     </div>
 
-
+<div class="special-button-teacher-container">
+  <button class="special-button-teacher" onclick="document.getElementById('add-teacher-container').style.display='block'">
+      <img src="{% static 'img/settings.svg' %}" alt="" />
+      Añadir
+    </button>
+</div>
 
 <table class="students-grid">
     <tr>
@@ -37,5 +42,26 @@
     {% endfor %}
 </table>
 
+
 {% endblock %}
 
+{% block outside %}
+<div id="add-teacher-container" onclick="document.getElementById('add-teacher-container').style.display='none'">
+  <div id="add-teacher-modal" onclick="event.stopPropagation();">
+       <h2>Añadir profesor</h2>
+       <form class="main-form" method="POST" action="">
+         {% csrf_token %}
+        <div class="entry">
+          <label for="id_code">Código del profesor</label>
+          <input type="text" name="code" maxlength="150" autofocus="" required=""
+                 id="id_code" placeholder="Introducir código">
+        </div>
+        <button type="submit" class="special-button-teacher">
+          <img src="{% static 'img/settings.svg' %}" alt="" />
+          Añadir
+        </button>
+      </form>
+  </div>
+</div>
+
+{% endblock %}

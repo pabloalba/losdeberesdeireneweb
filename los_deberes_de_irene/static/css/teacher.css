@@ -26,3 +26,49 @@
     width: 188px;
     text-align: center;
 }
+
+.special-button-teacher-container{
+    width: 100%;
+    text-align: right;
+}
+
+.special-button-teacher {
+  background-color: #54C6EB;
+  border-radius: 10px;
+  border-width: 0;
+  color: white;
+  font-size: 24px;
+  font-weight: 400;
+  padding: 10px 17px;
+  margin-top: 5px;
+  cursor: pointer;
+}
+.special-button-teacher img {
+  height: 30px;
+  padding-right: 15px;
+  vertical-align: middle;
+  width: 30px;
+}
+
+#add-teacher-container {
+    width: 100%;
+    height: 100%;
+    position: absolute;
+    top:0;
+    left:0;
+    background-color: rgba(0,0,0,0.5);
+    display: none;
+}
+
+
+#add-teacher-modal {
+    background:#D0EFF9;
+    margin: 0 auto;
+    width:700px;
+    position:relative;
+    z-index:41;
+    top: 25%;
+    padding:30px;
+}
+
+

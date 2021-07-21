@@ -106,19 +106,23 @@ class Label(models.Model):
         ordering = ["page__id", "y", "x"]
 
 
+
+from django.contrib.auth.models import User
+
+
 class Profile(models.Model):
-    owner = models.ForeignKey(
-        User,
-        null=False,
-        blank=False,
-        on_delete=models.CASCADE,
-        verbose_name="usuario"
-    )
+    owner = models.OneToOneField(User, on_delete=models.CASCADE)
     code = models.CharField(
         blank=False,
         null=False,
         max_length=10,
         verbose_name="codigo"
+    )
+    is_teacher = models.BooleanField(
+        blank=False,
+        null=False,
+        default=False,
+        verbose_name="es profesor"
     )
 
     def __str__(self):
@@ -128,3 +132,30 @@ class Profile(models.Model):
         verbose_name = "Perfil"
         verbose_name_plural = "Perfiles"
         ordering = ["owner__id", "id"]
+
+
+class StudentTeacher(models.Model):
+    student = models.ForeignKey(
+        User,
+        null=False,
+        blank=False,
+        on_delete=models.CASCADE,
+        verbose_name="student",
+        related_name="student"
+    )
+    teacher = models.ForeignKey(
+        User,
+        null=False,
+        blank=False,
+        on_delete=models.CASCADE,
+        verbose_name="teacher",
+        related_name = "teacher"
+    )
+
+    def __str__(self):
+        return str(self.id)
+
+    class Meta:
+        verbose_name = "AlumnoProfesor"
+        verbose_name_plural = "AlumnoProfesores"
+        ordering = ["id"]
