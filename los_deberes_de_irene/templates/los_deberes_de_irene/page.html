@@ -9,13 +9,13 @@
     <p class="heading">tamaño</p>
     <div class="options">
       <button class="option selected">
-        <object type="image/svg+xml" data="{% static 'img/font-size-small-selected.svg' %}"></object>
+        <img src="{% static 'img/font-size-small-selected.svg' %}"></img>
       </button>
       <button class="option">
-        <object type="image/svg+xml" data="{% static 'img/font-size-medium.svg' %}"></object>
+        <img src="{% static 'img/font-size-medium.svg' %}"></img>
       </button>
       <button class="option">
-        <object type="image/svg+xml" data="{% static 'img/font-size-big.svg' %}"></object>
+        <img src="{% static 'img/font-size-big.svg' %}"></img>
       </button>
     </div>
 
@@ -24,21 +24,21 @@
     <p class="heading">color</p>
     <div class="options">
       <button class="option selected">
-        <object type="image/svg+xml" data="{% static 'img/font-color-1.svg' %}"></object>
+        <img src="{% static 'img/font-color-1.svg' %}"></img>
       </button>
       <button class="option">
-        <object type="image/svg+xml" data="{% static 'img/font-color-2.svg' %}"></object>
+        <img src="{% static 'img/font-color-2.svg' %}"></img>
       </button>
       <button class="option">
-        <object type="image/svg+xml" data="{% static 'img/font-color-3.svg' %}"></object>
+        <img src="{% static 'img/font-color-3.svg' %}"></img>
       </button>
     </div>
 
     <div class="separator"></div>
 
     <div class="options">
-      <a class="option" href="{% url 'browser' back_folder %}">
-        <object type="image/svg+xml" data="{% static 'img/back-button.svg' %}"></object>
+      <a class="option" href="{% if back_folder %}{% url 'browser' back_folder %}{% else %}{% url 'browser' %}{% endif %}">
+        <img src="{% static 'img/back-button.svg' %}"></img>
       </a>
     </div>
   </div>
@@ -48,7 +48,9 @@
       <img class="header-logo" src="{% static 'img/logo-deberes-de-irene.svg' %}" />
     </a>
     <div class="header-title">{{ page.name }}</div>
-    <a class="header-button" href="{% url 'browser' back_folder %}">Volver</a>
+    <a class="header-button" href="{% if back_folder %}{% url 'browser' back_folder %}{% else %}{% url 'browser' %}{% endif %}">
+      Volver
+    </a>
   </div>
 
   <div id="page-viewport">
