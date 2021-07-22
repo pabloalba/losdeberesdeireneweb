@@ -146,6 +146,7 @@ a {
   color: #54C6EB;
   font-size: 18px;
   line-height: 55px;
+  cursor: pointer;
 }
 
 .header.students .tabs-title-item.selected{

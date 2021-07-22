@@ -71,4 +71,40 @@
     padding:30px;
 }
 
+#teachers-tab, #settings-tab{
+    width: 100%;
+    display: none;
+}
+
+#settings-tab div{
+    font-size: 18px;
+    margin-top: 50px;
+}
+
+.font-sample{
+    padding: 20px;
+    cursor: pointer;
+    border: 1px dashed #D0EFF9;
+}
+
+.font-sample.kid{
+    font-family: "Sacramento";
+}
+
+.font-sample.adult{
+    font-family: "Mali";
+}
+
+.font-sample.selected{
+    background-color: #D0EFF9;
+}
+
+.save-button-container{
+    width: 100%;
+}
+
+.save-button-container form{
+    width: 100%;
+    align-items: end;
+}
 

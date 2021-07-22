@@ -10,42 +10,62 @@
     <div class="header students">
       <img class="header-logo" src="{% static 'img/logo-deberes-de-irene.svg' %}" />
       <div class="tabs-title-container">
-        <div class="tabs-title-item selected">Profesores</div>
-        <div class="tabs-title-item">Configuración</div>
+        <div id="tab-selector-teachers" class="tabs-title-item" onclick="teachers()">Profesores</div>
+        <div id="tab-selector-settings" class="tabs-title-item"  onclick="settings()">Configuración</div>
       </div>
 
     </div>
+<div id="teachers-tab">
+    <div class="special-button-teacher-container">
+      <button class="special-button-teacher" onclick="document.getElementById('add-teacher-container').style.display='block'">
+          <img src="{% static 'img/settings.svg' %}" alt="" />
+          Añadir
+        </button>
+    </div>
 
-<div class="special-button-teacher-container">
-  <button class="special-button-teacher" onclick="document.getElementById('add-teacher-container').style.display='block'">
-      <img src="{% static 'img/settings.svg' %}" alt="" />
-      Añadir
-    </button>
+    <table class="students-grid">
+        <tr>
+          <th class="student-number"></th>
+          <th class="student-name">Nombre</th>
+          <th class="student-actions"></th>
+        </tr>
+      {% for teacher in teachers_list %}
+        <tr class="teacher">
+          <td class="student-number">
+            {{ forloop.counter }}.
+          </td>
+          <td>
+            {{ teacher.username }}
+          </td>
+          <td>
+              <a href="{% url 'delete_student_teacher'%}?teacher={{teacher.id}}" onclick="return confirm('¿Estás seguro?')">
+                <img src="{% static 'img/delete.png' %}"/>
+              </a>
+          </td>
+        </tr>
+        {% endfor %}
+    </table>
 </div>
+<div id="settings-tab">
+    <div>Elige el tipo de letra:</div>
+    <div>
+        <div id="font_sample_kid" class="font-sample kid {% if user.profile.selected_font != 'adult'%}selected{% endif %}" onclick="select_kid()">El veloz murciélago hindú comía feliz cardillo y kiwi. La cigüeña toca el saxofón detrás del palenque de paja. 1234567890</div>
+        <div id="font_sample_adult"  class="font-sample adult {% if user.profile.selected_font == 'adult'%}selected{% endif %}" onclick="select_adult()">El veloz murciélago hindú comía feliz cardillo y kiwi. La cigüeña toca el saxofón detrás del palenque de paja. 1234567890</div>
+    </div>
+    <div class="save-button-container">
+        <form class="main-form" method="POST" action="{% url 'save_settings' %}">
+         {% csrf_token %}
+        <input type="hidden" name="selected_font" id="id_selected_font" />
+         <button type="submit" class="special-button-teacher">
+          <img src="{% static 'img/settings.svg' %}" alt="" />
+          Guardar
+        </button>
+      </form>
 
-<table class="students-grid">
-    <tr>
-      <th class="student-number"></th>
-      <th class="student-name">Nombre</th>
-      <th class="student-actions"></th>
-    </tr>
-  {% for teacher in teachers_list %}
-    <tr class="teacher">
-      <td class="student-number">
-        {{ forloop.counter }}.
-      </td>
-      <td>
-        {{ teacher.username }}
-      </td>
-      <td>
-          <a href="{% url 'delete_student_teacher'%}?teacher={{teacher.id}}" onclick="return confirm('¿Estás seguro?')">
-            <img src="{% static 'img/delete.png' %}"/>
-          </a>
-      </td>
-    </tr>
-    {% endfor %}
-</table>
 
+
+    </div>
+</div>
 {% endblock %}
 
 {% block outside %}
@@ -66,4 +86,36 @@
       </form>
   </div>
 </div>
+<script>
+    function teachers(){
+        document.getElementById("teachers-tab").style.display='block';
+        document.getElementById("settings-tab").style.display='none';
+        document.getElementById("tab-selector-teachers").classList.add("selected");
+        document.getElementById("tab-selector-settings").classList.remove("selected");
+    }
+
+    function settings(){
+        document.getElementById("teachers-tab").style.display='none';
+        document.getElementById("settings-tab").style.display='block';
+        document.getElementById("tab-selector-teachers").classList.remove("selected");
+        document.getElementById("tab-selector-settings").classList.add("selected");
+    }
+
+    function select_kid(){
+        document.getElementById("font_sample_kid").classList.add("selected");
+        document.getElementById("font_sample_adult").classList.remove("selected");
+        document.getElementById("id_selected_font").value = 'kid';
+    }
+
+    function select_adult(){
+        document.getElementById("font_sample_kid").classList.remove("selected");
+        document.getElementById("font_sample_adult").classList.add("selected");
+        document.getElementById("id_selected_font").value = 'adult';
+    }
+    {% if "settings" == tab %}
+    settings();
+    {% else %}
+    teachers();
+    {% endif %}
+</script>
 {% endblock %}

@@ -144,6 +144,13 @@ class Profile(models.Model):
         on_delete=models.CASCADE,
         verbose_name="carpeta raiz"
     )
+    selected_font = models.CharField(
+        blank=False,
+        null=False,
+        max_length=10,
+        verbose_name="Fuente",
+        default="infantil"
+    )
 
     def __str__(self):
         return str(self.id)

@@ -177,9 +177,9 @@ class StudentView(generic.TemplateView):
         student_teachers = StudentTeacher.objects.filter(student=self.request.user).all()
         teachers = [st.teacher for st in student_teachers]
 
-        profile = Profile.objects.filter(owner=self.request.user).first()
-
         context["teachers_list"] = teachers
+        context["tab"] = self.request.session.get("tab")
+        self.request.session["tab"] = None
 
         return context
 
@@ -267,6 +267,20 @@ class AddPageView(generic.View):
                 image=form.cleaned_data.get('image'))
         return redirect("browser", folder_id=request.POST.get("parent_folder"))
 
+
+class SettingsView(generic.View):
+
+    def post(self, request):
+        if _is_teacher(self.request.user):
+            return redirect("teacher")
+
+        selected_font = request.POST.get("selected_font")
+        if "kid" == selected_font or "adult" == selected_font:
+            self.request.user.profile.selected_font = selected_font
+            self.request.user.profile.save()
+
+        request.session["tab"] = "settings"
+        return redirect("student")
 
 def _get_valid_folder(user, folder_id):
     page_folder = PageFolder.objects.filter(pk=folder_id).first()
