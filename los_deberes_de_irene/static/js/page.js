@@ -11,6 +11,7 @@ let scrollOffset = 0;
 
 let viewPortElement;
 let svgElement;
+let labelsElement;
 
 
 export function setupPage(width, height) {
@@ -30,9 +31,11 @@ export function setupPage(width, height) {
 function pageLoaded() {
   viewPortElement = document.getElementById("page-viewport");
   svgElement = viewPortElement.querySelectorAll("svg")[0];
+  labelsElement = document.getElementById("labels");
 
   window.addEventListener("resize", onResize);
-  viewPortElement.addEventListener("wheel", onWheel);
+  svgElement.addEventListener("wheel", onWheel);
+  svgElement.addEventListener("click", onClick);
 
   // The resize event does not occur in the initial load,
   // so we call it once here.
@@ -57,11 +60,13 @@ function onResize() {
 function onWheel(event) {
   event.preventDefault();
 
-  scrollOffset += event.deltaY;
-  scrollOffset = Math.min(scrollOffset, (imageHeight - viewBoxHeight));
-  scrollOffset = Math.max(scrollOffset, 0);
+  if (viewPortElement) {
+    scrollOffset += event.deltaY;
+    scrollOffset = Math.min(scrollOffset, (imageHeight - viewBoxHeight));
+    scrollOffset = Math.max(scrollOffset, 0);
 
-  setViewBox();
+    setViewBox();
+  }
 }
 
 
@@ -72,4 +77,31 @@ function setViewBox() {
     "0 " + scrollOffset.toString() + " " +
     viewBoxWidth.toString() + " " + 
     viewBoxHeight.toString());
+}
+
+
+function onClick(event) {
+  event.preventDefault();
+
+  if (viewPortElement) {
+    const x = screenToImage(event.offsetX);
+    const y = screenToImage(event.offsetY) + scrollOffset;
+
+    const labelElement = document.createElementNS("http://www.w3.org/2000/svg", "text");
+    labelElement.setAttribute("class", "page-label");
+    labelElement.setAttribute("x", x);
+    labelElement.setAttribute("y", y);
+    labelElement.setAttribute("style", "fill: #54C6EB; font-size: 15");
+    labelElement.textContent = "lorem ipsum dolor sit amet";
+
+    labelsElement.appendChild(labelElement);
+  }
+}
+
+function screenToImage(pos) {
+  return pos * viewBoxWidth / viewPortWidth;
+}
+
+function imageToScreen(pos) {
+  return pos * viewPortWidth / viewBoxWidth;
 }

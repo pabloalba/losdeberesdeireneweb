@@ -62,12 +62,14 @@
         viewBox="0 0 {{ page.image.width }} {{ page.image.height }}">
       <image x="0" y="0" width="{{ page.image.width }}" height="{{ page.image.height }}"
           href="{{ page.image.url }}"></image>
-      {% for label in labels %}
-        <text class="page-label" x="{{ label.x }}" y="{{ label.y }}"
-            style="fill: {{ label.color }}; font-size: {{ label.font_size }};">
-          {{ label.text }}
-        </text>
-      {% endfor %}
+      <g id="labels">
+        {% for label in labels %}
+          <text class="page-label" x="{{ label.x }}" y="{{ label.y }}"
+              style="fill: {{ label.color }}; font-size: {{ label.font_size }};">
+            {{ label.text }}
+          </text>
+        {% endfor %}
+      </g>
     </svg>
   </div>
 
