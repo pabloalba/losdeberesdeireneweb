@@ -129,7 +129,8 @@ a {
   border-radius: 10px;
   color: #FFFFFF;
   font-size: 25px;
-  padding: 10px 15px;
+  margin-right: 20px;
+  padding: 8px 15px;
 }
 
 .header.students .tabs-title-container{
