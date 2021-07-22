@@ -1,6 +1,7 @@
 #page-viewport {
   height: 100%;
   width: 100%;
+  position: relative;
 }
 
 .page-label {
@@ -72,4 +73,17 @@
 
 .options .option.selected {
   background-color: #FFFFFF;
+}
+
+#label-input {
+  background: none;
+  border: none;
+  caret-color: #F2484B;
+  color: #54C6EB;
+  font-family: "Sacramento";
+  font-size: 15px;
+  left: -1000px;
+  outline-style: none;
+  position: absolute;
+  top: -1000px;
 }
