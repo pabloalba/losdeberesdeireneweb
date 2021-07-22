@@ -27,6 +27,8 @@ urlpatterns = [
     path('admin/', admin.site.urls),
     path("", login_required(views.HomeView.as_view()), name='home'),
     path("browser/<int:folder_id>", login_required(views.BrowserView.as_view()), name='browser'),
+    path("add_folder", login_required(views.FolderView.as_view()), name='add_folder'),
+    path("add_page", login_required(views.PageView.as_view()), name='add_page'),
     path("teacher", login_required(views.TeacherView.as_view()), name='teacher'),
     path("student", login_required(views.StudentView.as_view()), name='student'),
     path("delete_student_teacher", login_required(views.StudentTeacherView.as_view()), name='delete_student_teacher'),

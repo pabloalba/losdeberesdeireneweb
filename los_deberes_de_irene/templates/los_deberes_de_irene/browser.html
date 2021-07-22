@@ -30,6 +30,18 @@
     </div>
   {% endif %}
 
+<div class="special-button-folder-container">
+    <button class="button" onclick="document.getElementById('add-folder-container').style.display='block'">
+      <img src="{% static 'img/settings.svg' %}" alt="" />
+      Añadir carpeta
+    </button>
+  <button class="button" onclick="document.getElementById('add-page-container').style.display='block'">
+      <img src="{% static 'img/settings.svg' %}" alt="" />
+      Añadir ficha
+    </button>
+</div>
+
+
   <div class="page-grid {% if big_grid %}big{% endif %}">
     {% if folders.count == 0 and pages.count == 0 %}
       <div class="empty-block">
@@ -50,5 +62,48 @@
       </div>
     {% endfor %}
   </div>
+{% endblock %}
+
+{% block outside %}
+<div id="add-folder-container" onclick="document.getElementById('add-folder-container').style.display='none'">
+  <div id="add-folder-modal" onclick="event.stopPropagation();">
+       <h2>Añadir carpeta</h2>
+       <form class="main-form" method="POST" action="{% url 'add_folder'%}">
+         {% csrf_token %}
+         <input type="hidden" name="parent_folder"  value="{{parent_folder.id}}">
+         <div class="entry">
+           <label for="id_folder_name">Nombre de la carpeta</label>
+           <input type="text" name="name" maxlength="150" autofocus="" required=""
+                 id="id_folder_name" placeholder="Introducir nombre">
+         </div>
+         <div>
+          <button type="submit" class="button">
+            <img src="{% static 'img/settings.svg' %}" alt="" />
+            Añadir
+          </button>
+         </div>
+      </form>
+  </div>
+</div>
+
+<div id="add-page-container" onclick="document.getElementById('add-page-container').style.display='none'">
+  <div id="add-page-modal" onclick="event.stopPropagation();">
+       <h2>Añadir ficha</h2>
+       <form class="main-form" method="POST" action="{% url 'add_page'%}" enctype="multipart/form-data">
+         {% csrf_token %}
+         <input type="hidden" name="parent_folder"  value="{{parent_folder.id}}">
+         <div class="entry">
+           <label for="id_image">Imagen de la ficha</label>
+           <input type="file" id="id_image" name="image" accept="image/png, image/jpeg" required="" />
+         </div>
+         <div>
+          <button type="submit" class="button">
+            <img src="{% static 'img/settings.svg' %}" alt="" />
+            Añadir
+          </button>
+         </div>
+      </form>
+  </div>
+</div>
 {% endblock %}
 

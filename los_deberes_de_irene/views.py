@@ -6,6 +6,8 @@ from django.utils.decorators import method_decorator
 from django.views import generic
 from django.views.decorators.csrf import csrf_exempt
 from django.core import serializers
+
+from homework.forms import ImageForm
 from homework.models import *
 from django.db import IntegrityError
 from .forms import NewUserForm
@@ -70,17 +72,9 @@ class BrowserView(generic.TemplateView):
     page_folder = None
 
     def get(self, request, folder_id):
-        self.page_folder = PageFolder.objects.filter(pk=folder_id).first()
+        self.page_folder = _get_valid_folder(request.user, folder_id)
         if not self.page_folder:
             return redirect("home")
-
-        if _is_teacher(request.user):
-            # Only allow view folders of its students
-            if StudentTeacher.objects.filter(teacher=request.user, student=self.page_folder.owner).count() == 0:
-                return redirect("home")
-        else:
-            if self.page_folder.owner != request.user:
-                return redirect("home")
 
         return super().get(request)
 
@@ -226,6 +220,47 @@ class LabelView(generic.View):
         except IntegrityError as e:
             return HttpResponse(status=404)
 
+
+class FolderView(generic.View):
+
+    def post(self, request):
+        page_folder = _get_valid_folder(request.user, request.POST.get("parent_folder"))
+        if not page_folder:
+            return redirect("home")
+        PageFolder.objects.create(name=request.POST.get("name"), owner=page_folder.owner, parent=page_folder)
+        return redirect("browser", folder_id=request.POST.get("parent_folder"))
+
+
+class PageView(generic.View):
+
+    def post(self, request):
+        page_folder = _get_valid_folder(request.user, request.POST.get("parent_folder"))
+        if not page_folder:
+            return redirect("home")
+        form = ImageForm(request.POST, request.FILES)
+        if form.is_valid():
+            Page.objects.create(
+                name=form.cleaned_data.get('image').name,
+                owner=page_folder.owner,
+                folder=page_folder,
+                image=form.cleaned_data.get('image'))
+        return redirect("browser", folder_id=request.POST.get("parent_folder"))
+
+
+def _get_valid_folder(user, folder_id):
+    page_folder = PageFolder.objects.filter(pk=folder_id).first()
+    if not page_folder:
+        return redirect("home")
+
+    if _is_teacher(user):
+        # Only allow view folders of its students
+        if StudentTeacher.objects.filter(teacher=user, student=page_folder.owner).count() == 0:
+            return None
+    else:
+        if page_folder.owner != user:
+            return None
+
+    return page_folder
 
 def _generate_code():
     characters = ['c', 'd', 'e', 'f', 'h', 'j', 'k', 'm', 'n', 'p', 'r', 't', 'v', 'w', 'x', 'y', '2', '3', '4', '5',

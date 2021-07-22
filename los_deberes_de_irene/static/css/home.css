@@ -76,24 +76,24 @@
   width: 100%;
 }
 
-.special-button-login {
+.button {
   background-color: #54C6EB;
   border-radius: 10px;
   border-width: 0;
   box-shadow: 4px 4px 4px rgba(0, 155, 202, 0.5);
   color: white;
-  font-size: 36px;
+  font-size: 24px;
   font-weight: 400;
   padding: 10px 17px;
   margin-top: 50px;
   cursor: pointer;
 }
 
-.special-button-login.register {
-  font-size: 24px;
+.button.login {
+  font-size: 36px;
 }
 
-.special-button-login img {
+.button img {
   height: 30px;
   padding-right: 15px;
   vertical-align: middle;
