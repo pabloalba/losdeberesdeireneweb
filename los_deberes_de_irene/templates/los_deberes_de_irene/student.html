@@ -7,15 +7,20 @@
 {% endblock %}
 
 {% block content %}
+    <div class="header root">
+        <div></div>
+        <div class="header-title">
+      <img class="header-logo students" src="{% static 'img/logo-deberes-de-irene.svg' %}" />
+            </div>
+      <a class="header-button" href="{% url 'browser' user.profile.root_folder.id %}">Atrás</a>
+    </div>
     <div class="header students">
-      <img class="header-logo" src="{% static 'img/logo-deberes-de-irene.svg' %}" />
       <div class="tabs-title-container">
         <div id="tab-selector-teachers" class="tabs-title-item" onclick="teachers()">Profesores</div>
-        <div id="tab-selector-settings" class="tabs-title-item"  onclick="settings()">Configuración</div>
+        <div id="tab-selector-settings" class="tabs-title-item"  onclick="settings()">Letra</div>
       </div>
-
     </div>
-<div id="teachers-tab">
+    <div id="teachers-tab">
     <div class="special-button-teacher-container">
       <button class="special-button-teacher" onclick="document.getElementById('add-teacher-container').style.display='block'">
           <img src="{% static 'img/settings.svg' %}" alt="" />

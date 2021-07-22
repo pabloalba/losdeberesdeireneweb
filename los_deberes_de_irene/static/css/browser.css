@@ -12,6 +12,7 @@
   flex-flow: row wrap;
   flex-grow: 1;
   justify-content: space-between;
+  width: 80%;
 }
 
 .page-grid .grid-item {
@@ -23,11 +24,11 @@
   justify-content: center;
   height: 280px;
   width: 280px;
-}
-
-.page-grid .grid-item:not(:first-child) {
+  margin-top: 50px;
   margin-left: 40px;
 }
+
+
 
 .page-grid.big .grid-item {
   width: 400px;
@@ -41,6 +42,10 @@
 .page-grid .grid-item.page {
   background-color: #FFFFFF;
   border: 5px solid #54C6EB;
+}
+
+.page-grid .grid-item.empty {
+  box-shadow: 4px 4px 4px #FFFFFF;
 }
 
 .page-grid .grid-item img {
@@ -101,4 +106,9 @@
 .arrow {
     width: 50px;
     cursor: pointer;
+}
+
+.special-button-folder-container{
+    width: 100%;
+    text-align: center;
 }

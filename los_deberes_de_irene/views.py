@@ -57,14 +57,15 @@ def login_request(request):
     return render(request=request, template_name="los_deberes_de_irene/login.html", context={"login_form": form})
 
 
-class HomeView(generic.TemplateView):
-    template_name = "los_deberes_de_irene/home.html"
+class HomeView(generic.View):
+    def get(self, request):
+        if _is_teacher(request.user):
+            return redirect("teacher")
+        else:
+            return redirect("browser", folder_id=request.user.profile.root_folder.id)
 
-    def get_context_data(self, **kwargs):
-        context = super().get_context_data(**kwargs)
-        context["is_teacher"] = _is_teacher(self.request.user)
+        return super().get(request)
 
-        return context
 
 
 class BrowserView(generic.TemplateView):
@@ -82,6 +83,7 @@ class BrowserView(generic.TemplateView):
         context = super().get_context_data(**kwargs)
 
         folders = PageFolder.objects.filter(parent=self.page_folder)
+
         pages = Page.objects.filter(folder=self.page_folder)
 
         if self.page_folder.parent:
@@ -89,11 +91,19 @@ class BrowserView(generic.TemplateView):
         else:
             back_folder = None
 
+        num = len(folders) + len(pages)
+        empties = []
+        if num > 4:
+            while num % 8 != 0:
+                empties.append(None)
+                num += 1
+
         context["big_grid"] = (len(folders) + len(pages) <= 2)
         context["parent_folder"] = self.page_folder
         context["back_folder"] = back_folder
-        context["folders"] = folders
+        context["empties"] = empties
         context["pages"] = pages
+        context["folders"] = folders
 
         return context
 

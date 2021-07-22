@@ -96,7 +96,7 @@ a {
 .header.students {
   flex-direction: column;
   align-items: start;
-  height: 101px;
+  height: 51px;
   border-bottom: 5px solid #54C6EB;
   margin-left: 62px;
   margin-right: 62px;
@@ -108,14 +108,15 @@ a {
   float: left;
 }
 
+.header-logo.students {
+  margin-left: 0;
+  float: none;
+}
+
 .header.page .header-logo {
   margin-left: calc(200px - 120px);
 }
 
-.header.students .header-logo{
-  height: 17px;
-  margin: 23px auto 10px;
-}
 
 .header-title {
   font-size: 35px;
