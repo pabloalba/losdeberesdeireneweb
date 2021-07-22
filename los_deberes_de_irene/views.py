@@ -236,7 +236,7 @@ class FolderView(generic.View):
         return redirect("browser", folder_id=request.POST.get("parent_folder"))
 
 
-class PageView(generic.View):
+class AddPageView(generic.View):
 
     def post(self, request):
         page_folder = _get_valid_folder(request.user, request.POST.get("parent_folder"))
