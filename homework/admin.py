@@ -16,4 +16,5 @@ admin.site.register(PageFolder, PageFolderAdmin)
 admin.site.register(Page, PageAdmin)
 admin.site.register(Label)
 admin.site.register(Profile)
+admin.site.register(StudentTeacher)
 

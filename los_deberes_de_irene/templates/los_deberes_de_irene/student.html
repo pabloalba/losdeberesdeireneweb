@@ -37,11 +37,14 @@
       <td>
         {{ teacher.username }}
       </td>
-      <td></td>
+      <td>
+          <a href="{% url 'delete_student_teacher'%}?teacher={{teacher.id}}" onclick="return confirm('¿Estás seguro?')">
+            <img src="{% static 'img/delete.png' %}"/>
+          </a>
+      </td>
     </tr>
     {% endfor %}
 </table>
-
 
 {% endblock %}
 
@@ -63,5 +66,9 @@
       </form>
   </div>
 </div>
+
+<script>
+
+</script>
 
 {% endblock %}

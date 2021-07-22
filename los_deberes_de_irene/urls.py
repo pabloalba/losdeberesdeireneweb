@@ -17,6 +17,7 @@ from django.contrib import admin
 from django.conf import settings
 from django.conf.urls import url, include
 from django.conf.urls.static import static
+from django.contrib.auth.decorators import login_required
 from django.urls import path
 
 from . import views
@@ -24,13 +25,14 @@ from . import views
 urlpatterns = [
     url('', include('pwa.urls')),
     path('admin/', admin.site.urls),
-    path("", views.HomeView.as_view(), name='home'),
-    path("browser/<int:folder_id>", views.BrowserView.as_view(), name='browser'),
-    path("browser", views.BrowserView.as_view(), name='browser'),
-    url(r"teacher", views.TeacherView.as_view(), name='teacher'),
-    url(r"student", views.StudentView.as_view(), name='student'),
-    path("pages/<int:page_id>", views.PageView.as_view(), name='page'),
-    path('pages/<int:page_id>/labels', views.LabelView.as_view(), name='labels'),
+    path("", login_required(views.HomeView.as_view()), name='home'),
+    path("browser/<int:folder_id>", login_required(views.BrowserView.as_view()), name='browser'),
+    path("browser", login_required(views.BrowserView.as_view()), name='browser'),
+    path("teacher", login_required(views.TeacherView.as_view()), name='teacher'),
+    path("student", login_required(views.StudentView.as_view()), name='student'),
+    path("delete_student_teacher", login_required(views.StudentTeacherView.as_view()), name='delete_student_teacher'),
+    path("pages/<int:page_id>", login_required(views.PageView.as_view()), name='page'),
+    path('pages/<int:page_id>/labels', login_required(views.LabelView.as_view()), name='labels'),
     path("register", views.register_request, name="register"),
     path("login", views.login_request, name="login")
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

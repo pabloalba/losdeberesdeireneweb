@@ -131,3 +131,4 @@ PWA_APP_DIR = 'ltr'
 PWA_APP_LANG = 'es-ES'
 PWA_APP_DEBUG_MODE = True
 
+LOGIN_URL = 'login'

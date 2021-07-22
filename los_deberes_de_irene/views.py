@@ -145,7 +145,8 @@ class StudentView(generic.TemplateView):
         if code:
             profile = Profile.objects.filter(code=code).first()
             if profile and _is_teacher(profile.owner):
-                StudentTeacher.objects.create(student=self.request.user, teacher=profile.owner)
+                if StudentTeacher.objects.filter(student=self.request.user, teacher=profile.owner).count() == 0:
+                    StudentTeacher.objects.create(student=self.request.user, teacher=profile.owner)
 
         return super().get(request)
 
@@ -160,6 +161,23 @@ class StudentView(generic.TemplateView):
         context["teachers_list"] = teachers
 
         return context
+
+
+class StudentTeacherView(generic.View):
+    def get(self, request):
+        if _is_teacher(self.request.user):
+            student_teacher = StudentTeacher.objects.filter(student=request.GET.get('student'),
+                                                            teacher=self.request.user).first()
+            if student_teacher:
+                student_teacher.delete()
+            return redirect("teacher")
+        else:
+            student_teacher = StudentTeacher.objects.filter(student=self.request.user,
+                                                            teacher=request.GET.get('teacher')).first()
+            if student_teacher:
+                student_teacher.delete()
+            return redirect("student")
+
 
 @method_decorator(csrf_exempt, name='dispatch')
 class LabelView(generic.View):
@@ -194,6 +212,6 @@ def _generate_code():
 
     return code
 
+
 def _is_teacher(user):
     return user.profile.is_teacher
-
