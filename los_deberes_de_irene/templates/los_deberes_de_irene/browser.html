@@ -3,27 +3,30 @@
 {% load static %}
 
 {% block main-class %}
-  {% if parent_folder %}browser-folder{% else %}browser-root{% endif %}
+  {% if back_folder %}browser-folder{% else %}browser-root{% endif %}
 {% endblock %}
 
 {% block content %}
-  {% if parent_folder %}
+  {% if back_folder or user.profile.is_teacher %}
     <div class="header folder">
-      <a href="{% url 'browser' %}">
-        <img class="header-logo" src="{% static 'img/logo-deberes-de-irene.svg' %}" />
-      </a>
-      <div class="header-title">{{ parent_folder.name }}</div>
+      <img class="header-logo" src="{% static 'img/logo-deberes-de-irene.svg' %}" />
+      <div class="header-title">
+        {% if user.profile.is_teacher %}
+        [{{ parent_folder.owner.username }}]&nbsp;
+        {% endif %}
+        {% if back_folder %}
+        {{ parent_folder.name }}
+        {% endif %}
+      </div>
       {% if back_folder %}
         <a class="header-button" href="{% url 'browser' back_folder %}">Atrás</a>
       {% else %}
-        <a class="header-button" href="{% url 'browser' %}">Atrás</a>
+        <a class="header-button" href="{% url 'teacher' %}">Atrás</a>
       {% endif %}
     </div>
   {% else %}
     <div class="header root">
-      <a href="{% url 'browser' %}">
         <img class="header-logo" src="{% static 'img/logo-deberes-de-irene.svg' %}" />
-      </a>
     </div>
   {% endif %}
 
@@ -36,7 +39,7 @@
     {% endif %}
     {% for folder in folders %}
       <div class="grid-item folder">
-        <a href="{% url 'browser' folder.id %}"><img src="{{ folder.icon.url }}" /></a>
+        <a href="{% url 'browser' folder.id %}"><img src="{% if folder.icon %}{{ folder.icon.url }}{% else %}{% static 'img/folder.png' %}{% endif %}" /></a>
         <span><a href="{% url 'browser' folder.id %}">{{ folder.name }}</a></span>
       </div>
     {% endfor %}

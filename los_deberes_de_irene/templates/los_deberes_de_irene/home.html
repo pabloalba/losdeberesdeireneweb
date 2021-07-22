@@ -8,7 +8,7 @@
   {% if is_teacher %}
   <a href="{% url 'teacher' %}"><h1 class="home-title"><span>Los deberes de Irene</span></h1></a>
   {% else %}
-    <a href="{% url 'browser' %}"><h1 class="home-title"><span>Los deberes de Irene</span></h1></a>
+    <a href="{% url 'browser' user.profile.root_folder.id%}"><h1 class="home-title"><span>Los deberes de Irene</span></h1></a>
     <a class="special-button" href="{% url 'student' %}">
       <img src="{% static 'img/settings.svg' %}" alt="" />
       Opciones

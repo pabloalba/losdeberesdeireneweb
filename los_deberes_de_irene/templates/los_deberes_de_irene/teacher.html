@@ -28,7 +28,7 @@
       <th class="student-actions"></th>
     </tr>
   {% for student in students_list %}
-    <tr class="student" onclick="document.location='{% url 'browser' student.id %}'">
+    <tr class="student" onclick="document.location='{% url 'browser' student.profile.root_folder.id %}'">
       <td class="student-number">
         {{ forloop.counter }}.
       </td>

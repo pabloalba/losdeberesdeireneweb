@@ -2,6 +2,7 @@ from django.contrib.auth.models import User
 from django.db import models
 
 
+
 class PageFolder(models.Model):
     parent = models.ForeignKey(
         "PageFolder",
@@ -17,9 +18,16 @@ class PageFolder(models.Model):
         verbose_name="nombre"
     )
     icon = models.ImageField(
-        null=False,
+        null=True,
         upload_to="",
         verbose_name="icono"
+    )
+    owner = models.ForeignKey(
+        User,
+        null=False,
+        blank=False,
+        on_delete=models.CASCADE,
+        verbose_name="owner"
     )
 
     def __str__(self):
@@ -49,6 +57,13 @@ class Page(models.Model):
         null=False,
         upload_to="",
         verbose_name="imagen"
+    )
+    owner = models.ForeignKey(
+        User,
+        null=False,
+        blank=False,
+        on_delete=models.CASCADE,
+        verbose_name="owner",
     )
 
     def __str__(self):
@@ -97,6 +112,7 @@ class Label(models.Model):
         verbose_name="tamaño de fuente"
     )
 
+
     def __str__(self):
         return self.text
 
@@ -104,10 +120,6 @@ class Label(models.Model):
         verbose_name = "Etiqueta"
         verbose_name_plural = "Etiquetas"
         ordering = ["page__id", "y", "x"]
-
-
-
-from django.contrib.auth.models import User
 
 
 class Profile(models.Model):
@@ -123,6 +135,13 @@ class Profile(models.Model):
         null=False,
         default=False,
         verbose_name="es profesor"
+    )
+    root_folder = models.ForeignKey(
+        "PageFolder",
+        null=True,
+        blank=True,
+        on_delete=models.CASCADE,
+        verbose_name="carpeta raiz"
     )
 
     def __str__(self):

@@ -22,11 +22,12 @@ def register_request(request):
             user = form.save()
             login(request, user)
             is_teacher = 'teacher' == form.cleaned_data.get('user_type')
-            Profile.objects.create(owner=user, code=_generate_code(), is_teacher=is_teacher)
-            messages.success(request, "Registration successful.")
+            profile = Profile.objects.create(owner=user, code=_generate_code(), is_teacher=is_teacher)
             if is_teacher:
                 return redirect("teacher")
             else:
+                profile.root_folder = PageFolder.objects.create(name="root", owner=user)
+                profile.save()
                 return redirect("home")
         messages.error(request, "Unsuccessful registration. Invalid information.")
     form = NewUserForm()
@@ -66,25 +67,36 @@ class HomeView(generic.TemplateView):
 
 class BrowserView(generic.TemplateView):
     template_name = "los_deberes_de_irene/browser.html"
+    page_folder = None
 
-    def get_context_data(self, folder_id=None, **kwargs):
+    def get(self, request, folder_id):
+        self.page_folder = PageFolder.objects.filter(pk=folder_id).first()
+        if not self.page_folder:
+            return redirect("home")
+
+        if _is_teacher(request.user):
+            # Only allow view folders of its students
+            if StudentTeacher.objects.filter(teacher=request.user, student=self.page_folder.owner).count() == 0:
+                return redirect("home")
+        else:
+            if self.page_folder.owner != request.user:
+                return redirect("home")
+
+        return super().get(request)
+
+    def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
 
-        if folder_id:
-            parent_folder = PageFolder.objects.get(pk=folder_id)
-        else:
-            parent_folder = None
+        folders = PageFolder.objects.filter(parent=self.page_folder)
+        pages = Page.objects.filter(folder=self.page_folder)
 
-        folders = PageFolder.objects.filter(parent=folder_id)
-        pages = Page.objects.filter(folder=folder_id)
-
-        if parent_folder and parent_folder.parent:
-            back_folder = parent_folder.parent.id
+        if self.page_folder.parent:
+            back_folder = self.page_folder.parent.id
         else:
             back_folder = None
 
         context["big_grid"] = (len(folders) + len(pages) <= 2)
-        context["parent_folder"] = parent_folder
+        context["parent_folder"] = self.page_folder
         context["back_folder"] = back_folder
         context["folders"] = folders
         context["pages"] = pages
@@ -94,15 +106,30 @@ class BrowserView(generic.TemplateView):
 
 class PageView(generic.TemplateView):
     template_name = "los_deberes_de_irene/page.html"
+    page = None
 
-    def get_context_data(self, page_id, **kwargs):
+    def get(self, request, page_id):
+        self.page = Page.objects.filter(pk=page_id).first()
+        if not self.page:
+            return redirect("home")
+
+        if _is_teacher(request.user):
+            # Only allow view folders of its students
+            if StudentTeacher.objects.filter(teacher=request.user, student=self.page.owner).count() == 0:
+                return redirect("home")
+        else:
+            if self.page.owner != request.user:
+                return redirect("home")
+
+        return super().get(request)
+
+    def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs
                                            )
-        page = Page.objects.get(pk=page_id)
-        back_folder = page.folder.id if page.folder else None
-        labels = Label.objects.filter(page=page)
+        back_folder = self.page.folder.id
+        labels = Label.objects.filter(page=self.page)
 
-        context["page"] = page
+        context["page"] = self.page
         context["back_folder"] = back_folder
         context["labels"] = labels
 
