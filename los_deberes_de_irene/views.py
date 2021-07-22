@@ -210,8 +210,8 @@ class LabelView(generic.View):
 
     def post(self, request, page_id):
         body = json.loads(request.body.decode("utf-8"))
-        body['page_id'] = page_id
         try:
+            body['page_id'] = page_id
             newrecord = Label.objects.create(**body)
             # Turn the object to json to dict, put in array to avoid non-iterable error
             data = json.loads(serializers.serialize('json', [newrecord]))
@@ -221,7 +221,23 @@ class LabelView(generic.View):
             return HttpResponse(status=404)
 
 
-class FolderView(generic.View):
+@method_decorator(csrf_exempt, name='dispatch')
+class EditLabelView(generic.View):
+    def post(self, request, page_id, label_id):
+        body = json.loads(request.body.decode("utf-8"))
+        try:
+            label = Label.objects.get(pk=label_id)
+            if len(body["text"]) > 0:
+                label.text = body["text"]
+                label.save()
+            else:
+                label.delete()
+            return JsonResponse("", safe=False)
+        except Label.DoesNotExist as e:
+            return HttpResponse(status=404)
+
+
+class AddFolderView(generic.View):
 
     def post(self, request):
         page_folder = _get_valid_folder(request.user, request.POST.get("parent_folder"))

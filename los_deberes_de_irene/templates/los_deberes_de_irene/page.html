@@ -65,7 +65,7 @@
           href="{{ page.image.url }}"></image>
       <g id="labels">
         {% for label in labels %}
-          <text class="page-label" x="{{ label.x }}" y="{{ label.y }}"
+          <text id="label-{{ label.id }}" class="page-label" x="{{ label.x }}" y="{{ label.y }}"
               style="fill: {{ label.color }}; font-size: {{ label.font_size }};">
             {{ label.text }}
           </text>
@@ -79,7 +79,7 @@
 {% block extra_scripts %}
   <script type="module">
     import { setupPage } from "{% static '/js/page.js' %}";
-    setupPage({{ page.image.width }}, {{ page.image.height }});
+    setupPage({{ page.id }}, {{ page.image.width }}, {{ page.image.height }});
   </script>
 {% endblock %}
 

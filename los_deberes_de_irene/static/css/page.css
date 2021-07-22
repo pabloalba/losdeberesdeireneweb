@@ -86,4 +86,6 @@
   outline-style: none;
   position: absolute;
   top: -1000px;
+  margin: 0;
+  padding: 0;
 }
