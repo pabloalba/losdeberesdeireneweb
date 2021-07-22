@@ -88,3 +88,17 @@
     top: 25%;
     padding:30px;
 }
+
+.icon-container{
+    width: 100%;
+    text-align: center;
+}
+
+.icon {
+    width: 128px;
+}
+
+.arrow {
+    width: 50px;
+    cursor: pointer;
+}

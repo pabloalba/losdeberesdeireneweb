@@ -51,7 +51,7 @@
     {% endif %}
     {% for folder in folders %}
       <div class="grid-item folder">
-        <a href="{% url 'browser' folder.id %}"><img src="{% if folder.icon %}{{ folder.icon.url }}{% else %}{% static 'img/folder.png' %}{% endif %}" /></a>
+        <a href="{% url 'browser' folder.id %}"><img src="{% if folder.icon %}{{ folder.icon }}{% else %}{% static 'img/folder.png' %}{% endif %}" /></a>
         <span><a href="{% url 'browser' folder.id %}">{{ folder.name }}</a></span>
       </div>
     {% endfor %}
@@ -75,6 +75,15 @@
            <label for="id_folder_name">Nombre de la carpeta</label>
            <input type="text" name="name" maxlength="150" autofocus="" required=""
                  id="id_folder_name" placeholder="Introducir nombre">
+         </div>
+         <div class="entry">
+           <label for="id_folder_icon">Icono de la carpeta</label>
+           <input type="hidden" id="id_folder_icon" name="folder_icon"  value="{% static 'img/folder.png' %}">
+           <div class="icon-container">
+             <span><img class="arrow" src="{% static 'img/left.png' %}" onclick="prev_icon()"/></span>
+             <span><img id='folder_icon' class="icon" src="" /></span>
+             <span><img class="arrow" src="{% static 'img/right.png' %}" onclick="next_icon()" /></span>
+           </div>
          </div>
          <div>
           <button type="submit" class="button">
@@ -105,5 +114,41 @@
       </form>
   </div>
 </div>
+
+
+<script>
+  var current_icon = 0;
+  var icons = [
+    '{% static 'img/subjects/folder.png'%}',
+    '{% static 'img/subjects/ciencias de la naturaleza.png'%}',
+    '{% static 'img/subjects/ciencias sociales.png'%}',
+    '{% static 'img/subjects/clase de idiomas.png'%}',
+    '{% static 'img/subjects/clase de música.png'%}',
+    '{% static 'img/subjects/conocimiento del medio.png'%}',
+    '{% static 'img/subjects/educación artística.png'%}',
+    '{% static 'img/subjects/educación plástica y visual.png'%}',
+    '{% static 'img/subjects/lenguaje.png'%}',
+    '{% static 'img/subjects/matematicas.png'%}',
+    '{% static 'img/subjects/religión.png'%}',
+    '{% static 'img/subjects/sport.png'%}'
+  ];
+  function next_icon(){
+    current_icon = (current_icon+1) % icons.length;
+    show_icon();
+  }
+  function prev_icon(){
+    current_icon = current_icon - 1;
+    if (current_icon < 0){
+      current_icon = icons.length - 1;
+    }
+    show_icon();
+  }
+  function show_icon(){
+    document.getElementById('folder_icon').src=icons[current_icon];
+    document.getElementById('id_folder_icon').value=icons[current_icon];
+  }
+  show_icon();
+</script>
+
 {% endblock %}
 

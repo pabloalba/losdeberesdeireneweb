@@ -227,7 +227,12 @@ class FolderView(generic.View):
         page_folder = _get_valid_folder(request.user, request.POST.get("parent_folder"))
         if not page_folder:
             return redirect("home")
-        PageFolder.objects.create(name=request.POST.get("name"), owner=page_folder.owner, parent=page_folder)
+
+        print(request.POST)
+        PageFolder.objects.create(name=request.POST.get("name"),
+                                  owner=page_folder.owner,
+                                  parent=page_folder,
+                                  icon=request.POST.get("folder_icon"))
         return redirect("browser", folder_id=request.POST.get("parent_folder"))
 
 

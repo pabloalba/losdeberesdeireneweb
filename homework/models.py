@@ -17,10 +17,11 @@ class PageFolder(models.Model):
         max_length=100,
         verbose_name="nombre"
     )
-    icon = models.ImageField(
+    icon = models.CharField(
+        blank=True,
         null=True,
-        upload_to="",
-        verbose_name="icono"
+        max_length=256,
+        verbose_name="icon"
     )
     owner = models.ForeignKey(
         User,
