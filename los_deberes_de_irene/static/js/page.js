@@ -19,6 +19,9 @@ let labelInputId;
 let labelInputX;
 let labelInputY;
 
+let currentFontSize;
+let currentColor;
+
 const LABEL_ID_PREFIX = "label-";
 const NEW_LABEL_ID = "label-new";
 
@@ -54,6 +57,20 @@ function pageLoaded() {
 
   labelInputElement.addEventListener("blur", onBlur);
 
+  for (let sizeButton of document.querySelectorAll(".size-button")) {
+    sizeButton.addEventListener("click", changeSize);
+  }
+
+  currentFontSize = "medium";
+  setSelectedButton(".size-button", "data-font-size", "medium");
+
+  for (let colorButton of document.querySelectorAll(".color-button")) {
+    colorButton.addEventListener("click", changeColor);
+  }
+
+  currentColor = "blue";
+  setSelectedButton(".color-button", "data-color", "blue");
+
   for (let labelElement of document.querySelectorAll(".page-label")) {
     labelElement.addEventListener("click", onClickLabel);
   }
@@ -77,6 +94,13 @@ function onResize() {
   viewBoxWidth = imageWidth;
   viewBoxHeight = imageWidth * ratio;
 
+  for (let labelElement of document.querySelectorAll(".page-label")) {
+    const labelFontSize = labelElement.getAttribute("data-font-size");
+    console.log(labelFontSize);
+    console.log(getFontSize(labelFontSize));
+    labelElement.setAttribute("style", "font-size: " + getFontSize(labelFontSize));
+  }
+
   setViewBox();
 }
 
@@ -88,9 +112,23 @@ function onWheel(event) {
     scrollOffset += event.deltaY;
     scrollOffset = Math.min(scrollOffset, (imageHeight - viewBoxHeight));
     scrollOffset = Math.max(scrollOffset, 0);
-
     setViewBox();
   }
+}
+
+
+function changeSize(event) {
+  // target could also be the inner img, but 'this' is always the element with the handler
+  const buttonElement = this;
+  currentFontSize = buttonElement.getAttribute("data-font-size");
+  setSelectedButton(".size-button", "data-font-size", currentFontSize);
+}
+
+
+function changeColor(event) {
+  const buttonElement = this;
+  currentColor = buttonElement.getAttribute("data-color");
+  setSelectedButton(".color-button", "data-color", currentColor);
 }
 
 
@@ -101,7 +139,7 @@ function onClick(event) {
     labelInputId = NEW_LABEL_ID;
     labelInputX = event.offsetX;
     labelInputY = event.offsetY;
-    showLabelInput("");
+    showLabelInput(currentFontSize, "");
   }
 }
 
@@ -114,9 +152,9 @@ function onClickLabel(event) {
     const labelElement = event.target;
     labelInputId = labelElement.getAttribute("id");
     labelInputX = imageToScreen(labelElement.getAttribute("x"));
-    labelInputY = imageToScreen(labelElement.getAttribute("y"));
+    labelInputY = imageToScreen(labelElement.getAttribute("y") - scrollOffset);
     labelElement.style.opacity = 0;
-    showLabelInput(labelElement.textContent.trim());
+    showLabelInput(labelElement.getAttribute("data-font-size"), labelElement.textContent.trim());
   }
 }
 
@@ -153,10 +191,25 @@ function setViewBox() {
 }
 
 
-function showLabelInput(text) {
+function setSelectedButton(query, attribute, value) {
+  for (let button of document.querySelectorAll(query)) {
+    if (button.getAttribute(attribute) === value) {
+      button.classList.add("selected");
+    } else {
+      button.classList.remove("selected");
+    }
+  }
+}
+
+
+function showLabelInput(fontSize, text) {
+  const screenFontSize = imageToScreen(getFontSize(fontSize));
+
   labelInputElement.style.left = labelInputX;
-  labelInputElement.style.top = labelInputY - 31;
-  labelInputElement.style.fontSize = imageToScreen(15).toString() + "px";
+  labelInputElement.style.top = labelInputY - screenFontSize * 0.75;
+  labelInputElement.style.width = viewPortWidth - labelInputX;
+  labelInputElement.style.fontSize = screenFontSize.toString() + "px";
+  labelInputElement.setAttribute("data-color", currentColor);
   labelInputElement.value = text;
   labelInputElement.focus();
 }
@@ -171,11 +224,14 @@ function hideLabelInput() {
 
 function createLabel(x, y, text) {
   const labelElement = document.createElementNS("http://www.w3.org/2000/svg", "text");
+
   labelElement.setAttribute("id", NEW_LABEL_ID);
   labelElement.setAttribute("class", "page-label");
   labelElement.setAttribute("x", x);
   labelElement.setAttribute("y", y);
-  labelElement.setAttribute("style", "fill: #54C6EB; font-size: 15");
+  labelElement.setAttribute("data-font-size", currentFontSize);
+  labelElement.setAttribute("data-color", currentColor);
+  labelElement.setAttribute("style", "font-size: " + getFontSize(currentFontSize));
   labelElement.textContent = text;
 
   labelElement.addEventListener("click", onClickLabel);
@@ -205,6 +261,20 @@ function imageToScreen(pos) {
 }
 
 
+function getFontSize(fontSize) {
+  if (fontSize === "small") {
+    return viewBoxWidth / 50;
+  }
+  if (fontSize === "medium") {
+    return viewBoxWidth / 25;
+  }
+  if (fontSize === "big") {
+    return viewBoxWidth / 15;
+  }
+  return 1;
+}
+
+
 // ====== HTTP API functions ==================
 
 function sendCreateLabel(x, y, text) {
@@ -228,9 +298,9 @@ function sendCreateLabel(x, y, text) {
     "x": x,
     "y": y,
     "text": text,
-    "color": "#54C6EB",
     "font_name": "xxx",
-    "font_size": 15,
+    "font_size": currentFontSize,
+    "color": currentColor,
   }));
 }
 

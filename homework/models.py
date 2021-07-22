@@ -108,11 +108,12 @@ class Label(models.Model):
         max_length=100,
         verbose_name="fuente"
     )
-    font_size = models.PositiveSmallIntegerField(
+    font_size = models.CharField(
         null=False,
+        blank=False,
+        max_length=7,
         verbose_name="tamaño de fuente"
     )
-
 
     def __str__(self):
         return self.text

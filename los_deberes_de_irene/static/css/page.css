@@ -4,11 +4,6 @@
   position: relative;
 }
 
-.page-label {
-  /* font-family: "Mali"; */
-  font-family: "Sacramento";
-}
-
 .sidebar {
   align-items: center;
   background-color: #F3FCFF;
@@ -39,14 +34,14 @@
   width: 80%;
 }
 
-.options {
+.option-buttons {
   background-color: #FFFFFF;
   border: 1px solid #DFDEED;
   border-radius: 10px;
   width: 75px;
 }
 
-.options .option {
+.option-buttons .option-button {
   align-items: center;
   background-color: #54C6EB;
   box-shadow: 4px 4px 4px #DFDEED;
@@ -57,30 +52,44 @@
   width: 75px;
 }
 
-.options .option:first-child {
+.option-buttons .option-button:first-child {
   border-top-left-radius: 10px;
   border-top-right-radius: 10px;
 }
 
-.options .option:last-child {
+.option-buttons .option-button:last-child {
   border-bottom-left-radius: 10px;
   border-bottom-right-radius: 10px;
 }
 
-.options .option:not(:first-child) {
+.option-buttons .option-button:not(:first-child) {
   margin-top: 2px;
 }
 
-.options .option.selected {
+.option-buttons .option-button.selected {
   background-color: #FFFFFF;
+}
+
+.option-buttons .option-button .selected-img {
+  display: none;
+}
+
+.option-buttons .option-button .unselected-img {
+  display: flex;
+}
+
+.option-buttons .option-button.selected .selected-img {
+  display: flex;
+}
+
+.option-buttons .option-button.selected .unselected-img {
+  display: none;
 }
 
 #label-input {
   background: none;
   border: none;
   caret-color: #F2484B;
-  color: #54C6EB;
-  font-family: "Sacramento";
   font-size: 15px;
   left: -1000px;
   outline-style: none;
@@ -89,3 +98,34 @@
   margin: 0;
   padding: 0;
 }
+
+.page-label,
+#label-input {
+  /* font-family: "Mali"; */
+  font-family: "Sacramento";
+}
+
+text[data-color="black"] {
+  fill: #000000;
+}
+
+text[data-color="blue"] {
+  fill: #54C6EB;
+}
+
+text[data-color="red"] {
+  fill: #F2484B;
+}
+
+input[data-color="black"] {
+  color: #000000;
+}
+
+input[data-color="blue"] {
+  color: #54C6EB;
+}
+
+input[data-color="red"] {
+  color: #F2484B;
+}
+

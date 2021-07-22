@@ -7,37 +7,40 @@
 {% block content %}
   <div class="sidebar">
     <p class="heading">tamaño</p>
-    <div class="options">
-      <button class="option selected">
-        <img src="{% static 'img/font-size-small-selected.svg' %}"></img>
+    <div class="option-buttons">
+      <button class="option-button size-button" data-font-size="small">
+        <img class="unselected-img" src="{% static 'img/font-size-small.svg' %}"></img>
+        <img class="selected-img" src="{% static 'img/font-size-small-selected.svg' %}"></img>
       </button>
-      <button class="option">
-        <img src="{% static 'img/font-size-medium.svg' %}"></img>
+      <button class="option-button size-button" data-font-size="medium">
+        <img class="unselected-img" src="{% static 'img/font-size-medium.svg' %}"></img>
+        <img class="selected-img" src="{% static 'img/font-size-medium-selected.svg' %}"></img>
       </button>
-      <button class="option">
-        <img src="{% static 'img/font-size-big.svg' %}"></img>
+      <button class="option-button size-button" data-font-size="big">
+        <img class="unselected-img" src="{% static 'img/font-size-big.svg' %}"></img>
+        <img class="selected-img" src="{% static 'img/font-size-big-selected.svg' %}"></img>
       </button>
     </div>
 
     <div class="separator"></div>
 
     <p class="heading">color</p>
-    <div class="options">
-      <button class="option selected">
-        <img src="{% static 'img/font-color-1.svg' %}"></img>
+    <div class="option-buttons">
+      <button class="option-button color-button" data-color="black">
+        <img src="{% static 'img/font-color-black.svg' %}"></img>
       </button>
-      <button class="option">
-        <img src="{% static 'img/font-color-2.svg' %}"></img>
+      <button class="option-button color-button" data-color="blue">
+        <img src="{% static 'img/font-color-blue.svg' %}"></img>
       </button>
-      <button class="option">
-        <img src="{% static 'img/font-color-3.svg' %}"></img>
+      <button class="option-button color-button" data-color="red">
+        <img src="{% static 'img/font-color-red.svg' %}"></img>
       </button>
     </div>
 
     <div class="separator"></div>
 
-    <div class="options">
-      <a class="option" href="{% url 'browser' back_folder %}">
+    <div class="option-buttons">
+      <a class="option-button" href="{% url 'browser' back_folder %}">
         <img src="{% static 'img/back-button.svg' %}"></img>
       </a>
     </div>
@@ -65,8 +68,9 @@
           href="{{ page.image.url }}"></image>
       <g id="labels">
         {% for label in labels %}
-          <text id="label-{{ label.id }}" class="page-label" x="{{ label.x }}" y="{{ label.y }}"
-              style="fill: {{ label.color }}; font-size: {{ label.font_size }};">
+          <text id="label-{{ label.id }}" class="page-label"
+              data-font-size="{{ label.font_size }}" data-color="{{ label.color }}"
+              x="{{ label.x }}" y="{{ label.y }}">
             {{ label.text }}
           </text>
         {% endfor %}
