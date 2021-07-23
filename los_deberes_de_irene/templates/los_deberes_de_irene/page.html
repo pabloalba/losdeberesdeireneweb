@@ -51,9 +51,9 @@
 
     <div class="header-title">
       {% if user.profile.is_teacher %}
-      [{{ page.owner.username }}]&nbsp;
+        [{{ page.owner.username }}]&nbsp;
       {% endif %}
-      {{ page.name }}
+        {{ page.name }}
     </div>
     <a class="header-button" href="{% url 'browser' back_folder %}">
       Volver
@@ -61,16 +61,28 @@
   </div>
 
   <div id="page-viewport">
-    <input id="label-input" type="text"></input>
-    <svg xmlns="http://www.w3.org/2000/svg" width="1000" height="1000"
-        viewBox="0 0 {{ page.image.width }} {{ page.image.height }}">
-      <image x="0" y="0" width="{{ page.image.width }}" height="{{ page.image.height }}"
-          href="{{ page.image.url }}"></image>
+
+    <input id="label-input" type="text" data-font-name="{{ user.profile.selected_font }}"></input>
+
+    <svg xmlns="http://www.w3.org/2000/svg"
+         width="1000"
+         height="1000"
+         viewBox="0 0 {{ page.image.width }} {{ page.image.height }}">
+      <image x="0"
+             y="0"
+             width="{{ page.image.width }}"
+             height="{{ page.image.height }}"
+             href="{{ page.image.url }}">
+      </image>
       <g id="labels">
         {% for label in labels %}
-          <text id="label-{{ label.id }}" class="page-label"
-              data-font-size="{{ label.font_size }}" data-color="{{ label.color }}"
-              x="{{ label.x }}" y="{{ label.y }}">
+          <text id="label-{{ label.id }}"
+                class="page-label"
+                data-font-name="{{ label.font_name }}"
+                data-font-size="{{ label.font_size }}"
+                data-color="{{ label.color }}"
+                x="{{ label.x }}"
+                y="{{ label.y }}">
             {{ label.text }}
           </text>
         {% endfor %}
@@ -83,7 +95,7 @@
 {% block extra_scripts %}
   <script type="module">
     import { setupPage } from "{% static '/js/page.js' %}";
-    setupPage({{ page.id }}, {{ page.image.width }}, {{ page.image.height }});
+    setupPage({{ page.id }}, {{ page.image.width }}, {{ page.image.height }}, "{{ user.profile.selected_font }}");
   </script>
 {% endblock %}
 

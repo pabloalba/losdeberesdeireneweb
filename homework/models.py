@@ -150,7 +150,7 @@ class Profile(models.Model):
         null=False,
         max_length=10,
         verbose_name="Fuente",
-        default="infantil"
+        default="kid"
     )
     full_name = models.CharField(
         blank=False,

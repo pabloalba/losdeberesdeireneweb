@@ -1,6 +1,7 @@
 let pageId;
 let imageWidth;
 let imageHeight;
+let currentFontName;
 
 let viewPortWidth;
 let viewPortHeight;
@@ -28,10 +29,11 @@ const NEW_LABEL_ID = "label-new";
 
 // ====== Initialization ==================
 
-export function setupPage(id, width, height) {
+export function setupPage(id, width, height, fontName) {
   pageId = id;
   imageWidth = width;
   imageHeight = height;
+  currentFontName = fontName;
   scrollOffset = 0;
 
   // Wait for the document to be fully loaded, and then finish
@@ -96,8 +98,6 @@ function onResize() {
 
   for (let labelElement of document.querySelectorAll(".page-label")) {
     const labelFontSize = labelElement.getAttribute("data-font-size");
-    console.log(labelFontSize);
-    console.log(getFontSize(labelFontSize));
     labelElement.setAttribute("style", "font-size: " + getFontSize(labelFontSize));
   }
 
@@ -229,6 +229,7 @@ function createLabel(x, y, text) {
   labelElement.setAttribute("class", "page-label");
   labelElement.setAttribute("x", x);
   labelElement.setAttribute("y", y);
+  labelElement.setAttribute("data-font-name", currentFontName);
   labelElement.setAttribute("data-font-size", currentFontSize);
   labelElement.setAttribute("data-color", currentColor);
   labelElement.setAttribute("style", "font-size: " + getFontSize(currentFontSize));
@@ -298,7 +299,7 @@ function sendCreateLabel(x, y, text) {
     "x": x,
     "y": y,
     "text": text,
-    "font_name": "xxx",
+    "font_name": currentFontName,
     "font_size": currentFontSize,
     "color": currentColor,
   }));

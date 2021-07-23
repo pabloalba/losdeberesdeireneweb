@@ -99,10 +99,14 @@
   padding: 0;
 }
 
-.page-label,
-#label-input {
-  /* font-family: "Mali"; */
+input[data-font-name="kid"],
+text[data-font-name="kid"] {
   font-family: "Sacramento";
+}
+
+input[data-font-name="adult"],
+text[data-font-name="adult"] {
+  font-family: "Mail";
 }
 
 text[data-color="black"] {
