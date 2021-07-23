@@ -43,6 +43,7 @@
   background-color: #FFFFFF;
   border: 5px solid #54C6EB;
   overflow: hidden;
+  text-align: center;
 }
 
 .page-grid .grid-item.empty {
