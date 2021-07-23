@@ -37,5 +37,6 @@ urlpatterns = [
     path('pages/<int:page_id>/labels/<int:label_id>', login_required(views.EditLabelView.as_view()), name='edit-label'),
     path("save_settings", login_required(views.SettingsView.as_view()), name='save_settings'),
     path("register", views.register_request, name="register"),
-    path("login", views.login_request, name="login")
+    path("login", views.login_request, name="login"),
+    path("logout", views.logout_request, name="logout"),
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
