@@ -152,6 +152,12 @@ class Profile(models.Model):
         verbose_name="Fuente",
         default="infantil"
     )
+    full_name = models.CharField(
+        blank=False,
+        null=False,
+        max_length=256,
+        verbose_name="nombre completo"
+    )
 
     def __str__(self):
         return str(self.id)

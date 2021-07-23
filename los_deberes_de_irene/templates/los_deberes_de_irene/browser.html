@@ -12,7 +12,7 @@
       <img class="header-logo" src="{% static 'img/logo-deberes-de-irene.svg' %}" />
       <div class="header-title">
         {% if user.profile.is_teacher %}
-        [{{ parent_folder.owner.username }}]&nbsp;
+        [{{ parent_folder.owner.profile.full_name }}]&nbsp;
         {% endif %}
         {% if back_folder %}
         {{ parent_folder.name }}
@@ -135,6 +135,7 @@
              Imagen de la ficha
            </label>
            <input type="file" id="id_image" name="image" accept="image/png, image/jpeg" required="" onchange="update_preview(this)"/>
+         </div>
          <div class="buttons">
            <button type="submit" class="button">
              <img src="{% static 'img/settings.svg' %}" alt="" />

@@ -35,7 +35,7 @@
         {{ forloop.counter }}.
       </td>
       <td>
-        {{ student.username }}
+        {{ student.profile.full_name }}
       </td>
       <td>
         <a href="{% url 'delete_student_teacher'%}?student={{student.id}}" onclick="event.stopPropagation();return confirm('¿Estás seguro?')">

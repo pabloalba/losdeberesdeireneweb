@@ -24,7 +24,10 @@ def register_request(request):
             user = form.save()
             login(request, user)
             is_teacher = "teacher" == form.cleaned_data.get("user_type")
-            profile = Profile.objects.create(owner=user, code=_generate_code(), is_teacher=is_teacher)
+            profile = Profile.objects.create(owner=user,
+                                             code=_generate_code(),
+                                             is_teacher=is_teacher,
+                                             full_name=form.cleaned_data.get("full_name"))
             if is_teacher:
                 return redirect("teacher")
             else:
