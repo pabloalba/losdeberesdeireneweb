@@ -23,7 +23,7 @@
     <div id="teachers-tab">
     <div class="special-button-teacher-container">
       <button class="special-button-teacher" onclick="document.getElementById('add-teacher-container').style.display='block'">
-          <img src="{% static 'img/settings.svg' %}" alt="" />
+          <img src="{% static 'img/person_icon.png' %}" alt="" />
           Añadir
         </button>
     </div>
@@ -62,7 +62,7 @@
          {% csrf_token %}
         <input type="hidden" name="selected_font" id="id_selected_font" />
          <button type="submit" class="special-button-teacher">
-          <img src="{% static 'img/settings.svg' %}" alt="" />
+          <img src="{% static 'img/save_icon.png' %}" alt="" />
           Guardar
         </button>
       </form>
