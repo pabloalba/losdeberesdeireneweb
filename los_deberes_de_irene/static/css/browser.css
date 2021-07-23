@@ -11,7 +11,7 @@
   display: flex;
   flex-flow: row wrap;
   flex-grow: 1;
-  justify-content: space-between;
+  justify-content: space-evenly;
   width: 80%;
 }
 
@@ -96,9 +96,13 @@
     cursor: pointer;
 }
 
-.special-button-folder-container{
+.special-button-folder-container {
     width: 100%;
     text-align: center;
+}
+
+.special-button-folder-container .button:not(:first-child) {
+  margin-left: 32px;
 }
 
 .preview {
