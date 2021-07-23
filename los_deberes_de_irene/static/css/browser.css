@@ -73,27 +73,6 @@
 }
 
 
-#add-folder-container, #add-page-container {
-    width: 100%;
-    height: 100%;
-    position: absolute;
-    top:0;
-    left:0;
-    background-color: rgba(0,0,0,0.5);
-    display: none;
-}
-
-
-#add-folder-modal, #add-page-modal {
-    background:#D0EFF9;
-    margin: 0 auto;
-    width:700px;
-    position:relative;
-    z-index:41;
-    top: 25%;
-    padding:30px;
-}
-
 .icon-container{
     width: 100%;
     text-align: center;
@@ -101,6 +80,12 @@
 
 .icon {
     width: 128px;
+    margin: 0 14px;
+}
+
+.icon.selected{
+    width: 180px;
+    border: 4px solid #009BCA;
 }
 
 .arrow {
@@ -111,4 +96,13 @@
 .special-button-folder-container{
     width: 100%;
     text-align: center;
+}
+
+.preview {
+    height: 250px;
+    margin-bottom: 10px;
+}
+
+.entry.page {
+    text-align:center;
 }

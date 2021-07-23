@@ -23,7 +23,7 @@ def register_request(request):
         if form.is_valid():
             user = form.save()
             login(request, user)
-            is_teacher = 'teacher' == form.cleaned_data.get('user_type')
+            is_teacher = "teacher" == form.cleaned_data.get("user_type")
             profile = Profile.objects.create(owner=user, code=_generate_code(), is_teacher=is_teacher)
             if is_teacher:
                 return redirect("teacher")
@@ -40,8 +40,8 @@ def login_request(request):
     if request.method == "POST":
         form = AuthenticationForm(request, data=request.POST)
         if form.is_valid():
-            username = form.cleaned_data.get('username')
-            password = form.cleaned_data.get('password')
+            username = form.cleaned_data.get("username")
+            password = form.cleaned_data.get("password")
             user = authenticate(username=username, password=password)
             if user is not None:
                 login(request, user)
@@ -94,7 +94,7 @@ class BrowserView(generic.TemplateView):
         num = len(folders) + len(pages)
         empties = []
         if num > 4:
-            while num % 8 != 0:
+            while num % 4 != 0:
                 empties.append(None)
                 num += 1
 
@@ -172,7 +172,7 @@ class StudentView(generic.TemplateView):
     def post(self, request):
         if _is_teacher(self.request.user):
             return redirect("home")
-        code = request.POST.get('code')
+        code = request.POST.get("code")
         if code:
             profile = Profile.objects.filter(code=code).first()
             if profile and _is_teacher(profile.owner):
@@ -197,41 +197,41 @@ class StudentView(generic.TemplateView):
 class StudentTeacherView(generic.View):
     def get(self, request):
         if _is_teacher(self.request.user):
-            student_teacher = StudentTeacher.objects.filter(student=request.GET.get('student'),
+            student_teacher = StudentTeacher.objects.filter(student=request.GET.get("student"),
                                                             teacher=self.request.user).first()
             if student_teacher:
                 student_teacher.delete()
             return redirect("teacher")
         else:
             student_teacher = StudentTeacher.objects.filter(student=self.request.user,
-                                                            teacher=request.GET.get('teacher')).first()
+                                                            teacher=request.GET.get("teacher")).first()
             if student_teacher:
                 student_teacher.delete()
             return redirect("student")
 
 
-@method_decorator(csrf_exempt, name='dispatch')
+@method_decorator(csrf_exempt, name="dispatch")
 class LabelView(generic.View):
     def get(self, request, page_id):
         labels = Label.objects.filter(page_id=page_id)
-        raw_data = serializers.serialize('python', labels)
-        actual_data = [d['fields'] for d in raw_data]
+        raw_data = serializers.serialize("python", labels)
+        actual_data = [d["fields"] for d in raw_data]
         return JsonResponse(actual_data, safe=False)
 
     def post(self, request, page_id):
         body = json.loads(request.body.decode("utf-8"))
         try:
-            body['page_id'] = page_id
+            body["page_id"] = page_id
             newrecord = Label.objects.create(**body)
             # Turn the object to json to dict, put in array to avoid non-iterable error
-            data = json.loads(serializers.serialize('json', [newrecord]))
+            data = json.loads(serializers.serialize("json", [newrecord]))
             # send json response with new object
             return JsonResponse(data, safe=False)
         except IntegrityError as e:
             return HttpResponse(status=404)
 
 
-@method_decorator(csrf_exempt, name='dispatch')
+@method_decorator(csrf_exempt, name="dispatch")
 class EditLabelView(generic.View):
     def post(self, request, page_id, label_id):
         body = json.loads(request.body.decode("utf-8"))
@@ -270,11 +270,15 @@ class AddPageView(generic.View):
             return redirect("home")
         form = ImageForm(request.POST, request.FILES)
         if form.is_valid():
+            name = request.POST.get("name")
+            if not name:
+                name = form.cleaned_data.get("image").name
+                name = name.rsplit(".", 1)[0]
             Page.objects.create(
-                name=form.cleaned_data.get('image').name,
+                name=name,
                 owner=page_folder.owner,
                 folder=page_folder,
-                image=form.cleaned_data.get('image'))
+                image=form.cleaned_data.get("image"))
         return redirect("browser", folder_id=request.POST.get("parent_folder"))
 
 
@@ -308,11 +312,11 @@ def _get_valid_folder(user, folder_id):
     return page_folder
 
 def _generate_code():
-    characters = ['c', 'd', 'e', 'f', 'h', 'j', 'k', 'm', 'n', 'p', 'r', 't', 'v', 'w', 'x', 'y', '2', '3', '4', '5',
-                  '6', '9']
+    characters = ["c", "d", "e", "f", "h", "j", "k", "m", "n", "p", "r", "t", "v", "w", "x", "y", "2", "3", "4", "5",
+                  "6", "9"]
     ok = False
     while not ok:
-        code = ''
+        code = ""
         while len(code) < 5:
             code += random.choice(characters)
         ok = Profile.objects.filter(code=code).count() == 0

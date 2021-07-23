@@ -74,20 +74,25 @@
 {% endblock %}
 
 {% block outside %}
-<div id="add-teacher-container" onclick="document.getElementById('add-teacher-container').style.display='none'">
-  <div id="add-teacher-modal" onclick="event.stopPropagation();">
-       <h2>Añadir profesor</h2>
+<div id="add-teacher-container" class="modal-container" onclick="document.getElementById('add-teacher-container').style.display='none'">
+  <div id="add-teacher-modal" class="modal-content" onclick="event.stopPropagation();">
+      <div class="close">
+          <img src ="{% static 'img/close.png' %}" onclick="document.getElementById('add-teacher-container').style.display='none'"/>
+      </div>
+       <div class="title">Añadir profesor</div>
        <form class="main-form" method="POST" action="">
          {% csrf_token %}
         <div class="entry">
           <label for="id_code">Código del profesor</label>
           <input type="text" name="code" maxlength="150" autofocus="" required=""
-                 id="id_code" placeholder="Introducir código">
+                 id="id_code" placeholder="Ej: j5t2r">
         </div>
-        <button type="submit" class="special-button-teacher">
-          <img src="{% static 'img/settings.svg' %}" alt="" />
-          Añadir
-        </button>
+        <div class="buttons">
+            <button type="submit" class="special-button-teacher">
+              <img src="{% static 'img/settings.svg' %}" alt="" />
+              Añadir
+            </button>
+        </div>
       </form>
   </div>
 </div>

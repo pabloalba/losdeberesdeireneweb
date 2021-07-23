@@ -78,9 +78,12 @@
 {% endblock %}
 
 {% block outside %}
-<div id="add-folder-container" onclick="document.getElementById('add-folder-container').style.display='none'">
-  <div id="add-folder-modal" onclick="event.stopPropagation();">
-       <h2>Añadir carpeta</h2>
+<div id="add-folder-container" class="modal-container" onclick="document.getElementById('add-folder-container').style.display='none'">
+  <div id="add-folder-modal" class="modal-content" onclick="event.stopPropagation();">
+       <div class="close">
+          <img src ="{% static 'img/close.png' %}" onclick="document.getElementById('add-folder-container').style.display='none'"/>
+       </div>
+       <div class="title">Añadir carpeta</div>
        <form class="main-form" method="POST" action="{% url 'add_folder'%}">
          {% csrf_token %}
          <input type="hidden" name="parent_folder"  value="{{parent_folder.id}}">
@@ -94,11 +97,13 @@
            <input type="hidden" id="id_folder_icon" name="folder_icon"  value="{% static 'img/folder.png' %}">
            <div class="icon-container">
              <span><img class="arrow" src="{% static 'img/left.png' %}" onclick="prev_icon()"/></span>
-             <span><img id='folder_icon' class="icon" src="" /></span>
+             <span><img id='folder_icon_left' class="icon" src="" /></span>
+             <span><img id='folder_icon' class="icon selected" src="" /></span>
+             <span><img id='folder_icon_right' class="icon" src="" /></span>
              <span><img class="arrow" src="{% static 'img/right.png' %}" onclick="next_icon()" /></span>
            </div>
          </div>
-         <div>
+         <div class="buttons">
           <button type="submit" class="button">
             <img src="{% static 'img/settings.svg' %}" alt="" />
             Añadir
@@ -108,21 +113,33 @@
   </div>
 </div>
 
-<div id="add-page-container" onclick="document.getElementById('add-page-container').style.display='none'">
-  <div id="add-page-modal" onclick="event.stopPropagation();">
-       <h2>Añadir ficha</h2>
+<div id="add-page-container" class="modal-container" onclick="document.getElementById('add-page-container').style.display='none'">
+  <div id="add-page-modal" class="modal-content"  onclick="event.stopPropagation();">
+      <div class="close">
+          <img src ="{% static 'img/close.png' %}" onclick="document.getElementById('add-page-container').style.display='none'"/>
+      </div>
+       <div class="title">Añadir ficha</div>
        <form class="main-form" method="POST" action="{% url 'add_page'%}" enctype="multipart/form-data">
          {% csrf_token %}
          <input type="hidden" name="parent_folder"  value="{{parent_folder.id}}">
          <div class="entry">
-           <label for="id_image">Imagen de la ficha</label>
-           <input type="file" id="id_image" name="image" accept="image/png, image/jpeg" required="" />
+           <label for="id_page_name">Nombre de la ficha</label>
+           <input type="text" name="name" maxlength="150" autofocus="" required=""
+                 id="id_page_name" placeholder="Introducir nombre">
          </div>
-         <div>
-          <button type="submit" class="button">
-            <img src="{% static 'img/settings.svg' %}" alt="" />
-            Añadir
-          </button>
+         <div class="entry page">
+           <label for="id_image" class="custom-file-upload">
+             <div>
+              <img id='preview' class="preview" src="" />
+             </div>
+             Imagen de la ficha
+           </label>
+           <input type="file" id="id_image" name="image" accept="image/png, image/jpeg" required="" onchange="update_preview(this)"/>
+         <div class="buttons">
+           <button type="submit" class="button">
+             <img src="{% static 'img/settings.svg' %}" alt="" />
+             Añadir
+           </button>
          </div>
       </form>
   </div>
@@ -145,6 +162,20 @@
     '{% static 'img/subjects/religión.png'%}',
     '{% static 'img/subjects/sport.png'%}'
   ];
+
+
+  function update_preview(file){
+    const [data] = file.files
+    if (data) {
+      document.getElementById('preview').src = URL.createObjectURL(data);
+      if (document.getElementById('id_page_name').value == ''){
+        var name = data.name.split('.').slice(0, -1).join('.');
+        document.getElementById('id_page_name').value = name;
+      }
+    }
+  }
+
+
   function next_icon(){
     current_icon = (current_icon+1) % icons.length;
     show_icon();
@@ -159,6 +190,16 @@
   function show_icon(){
     document.getElementById('folder_icon').src=icons[current_icon];
     document.getElementById('id_folder_icon').value=icons[current_icon];
+
+
+    var left_icon = current_icon - 1;
+    if (left_icon < 0){
+      left_icon = icons.length - 1;
+    }
+    document.getElementById('folder_icon_left').src=icons[left_icon];
+
+    var right_icon = (current_icon+1) % icons.length;
+    document.getElementById('folder_icon_right').src=icons[right_icon];
   }
   show_icon();
 </script>
