@@ -2,86 +2,100 @@
 
 {% load static %}
 
-{% block main-class %}
-  {% if back_folder %}browser-folder{% else %}browser-root{% endif %}
-{% endblock %}
+
 
 {% block content %}
-  {% if back_folder or user.profile.is_teacher %}
-    <div class="header folder">
-      <img class="header-logo" src="{% static 'img/logo-deberes-de-irene.svg' %}" />
-      <div class="header-title">
-        {% if user.profile.is_teacher %}
-        [{{ parent_folder.owner.profile.full_name }}]&nbsp;
-        {% endif %}
-        {% if back_folder %}
-        {{ parent_folder.name }}
-        {% endif %}
-      </div>
-      {% if back_folder %}
-        <a class="header-button" href="{% url 'browser' back_folder %}">Atrás</a>
-      {% else %}
-        <a class="header-button" href="{% url 'teacher' %}">Atrás</a>
-      {% endif %}
-    </div>
-  {% else %}
-    <div class="header root">
-        <img class="header-logo" src="{% static 'img/logo-deberes-de-irene.svg' %}" />
-    </div>
-  {% endif %}
-
-<div class="special-button-folder-container">
-    <button class="button" onclick="document.getElementById('add-folder-container').style.display='block'">
-      <img src="{% static 'img/folder_icon.png' %}" alt="" />
-      Añadir carpeta
-    </button>
-  <button class="button" onclick="document.getElementById('add-page-container').style.display='block'">
-      <img src="{% static 'img/document_icon.png' %}" alt="" />
-      Añadir ficha
-    </button>
+<div class="header browser">
+  <div class="header-left">
+    <img class="header-logo" src="{% static 'img/logo-deberes-de-irene.svg' %}" />
+  </div>
+  <div class="header-center header-title">
+    {% if user.profile.is_teacher %}
+    <div class="student_name">{{ parent_folder.owner.profile.full_name }}</div>
+    {% else %}
+    <div class="student_name">{{ user.profile.full_name }}</div>
+    {% endif %}
+    {% if back_folder %}
+    {{ parent_folder.name }}
+    {% endif %}
+  </div>
+  <div class="header-right">
+    {% if back_folder %}
+        <a class="simple-button" href="{% url 'browser' back_folder %}">Atrás</a>
+    {% else %}
+    {% if user.profile.is_teacher %}
+        <a class="simple-button" href="{% url 'teacher' %}">Atrás</a>
+    {% endif %}
+    {% endif %}
+  </div>
 </div>
 
 
-  <div class="page-grid {% if big_grid %}big{% endif %}">
-    {% if folders.count == 0 and pages.count == 0 %}
-      <div class="empty-block">
-        <img src="{% static 'img/nocontent.png' %}" />
-        <p>Aquí no hay deberes todavía</p>
-      </div>
-    {% endif %}
-    {% for folder in folders %}
-      <div class="grid-item folder">
-        <a href="{% url 'browser' folder.id %}"><img src="{% if folder.icon %}{{ folder.icon }}{% else %}{% static 'img/folder.png' %}{% endif %}" /></a>
-        <span><a href="{% url 'browser' folder.id %}">{{ folder.name }}</a></span>
-      </div>
-    {% endfor %}
-    {% for page in pages %}
-      <div class="grid-item page">
-        <a href="{% url 'page' page.id %}"><img src="{{ page.image.url }}" /></a>
-        <span><a href="{% url 'page' page.id %}">{{ page.name }}</a></span>
-      </div>
-    {% endfor %}
-    {% for empty in empties %}
-      <div class="grid-item empty">
-      </div>
-    {% endfor %}
+<div class="browser-content">
 
-    {% if not user.profile.is_teacher %}
+  <div class="browser-content-left">
     <div class="special-button-folder-container">
-      <a class="button" href="{% url 'student' %}">
+      {% if not user.profile.is_teacher %}
+      <button class="special-button img-only" onclick="document.location='{% url 'student' %}'">
         <img src="{% static 'img/settings.svg' %}" alt="" />
-        Configuración
-      </a>
-      <a class="button" href="{% url 'logout' %}">
-        <img src="{% static 'img/exit_icon.png' %}" alt="" />
-        Salir
-      </a>
+      </button>
+      {% endif %}
     </div>
-    {% endif %}
+    <img class="paginator" id="prev_page" src="{% static 'img/prev_page.png' %}" onclick="prev_page()"/>
   </div>
+
+  <div class="browser-content-center page-grid {% if big_grid %}big{% endif %}  {% if medium_grid %}medium{% endif %}">
+      {% if folders.count == 0 and pages.count == 0 %}
+        <div class="empty-block">
+          <img src="{% static 'img/nocontent.png' %}" />
+          <p>Aquí no hay deberes todavía</p>
+        </div>
+      {% endif %}
+      {% for folder in folders %}
+        <div class="grid-item folder" onclick="window.location='{% url 'browser' folder.id %}'">
+            <div class="img-container">
+                <img src="{% if folder.icon %}{{ folder.icon }}{% else %}{% static 'img/folder.png' %}{% endif %}" />
+            </div>
+          <div class="text-container">
+              <div>
+                {{ folder.name }}
+              </div>
+          </div>
+        </div>
+      {% endfor %}
+      {% for page in pages %}
+        <div class="grid-item page" onclick="window.location='{% url 'page' page.id %}'">
+            <div class="img-container">
+                <img src="{{ page.image.url }}" />
+            </div>
+
+
+          <div class="text-container">
+              <div>
+                {{ page.name }}
+              </div>
+          </div>
+        </div>
+      {% endfor %}
+    </div>
+  <div class="browser-content-right">
+    <div class="special-button-folder-container">
+        <button class="special-button img-only" onclick="document.getElementById('add-folder-container').style.display='block'">
+          <img src="{% static 'img/folder_icon.png' %}" alt="" />
+        </button>
+        <button class="special-button img-only" onclick="open_add_document()">
+          <img src="{% static 'img/document_icon.png' %}" alt="" />
+        </button>
+
+
+    </div>
+    <img class="paginator" id="next_page" src="{% static 'img/next_page.png' %}" onclick="next_page()"/>
+  </div>
+</div>
 {% endblock %}
 
 {% block outside %}
+
 <div id="add-folder-container" class="modal-container" onclick="document.getElementById('add-folder-container').style.display='none'">
   <div id="add-folder-modal" class="modal-content" onclick="event.stopPropagation();">
        <div class="close">
@@ -108,7 +122,7 @@
            </div>
          </div>
          <div class="buttons">
-          <button type="submit" class="button">
+          <button type="submit" class="special-button">
             <img src="{% static 'img/folder_icon.png' %}" alt="" />
             Añadir
           </button>
@@ -134,14 +148,14 @@
          <div class="entry page">
            <label for="id_image" class="custom-file-upload">
              <div>
-              <img id='preview' class="preview" src="" />
+              <img id='preview' class="preview" src="{% static 'img/image_add_icon.png' %}" />
              </div>
              Imagen de la ficha
            </label>
            <input type="file" id="id_image" name="image" accept="image/png, image/jpeg" required="" onchange="update_preview(this)"/>
          </div>
          <div class="buttons">
-           <button type="submit" class="button">
+           <button type="submit" class="special-button">
              <img src="{% static 'img/document_icon.png' %}" alt="" />
              Añadir
            </button>
@@ -152,7 +166,12 @@
 
 
 <script>
+  var page = 0;
+  var num_pages = 0;
+  var items_per_page = 8;
+  var items = [];
   var current_icon = 0;
+
   var icons = [
     '{% static 'img/subjects/folder.png'%}',
     '{% static 'img/subjects/ciencias de la naturaleza.png'%}',
@@ -180,11 +199,11 @@
     }
   }
 
-
   function next_icon(){
     current_icon = (current_icon+1) % icons.length;
     show_icon();
   }
+
   function prev_icon(){
     current_icon = current_icon - 1;
     if (current_icon < 0){
@@ -192,6 +211,7 @@
     }
     show_icon();
   }
+
   function show_icon(){
     document.getElementById('folder_icon').src=icons[current_icon];
     document.getElementById('id_folder_icon').value=icons[current_icon];
@@ -206,8 +226,77 @@
     var right_icon = (current_icon+1) % icons.length;
     document.getElementById('folder_icon_right').src=icons[right_icon];
   }
-  show_icon();
+
+  function init_page() {
+    items = document.getElementsByClassName("grid-item");
+    if (items.length > 0){
+      var width = window.innerWidth;
+
+      if (width <= 1300){
+        items_per_page = 6;
+        var height = window.innerHeight;
+        if (height < 700){
+            items_per_page = 3;
+        }
+      }
+      num_pages = Math.ceil(items.length / items_per_page);
+      show_page(0);
+    }
+    show_icon();
+  }
+
+  function show_page(num){
+    if (items.length >0) {
+      var start = page * items_per_page;
+      var end = (page + 1) * items_per_page;
+      var end = (page + 1) * items_per_page;
+      for (var i = 0; i<items.length; i++){
+        if ((i >= start) && (i < end)){
+          items[i].style.display = 'flex';
+        } else {
+          items[i].style.display = 'none';
+        }
+      }
+      if (page > 0){
+        document.getElementById('prev_page').style.visibility='visible';
+      } else {
+        document.getElementById('prev_page').style.visibility='hidden';
+      }
+
+      if (page < num_pages - 1){
+        document.getElementById('next_page').style.visibility='visible';
+      } else {
+        document.getElementById('next_page').style.visibility='hidden';
+      }
+    }
+  }
+
+  function next_page(){
+    if (page < num_pages) {
+      page += 1;
+      show_page();
+    }
+  }
+
+  function prev_page(){
+    if (page > 0) {
+      page -= 1;
+      show_page();
+    }
+  }
+
+  function open_add_document(){
+    document.getElementById('preview').src = '{% static 'img/image_add_icon.png' %}';
+    document.getElementById('id_page_name').value = '';
+    document.getElementById('id_image').value = null;
+
+
+
+    document.getElementById('add-page-container').style.display='block'
+  }
+
+  window.onload = init_page;
+  window.onresize = init_page;
+
 </script>
-
 {% endblock %}
-

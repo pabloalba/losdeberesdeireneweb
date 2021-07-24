@@ -2,27 +2,40 @@
 
 {% load static %}
 
-{% block main-class %}
-  students
-{% endblock %}
 
 {% block content %}
-    <div class="header root">
-        <div></div>
-        <div class="header-title">
-      <img class="header-logo students" src="{% static 'img/logo-deberes-de-irene.svg' %}" />
-            </div>
-      <a class="header-button" href="{% url 'browser' user.profile.root_folder.id %}">Atrás</a>
-    </div>
-    <div class="header students">
-      <div class="tabs-title-container">
-        <div id="tab-selector-teachers" class="tabs-title-item" onclick="teachers()">Profesores</div>
-        <div id="tab-selector-settings" class="tabs-title-item"  onclick="settings()">Letra</div>
+
+    <div class="header">
+      <div class="header-left">
+
+      </div>
+      <div class="header-center header-title">
+        <img class="header-logo" src="{% static 'img/logo-deberes-de-irene.svg' %}" />
+      </div>
+      <div class="header-right">
+
       </div>
     </div>
+
+    <div class="header teacher">
+      <div class="header-left">
+        <div class="tabs-title-container">
+            <div id="tab-selector-teachers" class="tabs-title-item selected" onclick="teachers()">Profesores</div>
+            <div id="tab-selector-settings" class="tabs-title-item"  onclick="settings()">Letra</div>
+        </div>
+      </div>
+      <div class="header-center header-title">
+      </div>
+      <div class="header-right code">
+        <a class="simple-button" href="{% url 'browser' user.profile.root_folder.id %}">Atrás</a>
+      </div>
+    </div>
+
+
+
     <div id="teachers-tab">
     <div class="special-button-teacher-container">
-      <button class="special-button-teacher" onclick="document.getElementById('add-teacher-container').style.display='block'">
+      <button class="special-button" onclick="document.getElementById('add-teacher-container').style.display='block'">
           <img src="{% static 'img/person_icon.png' %}" alt="" />
           Añadir
         </button>
@@ -61,14 +74,11 @@
         <form class="main-form" method="POST" action="{% url 'save_settings' %}">
          {% csrf_token %}
         <input type="hidden" name="selected_font" id="id_selected_font" />
-         <button type="submit" class="special-button-teacher">
+         <button type="submit" class="special-button">
           <img src="{% static 'img/save_icon.png' %}" alt="" />
           Guardar
         </button>
       </form>
-
-
-
     </div>
 </div>
 {% endblock %}
@@ -88,7 +98,7 @@
                  id="id_code" placeholder="Ej: j5t2r">
         </div>
         <div class="buttons">
-            <button type="submit" class="special-button-teacher">
+            <button type="submit" class="special-button">
               <img src="{% static 'img/person_icon.png' %}" alt="" />
               Añadir
             </button>

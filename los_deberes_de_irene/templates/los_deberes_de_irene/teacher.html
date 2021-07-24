@@ -2,25 +2,34 @@
 
 {% load static %}
 
-{% block main-class %}
-  students
-{% endblock %}
 
 {% block content %}
-  <div class="header root">
-      <div></div>
-      <div class="header-title">
-        <img class="header-logo students" src="{% static 'img/logo-deberes-de-irene.svg' %}" />
-      </div>
+
+<div class="header">
+  <div class="header-left">
+    
   </div>
-  <div class="header students">
+  <div class="header-center header-title">
+    <img class="header-logo" src="{% static 'img/logo-deberes-de-irene.svg' %}" />
+  </div>
+  <div class="header-right">
+
+  </div>
+</div>
+
+<div class="header teacher">
+  <div class="header-left">
     <div class="tabs-title-container">
       <div class="tabs-title-item selected">Alumnos</div>
-      <div class="tabs-title-item code">
-          Tu código: {{ code }}
-        </div>
+      <div class="tabs-title-item">Tus datos</div>
     </div>
   </div>
+  <div class="header-center header-title">
+  </div>
+  <div class="header-right code">
+    Tu código: {{ code }}
+  </div>
+</div>
 
 
 <table class="students-grid">

@@ -1,18 +1,48 @@
-.empty-block {
-  align-items: center;
-  color: #CCCCCC;
-  display: flex;
-  flex-direction: column;
-  font-size: 48px;
+.student_name {
+    width: 100%;
+    text-align: center;
+    font-size: 16px;
+    color: gray;
 }
 
+.browser-content {
+    width: 100%;
+    flex-grow: 1;
+    display: flex;
+    justify-content: space-between;
+    align-items: end;
+}
+
+.browser-content-left {
+    margin-left: 5px;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    width: 86px;
+}
+
+.browser-content-right {
+    margin-right: 5px;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    width: 86px;
+}
+
+
 .page-grid {
-  align-items: center;
-  display: flex;
-  flex-flow: row wrap;
-  flex-grow: 1;
-  justify-content: space-evenly;
-  width: 80%;
+    width: 100%;
+    height: 100%;
+
+    display: flex;
+    flex-flow: row wrap;
+    justify-content: space-around;
+
+    padding: 0;
+    margin: 0;
+    align-items: center;
 }
 
 .page-grid .grid-item {
@@ -22,57 +52,98 @@
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  height: 280px;
-  width: 280px;
-  margin-top: 50px;
-  margin-left: 40px;
+  width: 22%;
+  aspect-ratio: 1 / 1;
+  margin-top: 30px;
+  display: none;
+  cursor: pointer;
 }
 
-
-
 .page-grid.big .grid-item {
-  width: 400px;
-  height: 400px;
+  width: 35%;
+}
+
+.page-grid.medium .grid-item {
+  width: 30%;
 }
 
 .page-grid .grid-item.folder {
   background-color: #54C6EB;
+  color: #FFFFFF;
 }
 
 .page-grid .grid-item.page {
   background-color: #FFFFFF;
+  color: #000000;
   border: 5px solid #54C6EB;
   overflow: hidden;
   text-align: center;
 }
 
-.page-grid .grid-item.empty {
-  box-shadow: 4px 4px 4px #FFFFFF;
-}
-
 .page-grid .grid-item img {
-  height: 175px;
+  max-width:100%;
+  max-height:100%;
+  margin: auto;
 }
 
-.page-grid .grid-item span {
-  margin-top: 25px;
+.page-grid .grid-item .img-container {
+    width: 80%;
+    height: 80%;
+    text-align: center;
+    display: flex;
+
+}
+.page-grid .grid-item .text-container {
   text-align: center;
-}
-
-.page-grid .grid-item span a {
+  width: 100%;
+  height: 20%;
   font-size: 30px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  display: flex;
 }
 
-.page-grid .grid-item.folder span a {
-  color: #FFFFFF;
+.page-grid .grid-item .text-container div {
+    margin: auto;
+    overflow: hidden;
+    text-overflow: ellipsis;
 }
 
-.page-grid .grid-item.page span a {
-  color: #000000;
+
+.paginator {
+    visibility: hidden;
+    cursor: pointer;
+    margin-bottom: 10px;
 }
 
-.code {
-    font-weight: bold;
+.special-button-folder-container {
+    width: 100%;
+    text-align: center;
+}
+
+.special-button-folder-container .special-button{
+    margin-top: 20px;
+}
+
+.custom-file-upload {
+    border: 1px solid #ccc;
+    display: inline-block;
+    padding: 6px 12px;
+    cursor: pointer;
+}
+
+.preview {
+    height: 250px;
+    margin-bottom: 10px;
+}
+
+.entry.page {
+    text-align:center;
+}
+
+.entry.page input{
+    display: none;
 }
 
 
@@ -96,20 +167,15 @@
     cursor: pointer;
 }
 
-.special-button-folder-container {
-    width: 100%;
-    text-align: center;
-}
 
-.special-button-folder-container .button:not(:first-child) {
-  margin-left: 32px;
-}
 
-.preview {
-    height: 250px;
-    margin-bottom: 10px;
-}
 
-.entry.page {
-    text-align:center;
+@media screen and (max-width: 1300px) {
+  .page-grid .grid-item {
+    width: 30%;
+  }
+
+  .page-grid .grid-item {
+    font-size: 25px;
+  }
 }

@@ -1,11 +1,73 @@
-.students-grid {
-  width: 100%;
-  text-align: left;
-  border-collapse: collapse;
-  margin-top: 30px;
-  color: #4C485A;
-  font-size: 14px;
+.header.teacher {
+    border-bottom: 5px solid #54C6EB;
 }
+
+.header.teacher .tabs-title-container{
+    height: 46px;
+    margin-top: 13px;
+}
+
+.header.teacher .tabs-title-item {
+    display: inline-block;
+    width: 200px;
+    height: 100%;
+    border-bottom: 5px solid #F3FCFF;
+    text-align: center;
+    color: #54C6EB;
+    font-size: 18px;
+    line-height: 55px;
+    cursor: pointer;
+}
+
+.header.teacher .tabs-title-item.selected{
+    border-bottom: 5px solid #D0EFF9;
+}
+
+.students-grid {
+    width: 100%;
+    text-align: left;
+    border-collapse: collapse;
+    margin-top: 30px;
+    color: #4C485A;
+    font-size: 14px;
+}
+
+.students-grid tr.student{
+    border-bottom: 1px solid #D0EFF9;
+    height: 50px;
+    cursor: pointer;
+}
+
+.students-grid tr.student:hover, .students-grid tr.teacher:hover{
+  background-color: #D0EFF9;
+}
+
+.students-grid tr.teacher{
+    border-bottom: 1px solid #D0EFF9;
+    height: 50px;
+}
+
+.student-number{
+      width: 188px;
+      text-align: center;
+}
+
+.special-button-teacher-container{
+    width: 100%;
+    text-align: right;
+}
+
+.special-button-teacher-container .special-button{
+    margin-right: 35px;
+    padding: 10px 7px;
+    box-shadow: 0px 0px 0px rgba(0, 155, 202, 0.5);
+}
+
+.special-button-teacher-container .special-button img{
+    width: 20px;
+    height: 20px;
+}
+
 
 .students-grid tr.student{
   border-bottom: 1px solid #D0EFF9;
@@ -22,33 +84,6 @@
   height: 50px;
 }
 
-.student-number{
-    width: 188px;
-    text-align: center;
-}
-
-.special-button-teacher-container{
-    width: 100%;
-    text-align: right;
-}
-
-.special-button-teacher {
-  background-color: #54C6EB;
-  border-radius: 10px;
-  border-width: 0;
-  color: white;
-  font-size: 24px;
-  font-weight: 400;
-  padding: 10px 17px;
-  margin-top: 5px;
-  cursor: pointer;
-}
-.special-button-teacher img {
-  height: 30px;
-  padding-right: 15px;
-  vertical-align: middle;
-  width: 30px;
-}
 
 #teachers-tab, #settings-tab{
     width: 100%;
@@ -79,7 +114,7 @@
 }
 
 .save-button-container{
-    width: 100%;
+    width: 95%;
 }
 
 .save-button-container form{

@@ -46,20 +46,6 @@
     </div>
   </div>
 
-  <div class="header page">
-    <img class="header-logo" src="{% static 'img/logo-deberes-de-irene.svg' %}" />
-
-    <div class="header-title">
-      {% if user.profile.is_teacher %}
-        [{{ page.owner.username }}]&nbsp;
-      {% endif %}
-        {{ page.name }}
-    </div>
-    <a class="header-button" href="{% url 'browser' back_folder %}">
-      Volver
-    </a>
-  </div>
-
   <div id="page-viewport">
 
     <input id="label-input" type="text" data-font-name="{{ user.profile.selected_font }}"></input>
