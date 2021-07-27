@@ -5,7 +5,9 @@
 {% block main-class %}home{% endblock %}
 
 {% block content %}
-  <h1 class="home-title small"><span>Los deberes de Irene</span></h1>
+<div class="login-container">
+  <div class="login-content register">
+    <img class="login-logo"  src="{% static 'img/logo-deberes-de-irene.svg' %}" />
 
   <form class="main-form" method="POST">
     {% csrf_token %}
@@ -53,12 +55,15 @@
       </ul>
     {% endif %}
 
-    <button type="submit" class="button">
+    <button type="submit" class="special-button register">
       <img src="{% static 'img/save_icon.png' %}" alt="" />
       Guardar
     </button>
+    <label>¿Ya tienes cuenta?  <a href="{% url 'login' %}">Entra</a></label>
   </form>
 
-  <label>¿Ya tienes cuenta?  <a href="{% url 'login' %}">Entra</a></label>
+
+  </div>
+</div>
 {% endblock %}
 

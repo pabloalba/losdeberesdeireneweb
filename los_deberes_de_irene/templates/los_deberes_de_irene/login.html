@@ -5,36 +5,41 @@
 {% block main-class %}home{% endblock %}
 
 {% block content %}
-  <h1 class="home-title"><span>Los deberes de Irene</span></h1>
+<div class="login-container">
+  <div class="login-content">
+    <img class="login-logo"  src="{% static 'img/logo-deberes-de-irene.svg' %}" />
 
-  <form class="main-form" method="POST">
-    {% csrf_token %}
-    <div class="entry">
-      <label for="id_username">Usuario</label>
-      <input type="text" name="username" maxlength="150" autofocus="" required=""
-             id="id_username" placeholder="Introducir nombre de usuario">
-    </div>
+    <form class="main-form" method="POST">
+      {% csrf_token %}
+      <div class="entry">
+        <label for="id_username">Usuario</label>
+        <input type="text" name="username" maxlength="150" autofocus="" required=""
+               id="id_username" placeholder="Introducir nombre de usuario">
+      </div>
 
-    <div class="entry">
-      <label for="id_password">Contraseña</label>
-      <input type="password" name="password" autocomplete="password" required=""
-             id="id_password" placeholder="De al menos 8 caracteres">
-    </div>
+      <div class="entry">
+        <label for="id_password">Contraseña</label>
+        <input type="password" name="password" autocomplete="password" required=""
+               id="id_password" placeholder="De al menos 8 caracteres">
+      </div>
 
-    {% if messages %}
-      <ul class="messages">
-      {% for message in messages %}
-        <li {% if message.tags %} class="{{ message.tags }}"{% endif %}>{{ message }}</li>
-      {% endfor %}
-      </ul>
-    {% endif %}
+      {% if messages %}
+        <ul class="messages">
+        {% for message in messages %}
+          <li {% if message.tags %} class="{{ message.tags }}"{% endif %}>{{ message }}</li>
+        {% endfor %}
+        </ul>
+      {% endif %}
 
-    <button type="submit" class="button login">
-      <img src="{% static 'img/key_icon.png' %}" alt="" />
-      Entrar
-    </button>
-  </form>
+      <button type="submit" class="special-button login">
+        <img src="{% static 'img/key_icon.png' %}" alt="" />
+        Entrar
+      </button>
+      <label>¿Todavía no tienes cuenta? <a href="{% url 'register' %}">Registrate</a></label>
+    </form>
 
-  <label>¿Todavía no tienes cuenta? <a href="{% url 'register' %}">Registrate</a></label>
+
+  </div>
+</div>
 {% endblock %}
 

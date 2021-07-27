@@ -34,6 +34,10 @@ class PageFolder(models.Model):
     def __str__(self):
         return self.name
 
+    @staticmethod
+    def is_folder():
+        return True
+
     class Meta:
         verbose_name = "Carpeta de páginas"
         verbose_name_plural = "Carpetas de páginas"
@@ -69,6 +73,10 @@ class Page(models.Model):
 
     def __str__(self):
         return self.name
+
+    @staticmethod
+    def is_folder():
+        return False
 
     class Meta:
         verbose_name = "Página"

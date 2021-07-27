@@ -1,7 +1,8 @@
 #page-viewport {
   height: 100%;
-  width: 100%;
+  width: calc(100% - 60px);
   position: relative;
+  left: 30px;
 }
 
 .sidebar {
@@ -16,6 +17,7 @@
   position: absolute;
   top: 0;
   width: 115px;
+  z-index: 100;
 }
 
 .sidebar .heading {
