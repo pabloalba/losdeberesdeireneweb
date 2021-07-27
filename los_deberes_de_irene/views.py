@@ -107,7 +107,7 @@ class BrowserView(generic.TemplateView):
                 num += 1
 
         context["big_grid"] = (len(folders) + len(pages) <= 2)
-        context["medium_grid"] = (len(folders) + len(pages) > 2) and (len(folders) + len(pages) <= 4)
+        context["medium_grid"] = (len(folders) + len(pages) > 2) and (len(folders) + len(pages) <= 6)
         context["parent_folder"] = self.page_folder
         context["back_folder"] = back_folder
         context["empties"] = empties

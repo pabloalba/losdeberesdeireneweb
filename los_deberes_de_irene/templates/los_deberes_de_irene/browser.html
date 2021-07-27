@@ -84,7 +84,7 @@
     </div>
   <div class="browser-content-right">
     <div class="special-button-folder-container">
-        <button class="special-button img-only" onclick="document.getElementById('add-folder-container').style.display='block'">
+        <button class="special-button img-only" onclick="open_add_folder()">
           <img src="{% static 'img/folder_icon.png' %}" alt="" />
         </button>
         <button class="special-button img-only" onclick="open_add_document()">
@@ -119,9 +119,9 @@
            <input type="hidden" id="id_folder_icon" name="folder_icon"  value="{% static 'img/folder.png' %}">
            <div class="icon-container">
              <span><img class="arrow" src="{% static 'img/left.png' %}" onclick="prev_icon()"/></span>
-             <span><img id='folder_icon_left' class="icon" src="" /></span>
+             <span><img id='folder_icon_left' class="icon" src=""onclick="prev_icon()" /></span>
              <span><img id='folder_icon' class="icon selected" src="" /></span>
-             <span><img id='folder_icon_right' class="icon" src="" /></span>
+             <span><img id='folder_icon_right' class="icon" src="" onclick="next_icon()"/></span>
              <span><img class="arrow" src="{% static 'img/right.png' %}" onclick="next_icon()" /></span>
            </div>
          </div>
@@ -177,7 +177,6 @@
   var current_icon = 0;
 
   var icons = [
-    '{% static 'img/subjects/folder.png'%}',
     '{% static 'img/subjects/ciencias de la naturaleza.png'%}',
     '{% static 'img/subjects/ciencias sociales.png'%}',
     '{% static 'img/subjects/clase de idiomas.png'%}',
@@ -188,7 +187,13 @@
     '{% static 'img/subjects/lenguaje.png'%}',
     '{% static 'img/subjects/matematicas.png'%}',
     '{% static 'img/subjects/religión.png'%}',
-    '{% static 'img/subjects/sport.png'%}'
+    '{% static 'img/subjects/sport.png'%}',
+    '{% static 'img/subjects/folder.png'%}',
+    '{% static 'img/subjects/folder2.png'%}',
+    '{% static 'img/subjects/folder3.png'%}',
+    '{% static 'img/subjects/folder4.png'%}',
+    '{% static 'img/subjects/folder5.png'%}',
+    '{% static 'img/subjects/folder6.png'%}'
   ];
 
 
@@ -238,10 +243,6 @@
 
       if (width <= 1300){
         items_per_page = 6;
-        var height = window.innerHeight;
-        if (height < 700){
-            items_per_page = 3;
-        }
       }
       num_pages = Math.ceil(items.length / items_per_page);
       show_page(0);
@@ -293,10 +294,15 @@
     document.getElementById('preview').src = '{% static 'img/image_add_icon.png' %}';
     document.getElementById('id_page_name').value = '';
     document.getElementById('id_image').value = null;
+    document.getElementById('add-page-container').style.display='flex'
+  }
 
-
-
-    document.getElementById('add-page-container').style.display='block'
+  function open_add_folder(){
+    document.getElementById('preview').src = '{% static 'img/image_add_icon.png' %}';
+    document.getElementById('id_folder_name').value = '';
+    current_icon = 0;
+    show_icon();
+    document.getElementById('add-folder-container').style.display='flex'
   }
 
   window.onload = init_page;

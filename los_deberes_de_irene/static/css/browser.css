@@ -64,7 +64,7 @@
 }
 
 .page-grid.medium .grid-item {
-  width: 30%;
+  width: 26%;
 }
 
 .page-grid .grid-item.folder {
@@ -167,7 +167,10 @@
     cursor: pointer;
 }
 
-
+#teachers-tab .empty-block {
+    text-align: center;
+    margin-top: 100px;
+}
 
 
 @media screen and (max-width: 1300px) {

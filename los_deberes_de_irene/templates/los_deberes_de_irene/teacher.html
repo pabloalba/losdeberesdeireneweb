@@ -32,28 +32,35 @@
 </div>
 
 <div id="teachers-tab">
-  <table class="students-grid">
-      <tr>
-        <th class="student-number"></th>
-        <th class="student-name">Nombre</th>
-        <th class="student-actions"></th>
-      </tr>
-    {% for student in students_list %}
-      <tr class="student" onclick="document.location='{% url 'browser' student.profile.root_folder.id %}'">
-        <td class="student-number">
-          {{ forloop.counter }}.
-        </td>
-        <td>
-          {{ student.profile.full_name }}
-        </td>
-        <td>
-          <a href="{% url 'delete_student_teacher'%}?student={{student.id}}" onclick="event.stopPropagation();return confirm('¿Estás seguro?')">
-              <img src="{% static 'img/delete.png' %}"/>
-            </a>
-        </td>
-      </tr>
-      {% endfor %}
-  </table>
+      {% if not students_list %}
+        <div class="empty-block">
+          <img src="{% static 'img/nocontent.png' %}" />
+          <p>Aquí no hay profesores todavía</p>
+        </div>
+    {% else %}
+      <table class="students-grid">
+          <tr>
+            <th class="student-number"></th>
+            <th class="student-name">Nombre</th>
+            <th class="student-actions"></th>
+          </tr>
+        {% for student in students_list %}
+          <tr class="student" onclick="document.location='{% url 'browser' student.profile.root_folder.id %}'">
+            <td class="student-number">
+              {{ forloop.counter }}.
+            </td>
+            <td>
+              {{ student.profile.full_name }}
+            </td>
+            <td>
+              <a href="{% url 'delete_student_teacher'%}?student={{student.id}}" onclick="event.stopPropagation();return confirm('¿Estás seguro?')">
+                  <img src="{% static 'img/delete.png' %}"/>
+                </a>
+            </td>
+          </tr>
+          {% endfor %}
+      </table>
+  {% endif %}
 </div>
 
 <div id="profile-tab">

@@ -115,16 +115,15 @@ a {
     left:0;
     background-color: rgba(0,0,0,0.5);
     display: none;
+    flex-direction: column;
 }
 
 
 .modal-content {
     background:#D0EFF9;
-    margin: 0 auto;
+    margin: auto;
     width:700px;
-    position:relative;
     z-index:41;
-    top: 25%;
     padding:30px;
     color: #4C485A;
     font-size: 18px;
@@ -200,7 +199,6 @@ a {
   padding: 15px 20px;
   width: 100%;
 }
-
 
 @media screen and (max-width: 1300px) {
     .modal-content {

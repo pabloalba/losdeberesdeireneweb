@@ -41,6 +41,13 @@
         </button>
     </div>
 
+    {% if not teachers_list %}
+        <div class="empty-block">
+          <img src="{% static 'img/nocontent.png' %}" />
+          <p>Aquí no hay profesores todavía</p>
+        </div>
+    {% else %}
+
     <table class="students-grid">
         <tr>
           <th class="student-number"></th>
@@ -63,6 +70,7 @@
         </tr>
         {% endfor %}
     </table>
+    {% endif %}
 </div>
 <div id="settings-tab">
     <div>Elige el tipo de letra:</div>
