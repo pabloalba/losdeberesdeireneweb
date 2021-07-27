@@ -91,12 +91,7 @@
 </div>
 
 <div id="profile-tab">
-    <div class="line"></div>
-    <a class="special-button" href="{% url 'logout' %}">
-      <img src="{% static 'img/exit_icon.png' %}" alt="" />
-      Cerrar sesión
-    </a>
-
+    {% include "los_deberes_de_irene/profile.html" %}
 </div>
 {% endblock %}
 
@@ -165,7 +160,11 @@
     {% if "settings" == tab %}
     settings();
     {% else %}
-    teachers();
+    {% if "profile" == tab %}
+    profile();
+    {% else %}
+    teachers()
+    {% endif %}
     {% endif %}
 </script>
 {% endblock %}

@@ -169,6 +169,9 @@ class TeacherView(generic.TemplateView):
         context["code"] = profile.code
         context["students_list"] = students
 
+        context["tab"] = self.request.session.get("tab")
+        self.request.session["tab"] = None
+
         return context
 
 
@@ -316,7 +319,23 @@ class SettingsView(generic.View):
             self.request.user.profile.save()
 
         request.session["tab"] = "settings"
+        if self.request.profile.is_teacher:
+            return redirect("teacher")
+        else:
+            return redirect("student")
+
+
+class UpdateProfileView(generic.View):
+
+    def post(self, request):
+        request.user.profile.full_name = request.POST.get("full_name")
+        request.user.email = request.POST.get("email")
+        request.user.username = request.POST.get("username")
+        request.user.save()
+        request.user.profile.save()
+        request.session["tab"] = "profile"
         return redirect("student")
+
 
 def _get_valid_folder(user, folder_id):
     page_folder = PageFolder.objects.filter(pk=folder_id).first()

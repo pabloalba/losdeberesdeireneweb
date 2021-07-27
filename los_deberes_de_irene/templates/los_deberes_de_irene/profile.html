@@ -1,0 +1,45 @@
+{% load static %}
+<form class="main-form" method="POST" action="{% url 'update_profile' %}">
+    {% csrf_token %}
+    <div class="entry">
+      <label for="id_full_name">Nombre y apellidos</label>
+      <input type="text" name="full_name" maxlength="256" required="" autofocus=""
+             id="id_full_name" placeholder="Introducir nombre y apellidos"
+             value="{{user.profile.full_name}}">
+    </div>
+
+    <div class="entry">
+      <label for="id_email">Email</label>
+      <input type="email" name="email" required=""
+             id="id_email" placeholder="Introducir email"
+             value="{{user.email}}">
+    </div>
+    <div class="entry">
+      <label for="id_username">Usuario</label>
+      <input type="text" name="username" maxlength="150" required=""
+             id="id_username" placeholder="Introducir nombre de usuario"
+             value="{{user.username}}">
+    </div>
+
+    {% if messages %}
+      <ul class="messages">
+      {% for message in messages %}
+        <li {% if message.tags %} class="{{ message.tags }}"{% endif %}>{{ message }}</li>
+      {% endfor %}
+      </ul>
+    {% endif %}
+
+    <div class="buttons-container">
+
+        <button type="submit" class="special-button">
+          <img src="{% static 'img/save_icon.png' %}" alt="" />
+          Guardar
+        </button>
+    </div>
+
+  </form>
+<div class="line"></div>
+<a class="special-button" href="{% url 'logout' %}">
+  <img src="{% static 'img/exit_icon.png' %}" alt="" />
+  Cerrar sesión
+</a>
