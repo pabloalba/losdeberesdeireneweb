@@ -20,8 +20,8 @@
 <div class="header teacher">
   <div class="header-left">
     <div class="tabs-title-container">
-      <div class="tabs-title-item selected">Alumnos</div>
-      <div class="tabs-title-item">Tus datos</div>
+      <div id="tab-selector-teachers" class="tabs-title-item selected" onclick="students()">Alumnos</div>
+      <div id="tab-selector-profile" class="tabs-title-item"  onclick="profile()">Tus datos</div>
     </div>
   </div>
   <div class="header-center header-title">
@@ -31,29 +31,57 @@
   </div>
 </div>
 
+<div id="teachers-tab">
+  <table class="students-grid">
+      <tr>
+        <th class="student-number"></th>
+        <th class="student-name">Nombre</th>
+        <th class="student-actions"></th>
+      </tr>
+    {% for student in students_list %}
+      <tr class="student" onclick="document.location='{% url 'browser' student.profile.root_folder.id %}'">
+        <td class="student-number">
+          {{ forloop.counter }}.
+        </td>
+        <td>
+          {{ student.profile.full_name }}
+        </td>
+        <td>
+          <a href="{% url 'delete_student_teacher'%}?student={{student.id}}" onclick="event.stopPropagation();return confirm('¿Estás seguro?')">
+              <img src="{% static 'img/delete.png' %}"/>
+            </a>
+        </td>
+      </tr>
+      {% endfor %}
+  </table>
+</div>
 
-<table class="students-grid">
-    <tr>
-      <th class="student-number"></th>
-      <th class="student-name">Nombre</th>
-      <th class="student-actions"></th>
-    </tr>
-  {% for student in students_list %}
-    <tr class="student" onclick="document.location='{% url 'browser' student.profile.root_folder.id %}'">
-      <td class="student-number">
-        {{ forloop.counter }}.
-      </td>
-      <td>
-        {{ student.profile.full_name }}
-      </td>
-      <td>
-        <a href="{% url 'delete_student_teacher'%}?student={{student.id}}" onclick="event.stopPropagation();return confirm('¿Estás seguro?')">
-            <img src="{% static 'img/delete.png' %}"/>
-          </a>
-      </td>
-    </tr>
-    {% endfor %}
-</table>
+<div id="profile-tab">
+    <div class="line"></div>
+    <a class="special-button" href="{% url 'logout' %}">
+      <img src="{% static 'img/exit_icon.png' %}" alt="" />
+      Cerrar sesión
+    </a>
+
+</div>
 
 {% endblock %}
 
+{% block outside %}
+<script>
+  function students(){
+      document.getElementById("teachers-tab").style.display='block';
+      document.getElementById("profile-tab").style.display='none';
+      document.getElementById("tab-selector-teachers").classList.add("selected");
+      document.getElementById("tab-selector-profile").classList.remove("selected");
+  }
+
+  function profile(){
+      document.getElementById("teachers-tab").style.display='none';
+      document.getElementById("profile-tab").style.display='block';
+      document.getElementById("tab-selector-teachers").classList.remove("selected");
+      document.getElementById("tab-selector-profile").classList.add("selected");
+  }
+  students();
+</script>
+{% endblock %}

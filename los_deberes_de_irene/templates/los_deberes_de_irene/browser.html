@@ -17,15 +17,19 @@
     {% endif %}
     {% if back_folder %}
     {{ parent_folder.name }}
+    {% else %}
+    &nbsp;
     {% endif %}
   </div>
   <div class="header-right">
     {% if back_folder %}
         <a class="simple-button" href="{% url 'browser' back_folder %}">Atrás</a>
     {% else %}
-    {% if user.profile.is_teacher %}
-        <a class="simple-button" href="{% url 'teacher' %}">Atrás</a>
-    {% endif %}
+        {% if user.profile.is_teacher %}
+            <a class="simple-button" href="{% url 'teacher' %}">Atrás</a>
+        {% else %}
+            <a class="simple-button" style="visibility:hidden">Atrás</a>
+        {% endif %}
     {% endif %}
   </div>
 </div>

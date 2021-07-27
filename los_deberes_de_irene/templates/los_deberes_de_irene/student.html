@@ -7,13 +7,12 @@
 
     <div class="header">
       <div class="header-left">
-
       </div>
       <div class="header-center header-title">
         <img class="header-logo" src="{% static 'img/logo-deberes-de-irene.svg' %}" />
       </div>
       <div class="header-right">
-
+        <a class="simple-button" href="{% url 'browser' user.profile.root_folder.id %}">Atrás</a>
       </div>
     </div>
 
@@ -22,12 +21,13 @@
         <div class="tabs-title-container">
             <div id="tab-selector-teachers" class="tabs-title-item selected" onclick="teachers()">Profesores</div>
             <div id="tab-selector-settings" class="tabs-title-item"  onclick="settings()">Letra</div>
+            <div id="tab-selector-profile" class="tabs-title-item"  onclick="profile()">Tus datos</div>
         </div>
       </div>
       <div class="header-center header-title">
       </div>
-      <div class="header-right code">
-        <a class="simple-button" href="{% url 'browser' user.profile.root_folder.id %}">Atrás</a>
+      <div class="header-right">
+
       </div>
     </div>
 
@@ -81,6 +81,15 @@
       </form>
     </div>
 </div>
+
+<div id="profile-tab">
+    <div class="line"></div>
+    <a class="special-button" href="{% url 'logout' %}">
+      <img src="{% static 'img/exit_icon.png' %}" alt="" />
+      Cerrar sesión
+    </a>
+
+</div>
 {% endblock %}
 
 {% block outside %}
@@ -110,15 +119,28 @@
     function teachers(){
         document.getElementById("teachers-tab").style.display='block';
         document.getElementById("settings-tab").style.display='none';
+        document.getElementById("profile-tab").style.display='none';
         document.getElementById("tab-selector-teachers").classList.add("selected");
         document.getElementById("tab-selector-settings").classList.remove("selected");
+        document.getElementById("tab-selector-profile").classList.remove("selected");
     }
 
     function settings(){
         document.getElementById("teachers-tab").style.display='none';
         document.getElementById("settings-tab").style.display='block';
+        document.getElementById("profile-tab").style.display='none';
         document.getElementById("tab-selector-teachers").classList.remove("selected");
         document.getElementById("tab-selector-settings").classList.add("selected");
+        document.getElementById("tab-selector-profile").classList.remove("selected");
+    }
+
+    function profile(){
+        document.getElementById("teachers-tab").style.display='none';
+        document.getElementById("settings-tab").style.display='none';
+        document.getElementById("profile-tab").style.display='block';
+        document.getElementById("tab-selector-teachers").classList.remove("selected");
+        document.getElementById("tab-selector-settings").classList.remove("selected");
+        document.getElementById("tab-selector-profile").classList.add("selected");
     }
 
     function select_kid(){
