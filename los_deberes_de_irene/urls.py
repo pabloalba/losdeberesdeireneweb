@@ -28,6 +28,7 @@ urlpatterns = [
     path("", login_required(views.HomeView.as_view()), name='home'),
     path("browser/<int:folder_id>", login_required(views.BrowserView.as_view()), name='browser'),
     path("add_folder", login_required(views.AddFolderView.as_view()), name='add_folder'),
+    path("update_folder", login_required(views.UpdateFolderView.as_view()), name='update_folder'),
     path("add_page", login_required(views.AddPageView.as_view()), name='add_page'),
     path("teacher", login_required(views.TeacherView.as_view()), name='teacher'),
     path("student", login_required(views.StudentView.as_view()), name='student'),

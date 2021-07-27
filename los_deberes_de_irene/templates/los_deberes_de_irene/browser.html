@@ -16,7 +16,7 @@
     <div class="student_name">{{ user.profile.full_name }}</div>
     {% endif %}
     {% if back_folder %}
-    {{ parent_folder.name }}
+      <span class= "folder-name" onclick="open_update_folder()">{{ parent_folder.name }}</span>
     {% else %}
     &nbsp;
     {% endif %}
@@ -58,7 +58,7 @@
       {% for folder in folders %}
         <div class="grid-item folder" onclick="window.location='{% url 'browser' folder.id %}'">
             <div class="img-container">
-                <img src="{% if folder.icon %}{{ folder.icon }}{% else %}{% static 'img/folder.png' %}{% endif %}" />
+                <img src="{{ folder.icon }}" />
             </div>
           <div class="text-container">
               <div>
@@ -85,7 +85,7 @@
   <div class="browser-content-right">
     <div class="special-button-folder-container">
         <button class="special-button img-only" onclick="open_add_folder()">
-          <img src="{% static 'img/folder_icon.png' %}" alt="" />
+          <img src="{% static 'img/create_folder_icon.png' %}" alt="" />
         </button>
         <button class="special-button img-only" onclick="open_add_document()">
           <img src="{% static 'img/document_icon.png' %}" alt="" />
@@ -105,30 +105,35 @@
        <div class="close">
           <img src ="{% static 'img/close.png' %}" onclick="document.getElementById('add-folder-container').style.display='none'"/>
        </div>
-       <div class="title">Añadir carpeta</div>
-       <form class="main-form" method="POST" action="{% url 'add_folder'%}">
+       <div id="title-add-folder" class="title">Añadir carpeta</div>
+       <div id="title-update-folder" class="title">Modificar carpeta</div>
+       <form id="form-folder" class="main-form" method="POST" action="{% url 'add_folder'%}">
          {% csrf_token %}
          <input type="hidden" name="parent_folder"  value="{{parent_folder.id}}">
          <div class="entry">
            <label for="id_folder_name">Nombre de la carpeta</label>
            <input type="text" name="name" maxlength="150" autofocus="" required=""
-                 id="id_folder_name" placeholder="Introducir nombre">
+                 id="id_folder_name" placeholder="Introducir nombre" autofocus="" >
          </div>
          <div class="entry">
            <label for="id_folder_icon">Icono de la carpeta</label>
            <input type="hidden" id="id_folder_icon" name="folder_icon"  value="{% static 'img/folder.png' %}">
            <div class="icon-container">
              <span><img class="arrow" src="{% static 'img/left.png' %}" onclick="prev_icon()"/></span>
-             <span><img id='folder_icon_left' class="icon" src=""onclick="prev_icon()" /></span>
+             <span><img id='folder_icon_left' class="icon" src="" onclick="prev_icon()" /></span>
              <span><img id='folder_icon' class="icon selected" src="" /></span>
              <span><img id='folder_icon_right' class="icon" src="" onclick="next_icon()"/></span>
              <span><img class="arrow" src="{% static 'img/right.png' %}" onclick="next_icon()" /></span>
            </div>
          </div>
          <div class="buttons">
-          <button type="submit" class="special-button">
-            <img src="{% static 'img/folder_icon.png' %}" alt="" />
+          <button id="button-add-folder" type="submit" class="special-button">
+            <img src="{% static 'img/create_folder_icon.png' %}" alt="" />
             Añadir
+          </button>
+             <button id="button-update-folder" type="submit" class="special-button">
+            <img src="{% static 'img/folder_icon.png' %}" alt="" />
+            Modificar
           </button>
          </div>
       </form>
@@ -147,7 +152,7 @@
          <div class="entry">
            <label for="id_page_name">Nombre de la ficha</label>
            <input type="text" name="name" maxlength="150" autofocus="" required=""
-                 id="id_page_name" placeholder="Introducir nombre">
+                 id="id_page_name" placeholder="Introducir nombre" autofocus="" >
          </div>
          <div class="entry page">
            <label for="id_image" class="custom-file-upload">
@@ -294,15 +299,42 @@
     document.getElementById('preview').src = '{% static 'img/image_add_icon.png' %}';
     document.getElementById('id_page_name').value = '';
     document.getElementById('id_image').value = null;
-    document.getElementById('add-page-container').style.display='flex'
+    document.getElementById('add-page-container').style.display='flex';
+    document.getElementById('id_page_name').focus();
   }
 
   function open_add_folder(){
-    document.getElementById('preview').src = '{% static 'img/image_add_icon.png' %}';
     document.getElementById('id_folder_name').value = '';
     current_icon = 0;
     show_icon();
-    document.getElementById('add-folder-container').style.display='flex'
+    document.getElementById('title-add-folder').style.display='';
+    document.getElementById('title-update-folder').style.display='none';
+    document.getElementById('button-add-folder').style.display='';
+    document.getElementById('button-update-folder').style.display='none';
+    document.getElementById('form-folder').action="{% url 'add_folder'%}";
+    document.getElementById('add-folder-container').style.display='flex';
+    document.getElementById('id_folder_name').focus();
+  }
+
+
+  function open_update_folder(){
+    document.getElementById('id_folder_name').value = '{{ parent_folder.name }}';
+    current_icon = 0;
+    document.getElementById('title-add-folder').style.display='none';
+    document.getElementById('title-update-folder').style.display='';
+    document.getElementById('button-add-folder').style.display='none';
+    document.getElementById('button-update-folder').style.display='';
+    for (var i=0; i<icons.length; i++){
+        if (icons[i] == '{{ parent_folder.icon }}'){
+            current_icon = i;
+            break;
+        }
+    }
+
+    show_icon();
+    document.getElementById('form-folder').action="{% url 'update_folder'%}";
+    document.getElementById('add-folder-container').style.display='flex';
+    document.getElementById('id_folder_name').focus();
   }
 
   window.onload = init_page;

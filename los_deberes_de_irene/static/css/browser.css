@@ -172,6 +172,10 @@
     margin-top: 100px;
 }
 
+.folder-name {
+    cursor: pointer;
+}
+
 
 @media screen and (max-width: 1300px) {
   .page-grid .grid-item {

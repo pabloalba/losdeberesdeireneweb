@@ -265,13 +265,24 @@ class AddFolderView(generic.View):
         if not page_folder:
             return redirect("home")
 
-        print(request.POST)
         PageFolder.objects.create(name=request.POST.get("name"),
                                   owner=page_folder.owner,
                                   parent=page_folder,
                                   icon=request.POST.get("folder_icon"))
         return redirect("browser", folder_id=request.POST.get("parent_folder"))
 
+
+class UpdateFolderView(generic.View):
+
+    def post(self, request):
+        page_folder = _get_valid_folder(request.user, request.POST.get("parent_folder"))
+        if not page_folder:
+            return redirect("home")
+
+        page_folder.name = request.POST.get("name")
+        page_folder.icon = request.POST.get("folder_icon")
+        page_folder.save()
+        return redirect("browser", folder_id=request.POST.get("parent_folder"))
 
 class AddPageView(generic.View):
 

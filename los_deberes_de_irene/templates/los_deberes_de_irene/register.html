@@ -12,21 +12,21 @@
   <form class="main-form" method="POST">
     {% csrf_token %}
     <div class="entry">
-      <label for="id_username">Usuario</label>
-      <input type="text" name="username" maxlength="150" autofocus="" required=""
-             id="id_username" placeholder="Introducir nombre de usuario">
-    </div>
-    <div class="entry">
       <label for="id_full_name">Nombre y apellidos</label>
-      <input type="text" name="full_name" maxlength="256" required=""
+      <input type="text" name="full_name" maxlength="256" required="" autofocus=""
              id="id_full_name" placeholder="Introducir nombre y apellidos">
     </div>
+
     <div class="entry">
       <label for="id_email">Email</label>
       <input type="email" name="email" required=""
              id="id_email" placeholder="Introducir email">
     </div>
-
+    <div class="entry">
+      <label for="id_username">Usuario</label>
+      <input type="text" name="username" maxlength="150" required=""
+             id="id_username" placeholder="Introducir nombre de usuario">
+    </div>
     <div class="entry">
       <label for="id_password1">Contraseña</label>
       <input type="password" name="password1" autocomplete="new-password" required=""
