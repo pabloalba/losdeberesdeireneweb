@@ -71,6 +71,9 @@ class Page(models.Model):
         verbose_name="owner",
     )
 
+    def labels(self):
+        return Label.objects.filter(page=self)
+
     def __str__(self):
         return self.name
 

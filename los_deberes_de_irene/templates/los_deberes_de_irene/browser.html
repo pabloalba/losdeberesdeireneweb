@@ -69,6 +69,9 @@
       {% endfor %}
       {% for page in pages %}
         <div class="grid-item page" onclick="window.location='{% url 'page' page.id %}'">
+            {% if page.labels %}
+            <img src="{% static 'img/bookmark.png' %}" class="bookmark" />
+            {% endif %}
             <div class="img-container">
                 <img src="{{ page.image.url }}" />
             </div>
