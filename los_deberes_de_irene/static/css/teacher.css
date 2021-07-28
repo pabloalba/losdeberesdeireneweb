@@ -85,20 +85,21 @@
 }
 
 
-#teachers-tab, #settings-tab, #profile-tab{
+.content-tab{
     width: 90%;
     display: none;
 }
 
-#settings-tab div{
+#font-tab div{
     font-size: 18px;
-    margin-top: 50px;
+    margin-bottom: 30px;
 }
 
 .font-sample{
     padding: 20px;
     cursor: pointer;
     border: 1px dashed #D0EFF9;
+    margin: 10px 0;
 }
 
 .font-sample.kid{
@@ -138,12 +139,21 @@
     margin: 20px;
 }
 
-#profile-tab .main-form{
+.content-tab.spaced{
+    margin-top: 50px;
+}
+
+.content-tab .main-form{
     width: 100%;
 }
 
-#profile-tab .buttons-container{
+.content-tab .buttons-container{
     width: 100%;
     text-align: right;
     margin-top: 30px;
+}
+
+#teachers-tab .empty-block {
+    text-align: center;
+    margin-top: 100px;
 }

@@ -19,9 +19,10 @@
     <div class="header teacher">
       <div class="header-left">
         <div class="tabs-title-container">
-            <div id="tab-selector-teachers" class="tabs-title-item selected" onclick="teachers()">Profesores</div>
-            <div id="tab-selector-settings" class="tabs-title-item"  onclick="settings()">Letra</div>
-            <div id="tab-selector-profile" class="tabs-title-item"  onclick="profile()">Tus datos</div>
+            <div id="teachers-tab-selector" class="tabs-title-item selected" onclick="show_tab('teachers-tab')">Profesores</div>
+            <div id="font-tab-selector" class="tabs-title-item"  onclick="show_tab('font-tab')">Letra</div>
+            <div id="profile-tab-selector" class="tabs-title-item"  onclick="show_tab('profile-tab')">Tus datos</div>
+            <div id="password-tab-selector" class="tabs-title-item"  onclick="show_tab('password-tab')">Tu contraseña</div>
         </div>
       </div>
       <div class="header-center header-title">
@@ -33,7 +34,7 @@
 
 
 
-    <div id="teachers-tab">
+    <div id="teachers-tab" class="content-tab">
     <div class="special-button-teacher-container">
       <button class="special-button" onclick="document.getElementById('add-teacher-container').style.display='block'">
           <img src="{% static 'img/person_icon.png' %}" alt="" />
@@ -72,14 +73,14 @@
     </table>
     {% endif %}
 </div>
-<div id="settings-tab">
+<div id="font-tab" class="content-tab spaced">
     <div>Elige el tipo de letra:</div>
     <div>
         <div id="font_sample_kid" class="font-sample kid {% if user.profile.selected_font != 'adult'%}selected{% endif %}" onclick="select_kid()">El veloz murciélago hindú comía feliz cardillo y kiwi. La cigüeña toca el saxofón detrás del palenque de paja. 1234567890</div>
         <div id="font_sample_adult"  class="font-sample adult {% if user.profile.selected_font == 'adult'%}selected{% endif %}" onclick="select_adult()">El veloz murciélago hindú comía feliz cardillo y kiwi. La cigüeña toca el saxofón detrás del palenque de paja. 1234567890</div>
     </div>
     <div class="save-button-container">
-        <form class="main-form" method="POST" action="{% url 'save_settings' %}">
+        <form class="main-form" method="POST" action="{% url 'font' %}">
          {% csrf_token %}
         <input type="hidden" name="selected_font" id="id_selected_font" />
          <button type="submit" class="special-button">
@@ -90,8 +91,12 @@
     </div>
 </div>
 
-<div id="profile-tab">
+<div id="profile-tab" class="content-tab spaced">
     {% include "los_deberes_de_irene/profile.html" %}
+</div>
+
+<div id="password-tab" class="content-tab spaced">
+    {% include "los_deberes_de_irene/password.html" %}
 </div>
 {% endblock %}
 
@@ -119,31 +124,19 @@
   </div>
 </div>
 <script>
-    function teachers(){
-        document.getElementById("teachers-tab").style.display='block';
-        document.getElementById("settings-tab").style.display='none';
-        document.getElementById("profile-tab").style.display='none';
-        document.getElementById("tab-selector-teachers").classList.add("selected");
-        document.getElementById("tab-selector-settings").classList.remove("selected");
-        document.getElementById("tab-selector-profile").classList.remove("selected");
-    }
 
-    function settings(){
-        document.getElementById("teachers-tab").style.display='none';
-        document.getElementById("settings-tab").style.display='block';
-        document.getElementById("profile-tab").style.display='none';
-        document.getElementById("tab-selector-teachers").classList.remove("selected");
-        document.getElementById("tab-selector-settings").classList.add("selected");
-        document.getElementById("tab-selector-profile").classList.remove("selected");
-    }
+    function show_tab(tab_name){
+        elements = document.getElementsByClassName('content-tab');
+        for (var i = 0; i < elements.length; i++) {
+            elements[i].style.display="none";
+        }
+        document.getElementById(tab_name).style.display='block';
 
-    function profile(){
-        document.getElementById("teachers-tab").style.display='none';
-        document.getElementById("settings-tab").style.display='none';
-        document.getElementById("profile-tab").style.display='block';
-        document.getElementById("tab-selector-teachers").classList.remove("selected");
-        document.getElementById("tab-selector-settings").classList.remove("selected");
-        document.getElementById("tab-selector-profile").classList.add("selected");
+        elements = document.getElementsByClassName('tabs-title-item');
+        for (var i = 0; i < elements.length; i++) {
+            elements[i].classList.remove("selected");
+        }
+        document.getElementById(tab_name+"-selector").classList.add("selected");
     }
 
     function select_kid(){
@@ -157,14 +150,8 @@
         document.getElementById("font_sample_adult").classList.add("selected");
         document.getElementById("id_selected_font").value = 'adult';
     }
-    {% if "settings" == tab %}
-    settings();
-    {% else %}
-    {% if "profile" == tab %}
-    profile();
-    {% else %}
-    teachers()
-    {% endif %}
-    {% endif %}
+
+    show_tab('{{tab}}-tab');
+
 </script>
 {% endblock %}

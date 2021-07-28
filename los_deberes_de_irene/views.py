@@ -1,5 +1,6 @@
-from django.contrib.auth import authenticate, login, logout
-from django.contrib.auth.forms import AuthenticationForm
+from django.contrib.auth import authenticate, login, logout, update_session_auth_hash
+from django.contrib.auth.forms import AuthenticationForm, PasswordChangeForm
+from django.core.mail import send_mail
 from django.http import JsonResponse
 from django.http import HttpResponse
 from django.utils.decorators import method_decorator
@@ -169,7 +170,7 @@ class TeacherView(generic.TemplateView):
         context["code"] = profile.code
         context["students_list"] = students
 
-        context["tab"] = self.request.session.get("tab")
+        context["tab"] = self.request.session.get("tab") if self.request.session.get("tab") else "teachers"
         self.request.session["tab"] = None
 
         return context
@@ -202,8 +203,12 @@ class StudentView(generic.TemplateView):
         teachers = [st.teacher for st in student_teachers]
 
         context["teachers_list"] = teachers
-        context["tab"] = self.request.session.get("tab")
+        context["tab"] = self.request.session.get("tab") if self.request.session.get("tab") else "teachers"
         self.request.session["tab"] = None
+
+        form = PasswordChangeForm(self.request.user)
+        context["form"] = form
+
 
         return context
 
@@ -307,7 +312,7 @@ class AddPageView(generic.View):
         return redirect("browser", folder_id=request.POST.get("parent_folder"))
 
 
-class SettingsView(generic.View):
+class FontView(generic.View):
 
     def post(self, request):
         if _is_teacher(self.request.user):
@@ -318,8 +323,8 @@ class SettingsView(generic.View):
             self.request.user.profile.selected_font = selected_font
             self.request.user.profile.save()
 
-        request.session["tab"] = "settings"
-        if self.request.profile.is_teacher:
+        request.session["tab"] = "font"
+        if self.request.user.profile.is_teacher:
             return redirect("teacher")
         else:
             return redirect("student")
@@ -336,6 +341,19 @@ class UpdateProfileView(generic.View):
         request.session["tab"] = "profile"
         return redirect("student")
 
+
+class UpdatePasswordView(generic.View):
+
+    def post(self, request):
+        form = PasswordChangeForm(request.user, request.POST)
+        if form.is_valid():
+            user = form.save()
+            update_session_auth_hash(request, user)  # Important!
+            messages.success(request, 'Contraseña cambiada :)')
+        else:
+            messages.error(request, 'No se ha podido cambiar la contraseña :(')
+        request.session["tab"] = "password"
+        return redirect("student")
 
 def _get_valid_folder(user, folder_id):
     page_folder = PageFolder.objects.filter(pk=folder_id).first()
@@ -367,3 +385,13 @@ def _generate_code():
 
 def _is_teacher(user):
     return user.profile.is_teacher
+
+
+def _send_email(to, subject, message):
+    send_mail(
+            subject,
+            message,
+            'noreply@losdeberesdeirene.tk',
+            [to],
+            fail_silently=False,
+        )
