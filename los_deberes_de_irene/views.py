@@ -1,5 +1,10 @@
+import os
+
 from django.contrib.auth import authenticate, login, logout, update_session_auth_hash
 from django.contrib.auth.forms import AuthenticationForm, PasswordChangeForm
+from django.core.files.base import ContentFile, File
+from django.core.files.storage import default_storage
+from django.core.files.uploadedfile import InMemoryUploadedFile
 from django.core.mail import send_mail
 from django.http import JsonResponse
 from django.http import HttpResponse
@@ -8,14 +13,21 @@ from django.views import generic
 from django.views.decorators.csrf import csrf_exempt
 from django.core import serializers
 
-from homework.forms import ImageForm
+from homework.forms import ImageForm, PDFForm
 from homework.models import *
 from django.db import IntegrityError
+
+from . import settings
 from .forms import NewUserForm
 from django.contrib import messages, auth
 from django.shortcuts import render, redirect
+from pdf2image import convert_from_bytes
 import json
 import random
+from io import StringIO
+from io import BytesIO
+from django.templatetags.static import static
+
 
 
 def register_request(request):
@@ -115,7 +127,6 @@ class BrowserView(generic.TemplateView):
         context["pages"] = pages
         context["folders"] = folders
         context["items"] = list(folders) + list(pages)
-        print(context["items"])
 
         return context
 
@@ -300,16 +311,44 @@ class AddPageView(generic.View):
             return redirect("home")
         form = ImageForm(request.POST, request.FILES)
         if form.is_valid():
-            name = request.POST.get("name")
-            if not name:
-                name = form.cleaned_data.get("image").name
-                name = name.rsplit(".", 1)[0]
+            name = self._get_name(request.POST.get("name"), form.cleaned_data.get("image"))
             Page.objects.create(
                 name=name,
                 owner=page_folder.owner,
                 folder=page_folder,
                 image=form.cleaned_data.get("image"))
+        else:
+            form = PDFForm(request.POST, request.FILES)
+            if form.is_valid():
+                file = form.cleaned_data.get("image")
+                name = self._get_name(request.POST.get("name"), file)
+                with file.open() as f:
+                    images = convert_from_bytes(f.read())
+                    if len(images) > 1:
+                        icon_url = static('img/subjects/folder.png')
+                        page_folder = PageFolder.objects.create(name=name,
+                                                                owner=page_folder.owner,
+                                                                parent=page_folder,
+                                                                icon=icon_url)
+                    for i in range(len(images)):
+                        image_name = name + '_' + str(i).zfill(2)
+                        self._create_page(image_name, images[i], page_folder)
+
         return redirect("browser", folder_id=request.POST.get("parent_folder"))
+
+    def _get_name(self, name, image):
+        if not name:
+            return image.name.rsplit(".", 1)[0]
+        return name
+
+    def _create_page(self, name, image, page_folder):
+        page = Page(name=name, owner=page_folder.owner, folder=page_folder)
+        blob = BytesIO()
+        image.save(blob, 'JPEG')
+        page.image.save(name + '.jpg', File(blob))
+        page.save()
+        return
+
 
 
 class FontView(generic.View):

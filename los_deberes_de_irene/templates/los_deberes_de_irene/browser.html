@@ -149,7 +149,7 @@
           <img src ="{% static 'img/close.png' %}" onclick="document.getElementById('add-page-container').style.display='none'"/>
       </div>
        <div class="title">Añadir ficha</div>
-       <form class="main-form" method="POST" action="{% url 'add_page'%}" enctype="multipart/form-data">
+       <form class="main-form" method="POST" action="{% url 'add_page'%}" enctype="multipart/form-data" onsubmit="show_loading()">
          {% csrf_token %}
          <input type="hidden" name="parent_folder"  value="{{parent_folder.id}}">
          <div class="entry">
@@ -164,7 +164,7 @@
              </div>
              Imagen de la ficha
            </label>
-           <input type="file" id="id_image" name="image" accept="image/png, image/jpeg" required="" onchange="update_preview(this)"/>
+           <input type="file" id="id_image" name="image" accept="image/png, image/jpeg, application/pdf" required="" onchange="update_preview(this)"/>
          </div>
          <div class="buttons">
            <button type="submit" class="special-button">
@@ -174,6 +174,12 @@
          </div>
       </form>
   </div>
+</div>
+
+<div id="loading-container" class="modal-container">
+    <div class="modal-content">
+        <img src="{% static 'img/loading.gif' %}" alt="" />
+    </div>
 </div>
 
 
@@ -208,7 +214,11 @@
   function update_preview(file){
     const [data] = file.files
     if (data) {
-      document.getElementById('preview').src = URL.createObjectURL(data);
+      if (data.name.slice(-4).toUpperCase() === '.PDF') {
+        document.getElementById('preview').src = '{% static 'img/pdf_file_icon.png' %}';
+      } else {
+        document.getElementById('preview').src = URL.createObjectURL(data);
+      }
       if (document.getElementById('id_page_name').value == ''){
         var name = data.name.split('.').slice(0, -1).join('.');
         document.getElementById('id_page_name').value = name;
@@ -338,6 +348,11 @@
     document.getElementById('form-folder').action="{% url 'update_folder'%}";
     document.getElementById('add-folder-container').style.display='flex';
     document.getElementById('id_folder_name').focus();
+  }
+
+  function show_loading(){
+    document.getElementById('add-page-container').style.display='none';
+    document.getElementById('loading-container').style.display='flex';
   }
 
   window.onload = init_page;

@@ -179,6 +179,9 @@
     cursor: pointer;
 }
 
+#loading-container img{
+    width: 700px;
+}
 
 @media screen and (max-width: 1300px) {
   .page-grid .grid-item {
