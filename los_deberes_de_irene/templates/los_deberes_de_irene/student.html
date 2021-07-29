@@ -73,11 +73,14 @@
     </table>
     {% endif %}
 </div>
-<div id="font-tab" class="content-tab spaced">
-    <div>Elige el tipo de letra:</div>
+<div id="font-tab" class="content-tab">
+    <div>Elige el tipo de letra para escribir en las fichas:</div>
     <div>
+        <label>Letra ligada:</label>
         <div id="font_sample_kid" class="font-sample kid {% if user.profile.selected_font == 'kid'%}selected{% endif %}" onclick="select_kid()">El veloz murciélago hindú comía feliz cardillo y kiwi. La cigüeña toca el saxofón detrás del palenque de paja. 1234567890</div>
+        <label>Letra para dislexia:</label>
         <div id="font_sample_dyslexia" class="font-sample dyslexia {% if user.profile.selected_font == 'dyslexia'%}selected{% endif %}" onclick="select_dyslexia()">El veloz murciélago hindú comía feliz cardillo y kiwi. La cigüeña toca el saxofón detrás del palenque de paja. 1234567890</div>
+        <label>Letra de imprenta:</label>
         <div id="font_sample_adult"  class="font-sample adult {% if user.profile.selected_font == 'adult'%}selected{% endif %}" onclick="select_adult()">El veloz murciélago hindú comía feliz cardillo y kiwi. La cigüeña toca el saxofón detrás del palenque de paja. 1234567890</div>
     </div>
     <div class="save-button-container">

@@ -90,8 +90,17 @@
     display: none;
 }
 
+#font-tab {
+    margin-top: 25px;
+}
+
+
 #font-tab div{
     margin-bottom: 30px;
+}
+
+#font-tab label{
+    font-weight: bold;
 }
 
 .font-sample{
@@ -99,7 +108,7 @@
     cursor: pointer;
     border: 1px dashed #D0EFF9;
     margin: 10px 0;
-    font-size: 26px;
+    font-size: 22px;
 }
 
 .font-sample.kid{
