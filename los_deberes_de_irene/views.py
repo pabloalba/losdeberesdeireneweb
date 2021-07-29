@@ -358,7 +358,7 @@ class FontView(generic.View):
             return redirect("teacher")
 
         selected_font = request.POST.get("selected_font")
-        if "kid" == selected_font or "adult" == selected_font:
+        if "kid" == selected_font or "adult" == selected_font or "dyslexia" == selected_font:
             self.request.user.profile.selected_font = selected_font
             self.request.user.profile.save()
 

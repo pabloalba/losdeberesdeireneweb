@@ -76,7 +76,8 @@
 <div id="font-tab" class="content-tab spaced">
     <div>Elige el tipo de letra:</div>
     <div>
-        <div id="font_sample_kid" class="font-sample kid {% if user.profile.selected_font != 'adult'%}selected{% endif %}" onclick="select_kid()">El veloz murciélago hindú comía feliz cardillo y kiwi. La cigüeña toca el saxofón detrás del palenque de paja. 1234567890</div>
+        <div id="font_sample_kid" class="font-sample kid {% if user.profile.selected_font == 'kid'%}selected{% endif %}" onclick="select_kid()">El veloz murciélago hindú comía feliz cardillo y kiwi. La cigüeña toca el saxofón detrás del palenque de paja. 1234567890</div>
+        <div id="font_sample_dyslexia" class="font-sample dyslexia {% if user.profile.selected_font == 'dyslexia'%}selected{% endif %}" onclick="select_dyslexia()">El veloz murciélago hindú comía feliz cardillo y kiwi. La cigüeña toca el saxofón detrás del palenque de paja. 1234567890</div>
         <div id="font_sample_adult"  class="font-sample adult {% if user.profile.selected_font == 'adult'%}selected{% endif %}" onclick="select_adult()">El veloz murciélago hindú comía feliz cardillo y kiwi. La cigüeña toca el saxofón detrás del palenque de paja. 1234567890</div>
     </div>
     <div class="save-button-container">
@@ -142,15 +143,23 @@
     function select_kid(){
         document.getElementById("font_sample_kid").classList.add("selected");
         document.getElementById("font_sample_adult").classList.remove("selected");
+        document.getElementById("font_sample_dyslexia").classList.remove("selected");
         document.getElementById("id_selected_font").value = 'kid';
     }
 
     function select_adult(){
         document.getElementById("font_sample_kid").classList.remove("selected");
         document.getElementById("font_sample_adult").classList.add("selected");
+        document.getElementById("font_sample_dyslexia").classList.remove("selected");
         document.getElementById("id_selected_font").value = 'adult';
     }
 
+    function select_dyslexia(){
+        document.getElementById("font_sample_kid").classList.remove("selected");
+        document.getElementById("font_sample_adult").classList.remove("selected");
+        document.getElementById("font_sample_dyslexia").classList.add("selected");
+        document.getElementById("id_selected_font").value = 'dyslexia';
+    }
     show_tab('{{tab}}-tab');
 
 </script>

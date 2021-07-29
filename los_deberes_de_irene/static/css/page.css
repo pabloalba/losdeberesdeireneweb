@@ -103,12 +103,17 @@
 
 input[data-font-name="kid"],
 text[data-font-name="kid"] {
-  font-family: "Sacramento";
+  font-family: "Escolar_G";
 }
 
 input[data-font-name="adult"],
 text[data-font-name="adult"] {
-  font-family: "Mail";
+  font-family: "Roboto";
+}
+
+input[data-font-name="dyslexia"],
+text[data-font-name="dyslexia"] {
+  font-family: "OpenDyslexic";
 }
 
 text[data-color="black"] {

@@ -1,3 +1,24 @@
+@font-face {
+    font-family: "WoodfordBourne";
+    src: url("/static/fonts/woodfordbourne-regular.otf") format("opentype");
+}
+
+@font-face {
+    font-family: "OpenDyslexic";
+    src: url("/static/fonts/OpenDyslexic-Regular.otf") format("opentype");
+}
+
+@font-face {
+    font-family: "Escolar_G";
+    src: url("/static/fonts/Escolar_G.ttf") format("truetype");
+}
+
+@font-face {
+    font-family: "Roboto";
+    src: url("/static/fonts/Roboto-Regular.ttf") format("truetype");
+}
+
+
 body {
   font-family: Montserrat;
   height: 100%;
