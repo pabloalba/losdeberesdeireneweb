@@ -354,6 +354,10 @@ function sendCreateLabel(label, callback) {
         "font_size": label.getAttribute("data-font-size"),
         "color": label.getAttribute("data-color")
       }));
+  } else {
+    if (callback){
+      callback();
+    }
   }
 }
 
