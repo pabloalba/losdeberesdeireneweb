@@ -180,7 +180,9 @@ function selectLabel(label){
     }
     currentLabel = label;
     updateCursor();
-    labelInputElement.value = currentLabel.textContent;
+    console.log(labelInputElement);
+    labelInputElement.value = currentLabel.textContent.trim();
+    console.log(labelInputElement.value);
     labelInputElement.focus();
 }
 
@@ -206,7 +208,7 @@ function onChange(event) {
   if (viewPortElement) {
     const text = labelInputElement.value;
     if (currentLabel != null){
-        currentLabel.textContent = text;
+        currentLabel.textContent = text.trim();
         updateCursor();
     }
   }
@@ -287,7 +289,7 @@ function createLabel(x, y, text) {
   labelElement.setAttribute("data-font-size", currentFontSize);
   labelElement.setAttribute("data-color", currentColor);
   labelElement.setAttribute("style", "font-size: " + getFontSize(currentFontSize));
-  labelElement.textContent = text;
+  labelElement.textContent = text.trim();
 
   labelElement.addEventListener("click", onClickLabel);
 
@@ -323,7 +325,7 @@ function getFontSize(fontSize) {
 // ====== HTTP API functions ==================
 
 function sendCreateLabel(label, callback) {
-  let text = label.textContent;
+  let text = label.textContent.trim();
   if (text != ""){
       let xhr = new XMLHttpRequest();
       xhr.open("POST", "/pages/" + pageId.toString() + "/labels");
@@ -347,7 +349,7 @@ function sendCreateLabel(label, callback) {
       xhr.send(JSON.stringify({
         "x": label.getAttribute("x"),
         "y": label.getAttribute("y"),
-        "text": label.textContent,
+        "text": label.textContent.trim(),
         "font_name": label.getAttribute("data-font-name"),
         "font_size": label.getAttribute("data-font-size"),
         "color": label.getAttribute("data-color")
@@ -374,7 +376,7 @@ function sendUpdateLabel(label, callback) {
   };
 
   xhr.send(JSON.stringify({
-    "text": label.textContent
+    "text": label.textContent.trim()
   }));
 }
 
