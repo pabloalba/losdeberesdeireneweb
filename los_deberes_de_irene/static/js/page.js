@@ -246,8 +246,10 @@ function nextLabel(){
 function goBack(url){
     if (currentLabel != null) {
         sendCreateOrUpdateLabel(currentLabel, function(){
-            document.location = document.getElementById("go-back-button").getAttribute("data-url")
+            document.location = document.getElementById("go-back-button").getAttribute("data-url");
         });
+    } else {
+        document.location = document.getElementById("go-back-button").getAttribute("data-url");
     }
 }
 
