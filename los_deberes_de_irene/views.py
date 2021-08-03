@@ -151,8 +151,7 @@ class PageView(generic.TemplateView):
         return super().get(request)
 
     def get_context_data(self, **kwargs):
-        context = super().get_context_data(**kwargs
-                                           )
+        context = super().get_context_data(**kwargs)
         back_folder = self.page.folder.id
         labels = Label.objects.filter(page=self.page)
 

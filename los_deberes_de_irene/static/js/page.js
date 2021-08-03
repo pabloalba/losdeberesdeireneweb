@@ -15,6 +15,8 @@ let viewPortElement;
 let svgElement;
 let labelsElement;
 let labelInputElement;
+let currentLabel = null;
+
 
 let labelInputId;
 let labelInputX;
@@ -22,6 +24,9 @@ let labelInputY;
 
 let currentFontSize;
 let currentColor;
+
+let cursor;
+let labelBg;
 
 const LABEL_ID_PREFIX = "label-";
 const NEW_LABEL_ID = "label-new";
@@ -57,7 +62,9 @@ function pageLoaded() {
   svgElement.addEventListener("wheel", onWheel);
   svgElement.addEventListener("click", onClick);
 
-  labelInputElement.addEventListener("blur", onBlur);
+  document.getElementById("go-back-button").addEventListener("click", goBack);
+
+  labelInputElement.addEventListener("keyup", onChange);
 
   for (let sizeButton of document.querySelectorAll(".size-button")) {
     sizeButton.addEventListener("click", changeSize);
@@ -76,6 +83,19 @@ function pageLoaded() {
   for (let labelElement of document.querySelectorAll(".page-label")) {
     labelElement.addEventListener("click", onClickLabel);
   }
+
+  cursor = document.getElementById("cursor");
+  labelBg = document.getElementById("label-bg");
+
+  window.setInterval(function(){
+    if (cursor.style.opacity == 0.25){
+        cursor.style.opacity = 1;
+    } else {
+        cursor.style.opacity = 0.25;
+    }
+    }, 500);
+
+  document.addEventListener('keydown', onKeyDown)
 
   // The resize event does not occur in the initial load,
   // so we call it once here.
@@ -109,13 +129,16 @@ function onWheel(event) {
   event.preventDefault();
 
   if (viewPortElement) {
-    scrollOffset += event.deltaY;
-    scrollOffset = Math.min(scrollOffset, (imageHeight - viewBoxHeight));
-    scrollOffset = Math.max(scrollOffset, 0);
-    setViewBox();
+    scroll(event.deltaY)
   }
 }
 
+function scroll(delta){
+    scrollOffset += delta;
+    scrollOffset = Math.min(scrollOffset, (imageHeight - viewBoxHeight));
+    scrollOffset = Math.max(scrollOffset, 0);
+    setViewBox();
+}
 
 function changeSize(event) {
   // target could also be the inner img, but 'this' is always the element with the handler
@@ -136,10 +159,8 @@ function onClick(event) {
   event.preventDefault();
 
   if (viewPortElement) {
-    labelInputId = NEW_LABEL_ID;
-    labelInputX = event.offsetX;
-    labelInputY = event.offsetY;
-    showLabelInput(currentFontSize, "");
+    const label = createLabel(Math.round(screenToImage(event.offsetX)), Math.round(screenToImage(event.offsetY) + scrollOffset), "");
+    selectLabel(label);
   }
 }
 
@@ -149,35 +170,86 @@ function onClickLabel(event) {
   event.stopPropagation();
 
   if (viewPortElement) {
-    const labelElement = event.target;
-    labelInputId = labelElement.getAttribute("id");
-    labelInputX = imageToScreen(labelElement.getAttribute("x"));
-    labelInputY = imageToScreen(labelElement.getAttribute("y") - scrollOffset);
-    labelElement.style.opacity = 0;
-    showLabelInput(labelElement.getAttribute("data-font-size"), labelElement.textContent.trim());
+    selectLabel(event.target);
   }
 }
 
+function selectLabel(label){
+    if (currentLabel != null) {
+        sendCreateOrUpdateLabel(currentLabel);
+    }
+    currentLabel = label;
+    updateCursor();
+    labelInputElement.value = currentLabel.textContent;
+    labelInputElement.focus();
+}
 
-function onBlur(event) {
+ function updateCursor(){
+    if (currentLabel != null){
+        const fontSize = getFontSize(currentLabel.getAttribute("data-font-size"));
+        const x = Number(currentLabel.getAttribute("x")) + currentLabel.getBBox().width;
+        cursor.setAttribute("x", x);
+        cursor.setAttribute("y", (currentLabel.getAttribute("y") - fontSize + 10));
+        cursor.setAttribute("width", fontSize/2);
+        cursor.setAttribute("height", fontSize);
+        cursor.setAttribute("fill", currentColor);
+
+        labelBg.setAttribute("x", currentLabel.getAttribute("x"));
+        labelBg.setAttribute("y", currentLabel.getAttribute("y") - fontSize);
+        labelBg.setAttribute("width", currentLabel.getBBox().width);
+        labelBg.setAttribute("height", fontSize + 10);
+    }
+
+}
+
+function onChange(event) {
   if (viewPortElement) {
-    const x = screenToImage(labelInputX);
-    const y = screenToImage(labelInputY) + scrollOffset;
-    const text = labelInputElement.value.trim();
-    hideLabelInput();
-
-    if (labelInputId === NEW_LABEL_ID) {
-      if (text.length > 0) {
-        createLabel(x, y, text);
-        sendCreateLabel(x, y, text);
-      }
-    } else {
-      updateLabel(text);
-      sendUpdateLabel(text);
+    const text = labelInputElement.value;
+    if (currentLabel != null){
+        currentLabel.textContent = text;
+        updateCursor();
     }
   }
 }
 
+
+function onKeyDown(e){
+    if (40 == e.which){
+        scroll(100);
+        e.preventDefault();
+    } else if (38 == e.which){
+        scroll(-100);
+        e.preventDefault();
+    } else if (38 == e.which){
+        scroll(-100);
+        e.preventDefault();
+    } else if (37 == e.which || 39 == e.which){
+        e.preventDefault();
+    }
+}
+
+function nextLabel(){
+    if (currentLabel != null){
+        var next = 0;
+        for (var i =0; i<labelsElement.childNodes.length; i++){
+            if (labelsElement.childNodes[i] == currentLabel){
+                if (i < labelsElement.childNodes.length -1){
+                    next = i+1;
+                }
+                break;
+            }
+        }
+        selectLabel(labelsElement.childNodes[next]);
+    }
+}
+
+function goBack(url){
+    if (currentLabel != null) {
+        sendCreateOrUpdateLabel(currentLabel, function(){
+            document.location = document.getElementById("go-back-button").getAttribute("data-url")
+        });
+    }
+}
 
 // ====== Auxiliary functions ==================
 
@@ -202,26 +274,6 @@ function setSelectedButton(query, attribute, value) {
 }
 
 
-function showLabelInput(fontSize, text) {
-  const screenFontSize = imageToScreen(getFontSize(fontSize));
-
-  labelInputElement.style.left = labelInputX;
-  labelInputElement.style.top = labelInputY - screenFontSize * 0.75;
-  labelInputElement.style.width = viewPortWidth - labelInputX;
-  labelInputElement.style.fontSize = screenFontSize.toString() + "px";
-  labelInputElement.setAttribute("data-color", currentColor);
-  labelInputElement.value = text;
-  labelInputElement.focus();
-}
-
-
-function hideLabelInput() {
-  labelInputElement.style.left = -1000;
-  labelInputElement.style.top = -1000;
-  labelInputElement.value = "";
-}
-
-
 function createLabel(x, y, text) {
   const labelElement = document.createElementNS("http://www.w3.org/2000/svg", "text");
 
@@ -238,17 +290,7 @@ function createLabel(x, y, text) {
   labelElement.addEventListener("click", onClickLabel);
 
   labelsElement.appendChild(labelElement);
-}
-
-
-function updateLabel(text) {
-  const labelElement = document.getElementById(labelInputId);
-  if (text.length > 0) {
-    labelElement.textContent = text;
-    labelElement.style.opacity = 1;
-  } else {
-    labelElement.parentNode.removeChild(labelElement);
-  }
+  return labelElement;
 }
 
 
@@ -278,36 +320,42 @@ function getFontSize(fontSize) {
 
 // ====== HTTP API functions ==================
 
-function sendCreateLabel(x, y, text) {
-  let xhr = new XMLHttpRequest();
-  xhr.open("POST", "/pages/" + pageId.toString() + "/labels");
-  xhr.setRequestHeader("Content-Type", "application/json");
+function sendCreateLabel(label, callback) {
+  let text = label.textContent;
+  if (text != ""){
+      let xhr = new XMLHttpRequest();
+      xhr.open("POST", "/pages/" + pageId.toString() + "/labels");
+      xhr.setRequestHeader("Content-Type", "application/json");
 
-  xhr.onload = function() {
-    if (xhr.status != 200) {
-      console.error("ERROR on save: ", xhr.statusText);
-    } else {
-      const label = JSON.parse(xhr.response)[0];
-      const labelElement = document.querySelector(".page-label#" + NEW_LABEL_ID);
-      if (labelElement) {
-        labelElement.setAttribute("id", LABEL_ID_PREFIX + label.pk.toString());
-      }
-    }
-  };
+      xhr.onload = function() {
+        if (xhr.status != 200) {
+          console.error("ERROR on save: ", xhr.statusText);
+        } else {
+          const label = JSON.parse(xhr.response)[0];
+          const labelElement = document.getElementById("label-" + NEW_LABEL_ID);
+          if (labelElement) {
+            labelElement.setAttribute("id", LABEL_ID_PREFIX + label.pk.toString());
+          }
+          if (callback){
+            callback();
+          }
+        }
+      };
 
-  xhr.send(JSON.stringify({
-    "x": x,
-    "y": y,
-    "text": text,
-    "font_name": currentFontName,
-    "font_size": currentFontSize,
-    "color": currentColor,
-  }));
+      xhr.send(JSON.stringify({
+        "x": label.getAttribute("x"),
+        "y": label.getAttribute("y"),
+        "text": label.textContent,
+        "font_name": label.getAttribute("data-font-name"),
+        "font_size": label.getAttribute("data-font-size"),
+        "color": label.getAttribute("data-color")
+      }));
+  }
 }
 
 
-function sendUpdateLabel(text) {
-  const labelId = labelInputId.slice(LABEL_ID_PREFIX.length);
+function sendUpdateLabel(label, callback) {
+  const labelId = label.id.slice(LABEL_ID_PREFIX.length);
 
   let xhr = new XMLHttpRequest();
   xhr.open("POST", "/pages/" + pageId.toString() + "/labels/" + labelId);
@@ -316,11 +364,22 @@ function sendUpdateLabel(text) {
   xhr.onload = function() {
     if (xhr.status != 200) {
       console.error("ERROR on save: ", xhr.statusText);
+    } else {
+      if (callback){
+        callback();
+      }
     }
   };
 
   xhr.send(JSON.stringify({
-    "text": text,
+    "text": label.textContent
   }));
 }
 
+function sendCreateOrUpdateLabel(label, callback){
+    if (NEW_LABEL_ID == label.id){
+        sendCreateLabel(label, callback)
+    } else {
+        sendUpdateLabel(label, callback)
+    }
+}

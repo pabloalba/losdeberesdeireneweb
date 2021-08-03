@@ -40,7 +40,7 @@
     <div class="separator"></div>
 
     <div class="option-buttons">
-      <a class="option-button" href="{% url 'browser' back_folder %}">
+      <a id="go-back-button" class="option-button selected" href="#" data-url="{% url 'browser' back_folder %}">
         <img src="{% static 'img/back-button.svg' %}"></img>
       </a>
     </div>
@@ -60,6 +60,18 @@
              height="{{ page.image.height }}"
              href="{{ page.image.url }}">
       </image>
+      <rect id="cursor" x="0"
+             y="0"
+             width="0"
+             height="0"
+             fill="blue">
+      </rect>
+      <rect id="label-bg" x="0"
+             y="0"
+             width="0"
+             height="0"
+             fill="#f2f3bb">
+      </rect>
       <g id="labels">
         {% for label in labels %}
           <text id="label-{{ label.id }}"
