@@ -62,7 +62,7 @@
       </image>
       <rect id="cursor" x="0"
              y="0"
-             width="0"
+             width="10"
              height="0"
              fill="blue">
       </rect>
@@ -80,9 +80,7 @@
                 data-font-size="{{ label.font_size }}"
                 data-color="{{ label.color }}"
                 x="{{ label.x }}"
-                y="{{ label.y }}">
-            {{ label.text }}
-          </text>
+                y="{{ label.y }}">{{ label.text }}</text>
         {% endfor %}
       </g>
     </svg>

@@ -181,7 +181,7 @@ function selectLabel(label){
     currentLabel = label;
     updateCursor();
     console.log(labelInputElement);
-    labelInputElement.value = currentLabel.textContent.trim();
+    labelInputElement.value = currentLabel.textContent;
     console.log(labelInputElement.value);
     labelInputElement.focus();
 }
@@ -192,7 +192,6 @@ function selectLabel(label){
         const x = Number(currentLabel.getAttribute("x")) + currentLabel.getBBox().width;
         cursor.setAttribute("x", x);
         cursor.setAttribute("y", (currentLabel.getAttribute("y") - fontSize + 10));
-        cursor.setAttribute("width", fontSize/2);
         cursor.setAttribute("height", fontSize);
         cursor.setAttribute("fill", currentColor);
 
@@ -208,7 +207,7 @@ function onChange(event) {
   if (viewPortElement) {
     const text = labelInputElement.value;
     if (currentLabel != null){
-        currentLabel.textContent = text.trim();
+        currentLabel.textContent = text;
         updateCursor();
     }
   }
@@ -289,7 +288,7 @@ function createLabel(x, y, text) {
   labelElement.setAttribute("data-font-size", currentFontSize);
   labelElement.setAttribute("data-color", currentColor);
   labelElement.setAttribute("style", "font-size: " + getFontSize(currentFontSize));
-  labelElement.textContent = text.trim();
+  labelElement.textContent = text;
 
   labelElement.addEventListener("click", onClickLabel);
 
@@ -325,7 +324,7 @@ function getFontSize(fontSize) {
 // ====== HTTP API functions ==================
 
 function sendCreateLabel(label, callback) {
-  let text = label.textContent.trim();
+  let text = label.textContent;
   if (text != ""){
       let xhr = new XMLHttpRequest();
       xhr.open("POST", "/pages/" + pageId.toString() + "/labels");
@@ -349,7 +348,7 @@ function sendCreateLabel(label, callback) {
       xhr.send(JSON.stringify({
         "x": label.getAttribute("x"),
         "y": label.getAttribute("y"),
-        "text": label.textContent.trim(),
+        "text": label.textContent,
         "font_name": label.getAttribute("data-font-name"),
         "font_size": label.getAttribute("data-font-size"),
         "color": label.getAttribute("data-color")
@@ -380,7 +379,7 @@ function sendUpdateLabel(label, callback) {
   };
 
   xhr.send(JSON.stringify({
-    "text": label.textContent.trim()
+    "text": label.textContent
   }));
 }
 

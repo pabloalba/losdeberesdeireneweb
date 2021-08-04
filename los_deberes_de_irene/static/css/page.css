@@ -116,6 +116,10 @@ text[data-font-name="dyslexia"] {
   font-family: "OpenDyslexic";
 }
 
+text {
+    white-space: pre;
+}
+
 text[data-color="black"] {
   fill: #000000;
 }
