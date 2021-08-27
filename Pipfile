@@ -8,6 +8,7 @@ django = "*"
 django-pwa = "*"
 pillow = "*"
 pdf2image = "*"
+psycopg2-binary = "*"
 
 [dev-packages]
 
