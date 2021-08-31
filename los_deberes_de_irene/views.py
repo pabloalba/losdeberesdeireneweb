@@ -373,7 +373,7 @@ class UpdateProfileView(generic.View):
     def post(self, request):
         request.user.profile.full_name = request.POST.get("full_name")
         request.user.email = request.POST.get("email")
-        request.user.username = request.POST.get("username")
+        request.user.username = request.POST.get("email")
         request.user.save()
         request.user.profile.save()
         request.session["tab"] = "profile"
