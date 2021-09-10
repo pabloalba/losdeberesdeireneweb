@@ -9,29 +9,30 @@
   <div class="login-content register">
     <img class="login-logo"  src="{% static 'img/logo-deberes-de-irene.svg' %}" />
 
-  <form class="main-form" method="POST">
+  <form class="main-form" method="POST" action="{% url 'register' %}">
     {% csrf_token %}
+
     <div class="entry">
       <label for="id_full_name">Nombre y apellidos</label>
-      <input type="text" name="full_name" maxlength="256" required="" autofocus=""
-             id="id_full_name" placeholder="Introducir nombre y apellidos">
+      {{ form.full_name }}
+      {{ form.full_name.errors }}
     </div>
 
     <div class="entry">
       <label for="id_username">Email</label>
-      <input type="email" name="username" maxlength="150" required=""
-             id="id_username" placeholder="Introducir email de usuario">
+      {{ form.username }}
+      {{ form.username.errors }}
     </div>
     <div class="entry">
       <label for="id_password1">Contraseña</label>
-      <input type="password" name="password1" autocomplete="new-password" required=""
-             id="id_password1" placeholder="De al menos 8 caracteres">
+      {{ form.password1 }}
+      {{ form.password1.errors }}
     </div>
 
     <div class="entry">
       <label for="id_password2">Repetir contraseña</label>
-      <input type="password" name="password2" autocomplete="new-password" required=""
-             id="id_password2" placeholder="De al menos 8 caracteres">
+      {{ form.password2 }}
+      {{ form.password2.errors }}
     </div>
 
     <div class="entry">
@@ -42,13 +43,7 @@
       </select>
     </div>
 
-    {% if messages %}
-      <ul class="messages">
-      {% for message in messages %}
-        <li {% if message.tags %} class="{{ message.tags }}"{% endif %}>{{ message }}</li>
-      {% endfor %}
-      </ul>
-    {% endif %}
+    {{ form.non_field_errors }}
 
     <button type="submit" class="special-button register">
       <img src="{% static 'img/save_icon.png' %}" alt="" />

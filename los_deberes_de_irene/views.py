@@ -1,7 +1,8 @@
 import os
 
 from django.contrib.auth import authenticate, login, logout, update_session_auth_hash
-from django.contrib.auth.forms import AuthenticationForm, PasswordChangeForm
+from django.contrib.auth.forms import PasswordChangeForm
+from django.contrib.auth.views import LoginView
 from django.core.files.base import ContentFile, File
 from django.core.files.storage import default_storage
 from django.core.files.uploadedfile import InMemoryUploadedFile
@@ -18,7 +19,7 @@ from homework.models import *
 from django.db import IntegrityError
 
 from . import settings
-from .forms import NewUserForm
+from .forms import NewUserForm, LoginForm
 from django.contrib import messages, auth
 from django.shortcuts import render, redirect
 from pdf2image import convert_from_bytes
@@ -29,53 +30,39 @@ from io import BytesIO
 from django.templatetags.static import static
 
 
+class RegisterView(generic.FormView):
+    template_name = "los_deberes_de_irene/register.html"
+    form_class = NewUserForm
+    success_url = "/"
 
-def register_request(request):
-    if request.method == "POST":
-        form = NewUserForm(request.POST)
-        if form.is_valid():
-            user = form.save()
-            login(request, user)
-            is_teacher = "teacher" == form.cleaned_data.get("user_type")
-            profile = Profile.objects.create(owner=user,
-                                             code=_generate_code(),
-                                             is_teacher=is_teacher,
-                                             full_name=form.cleaned_data.get("full_name"))
-            if is_teacher:
-                return redirect("teacher")
-            else:
-                profile.root_folder = PageFolder.objects.create(name="root", owner=user)
-                profile.save()
-                return redirect("home")
-        messages.error(request, "Unsuccessful registration. Invalid information.")
-    form = NewUserForm()
-    return render(request=request, template_name="los_deberes_de_irene/register.html", context={"register_form": form})
+    def form_valid(self, form):
+        user = form.save()
+        login(self.request, user)
+        is_teacher = "teacher" == form.cleaned_data.get("user_type")
+        profile = Profile.objects.create(owner=user,
+                                         code=_generate_code(),
+                                         is_teacher=is_teacher,
+                                         full_name=form.cleaned_data.get("full_name"))
+        if not is_teacher:
+            profile.root_folder = PageFolder.objects.create(name="root", owner=user)
+            profile.save()
+
+        return super().form_valid(form)
 
 
-def login_request(request):
-    if request.method == "POST":
-        form = AuthenticationForm(request, data=request.POST)
-        if form.is_valid():
-            username = form.cleaned_data.get("username")
-            password = form.cleaned_data.get("password")
-            user = authenticate(username=username, password=password)
-            if user is not None:
-                login(request, user)
-                if _is_teacher(user):
-                    return redirect("teacher")
-                else:
-                    return redirect("home")
-            else:
-                messages.error(request, "Invalid username or password.")
-        else:
-            messages.error(request, "Invalid username or password.")
-    form = AuthenticationForm()
-    return render(request=request, template_name="los_deberes_de_irene/login.html", context={"login_form": form})
+class LoginView(LoginView):
+    template_name = "los_deberes_de_irene/login.html"
+    authentication_form = LoginForm
+
+    def get_success_url(self):
+        url = self.get_redirect_url()
+        return url or "/"
 
 
-def logout_request(request):
-    logout(request)
-    return redirect("home")
+class LogoutView(generic.View):
+    def get(self, request):
+        logout(request)
+        return redirect("home")
 
 
 class HomeView(generic.View):

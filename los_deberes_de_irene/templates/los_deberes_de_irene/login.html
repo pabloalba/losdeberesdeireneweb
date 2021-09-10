@@ -9,27 +9,24 @@
   <div class="login-content">
     <img class="login-logo"  src="{% static 'img/logo-deberes-de-irene.svg' %}" />
 
-    <form class="main-form" method="POST">
+    <form class="main-form" method="POST" action="{% url 'login' %}">
       {% csrf_token %}
+
       <div class="entry">
         <label for="id_username">Email</label>
-        <input type="email" name="username" maxlength="150" autofocus="" required=""
-               id="id_username" placeholder="Introducir email de usuario">
+        {{ form.username }}
+        {{ form.username.errors }}
       </div>
 
       <div class="entry">
         <label for="id_password">Contraseña</label>
-        <input type="password" name="password" autocomplete="password" required=""
-               id="id_password" placeholder="De al menos 8 caracteres">
+        {{ form.password }}
+        {{ form.password.errors }}
       </div>
 
-      {% if messages %}
-        <ul class="messages">
-        {% for message in messages %}
-          <li {% if message.tags %} class="{{ message.tags }}"{% endif %}>{{ message }}</li>
-        {% endfor %}
-        </ul>
-      {% endif %}
+      {{ form.non_field_errors }}
+
+      <input type="hidden" name="next" value="{{ next }}">
 
       <button type="submit" class="special-button login">
         <img src="{% static 'img/key_icon.png' %}" alt="" />
@@ -37,7 +34,6 @@
       </button>
       <label>¿Todavía no tienes cuenta? <a href="{% url 'register' %}">Registrate</a></label>
     </form>
-
 
   </div>
 </div>
