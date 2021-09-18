@@ -226,3 +226,7 @@ a {
         top: 10%;
     }
 }
+
+.errorlist {
+  color: red;
+}
