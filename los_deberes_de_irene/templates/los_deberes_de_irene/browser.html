@@ -35,7 +35,7 @@
 </div>
 
 
-<div class="browser-content">
+<div class="browser-content" onmouseup="open_selected_item()">
 
   <div class="browser-content-left">
     <div class="special-button-folder-container">
@@ -56,7 +56,7 @@
         </div>
       {% endif %}
       {% for folder in folders %}
-        <div class="grid-item folder" onclick="window.location='{% url 'browser' folder.id %}'">
+        <div class="grid-item folder" onmousedown="select_item(true, {{ folder.id }})">
             <div class="img-container">
                 <img src="{{ folder.icon }}" />
             </div>
@@ -68,7 +68,7 @@
         </div>
       {% endfor %}
       {% for page in pages %}
-        <div class="grid-item page" onclick="window.location='{% url 'page' page.id %}'">
+        <div class="grid-item page" onmousedown="select_item(false, {{ page.id }})">
             {% if page.labels %}
             <img src="{% static 'img/bookmark.png' %}" class="bookmark" />
             {% endif %}
@@ -189,6 +189,8 @@
   var items_per_page = 8;
   var items = [];
   var current_icon = 0;
+  var selected_folder = null;
+  var selected_page = null;
 
   var icons = [
     '{% static 'img/subjects/ciencias de la naturaleza.png'%}',
@@ -355,8 +357,60 @@
     document.getElementById('loading-container').style.display='flex';
   }
 
+  function select_item(is_folder, item_id){
+    if (is_folder){
+      selected_page = null;
+      selected_folder = item_id;
+      setTimeout(() => {
+        delete_folder();
+      }, 1000)
+    } else {
+      selected_page = item_id;
+      selected_folder = null;
+      setTimeout(() => {
+        delete_page();
+      }, 1000)
+    }
+  }
+
+  function open_selected_item(){    
+    if (selected_folder != null){      
+      var url = "{% url 'browser' 0 %}".slice(0, -1);
+      window.location=url+selected_folder;
+    } else if (selected_page != null){
+      var url = "{% url 'page' 0 %}".slice(0, -1);
+      window.location=url+selected_page;
+    }
+  }
+
+  function delete_folder(){
+    if (selected_folder != null){
+      result = confirm("¿Seguro que quieres borrar esta carpeta? Esta acción no se puede deshacer");
+      if (result){
+        var url = "{% url 'delete_folder' 0 %}".slice(0, -1);
+        window.location=url+selected_folder;
+      }
+    }
+    selected_folder = null;
+    selected_page = null;
+  }
+
+  function delete_page(){
+    if (selected_page != null){
+      result = confirm("¿Seguro que quieres borrar esta ficha? Esta acción no se puede deshacer");
+      if (result){
+        var url = "{% url 'delete_page' 0 %}".slice(0, -1);
+        window.location=url+selected_page;
+      }
+    }
+    selected_folder = null;
+    selected_page = null;
+  }
+
   window.onload = init_page;
   window.onresize = init_page;
 
 </script>
 {% endblock %}
+
+

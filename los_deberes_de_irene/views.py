@@ -226,6 +226,25 @@ class StudentTeacherView(generic.View):
             return redirect("student")
 
 
+class DeleteFolderView(generic.View):
+    def get(self, request, folder_id):
+        folder = _get_valid_folder(request.user, folder_id)
+        if not folder or folder_id == request.user.profile.root_folder.id:
+            return redirect("home")
+        parent_id = folder.parent.id
+        folder.delete()
+        return redirect("browser", folder_id=parent_id)
+
+class DeletePageView(generic.View):
+    def get(self, request, page_id):
+        page = Page.objects.filter(pk=page_id).first()
+        if not page:
+            return redirect("home")
+        parent_id = page.folder.id
+        page.delete()
+        return redirect("browser", folder_id=parent_id)
+
+
 @method_decorator(csrf_exempt, name="dispatch")
 class LabelView(generic.View):
     def get(self, request, page_id):
