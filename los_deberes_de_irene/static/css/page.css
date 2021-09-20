@@ -88,6 +88,7 @@
   display: none;
 }
 
+
 #label-input {
   background: none;
   border: none;
@@ -144,3 +145,9 @@ input[data-color="red"] {
   color: #F2484B;
 }
 
+
+@media screen and (max-height: 900px) {
+  .sidebar .separator {
+    margin: 10px 0;
+  }
+}

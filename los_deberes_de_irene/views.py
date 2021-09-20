@@ -141,10 +141,12 @@ class PageView(generic.TemplateView):
         context = super().get_context_data(**kwargs)
         back_folder = self.page.folder.id
         labels = Label.objects.filter(page=self.page)
+        lines = Line.objects.filter(page=self.page)
 
         context["page"] = self.page
         context["back_folder"] = back_folder
         context["labels"] = labels
+        context["lines"] = lines
 
         return context
 
@@ -281,6 +283,40 @@ class EditLabelView(generic.View):
         except Label.DoesNotExist as e:
             return HttpResponse(status=404)
 
+@method_decorator(csrf_exempt, name="dispatch")
+class EditLineView(generic.View):
+    def post(self, request, page_id, line_id):
+        body = json.loads(request.body.decode("utf-8"))
+        try:
+            line = Line.objects.get(pk=line_id)
+            if len(body["color"]) > 0:
+                line.color = body["color"]
+                line.save()
+            else:
+                line.delete()
+            return JsonResponse("", safe=False)
+        except Line.DoesNotExist as e:
+            return HttpResponse(status=404)
+
+@method_decorator(csrf_exempt, name="dispatch")
+class LineView(generic.View):
+    def get(self, request, page_id):
+        lines = Line.objects.filter(page_id=page_id)
+        raw_data = serializers.serialize("python", lines)
+        actual_data = [d["fields"] for d in raw_data]
+        return JsonResponse(actual_data, safe=False)
+
+    def post(self, request, page_id):
+        body = json.loads(request.body.decode("utf-8"))
+        try:
+            body["page_id"] = page_id
+            newrecord = Line.objects.create(**body)
+            # Turn the object to json to dict, put in array to avoid non-iterable error
+            data = json.loads(serializers.serialize("json", [newrecord]))
+            # send json response with new object
+            return JsonResponse(data, safe=False)
+        except IntegrityError as e:
+            return HttpResponse(status=404)
 
 class AddFolderView(generic.View):
 

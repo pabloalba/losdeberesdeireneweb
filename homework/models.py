@@ -135,6 +135,43 @@ class Label(models.Model):
         ordering = ["page__id", "y", "x"]
 
 
+class Line(models.Model):
+    page = models.ForeignKey(
+        Page,
+        null=False,
+        on_delete=models.CASCADE,
+        verbose_name="página"
+    )    
+    x1 = models.PositiveSmallIntegerField(
+        null=False,
+        verbose_name="x1"
+    )
+    y1 = models.PositiveSmallIntegerField(
+        null=False,
+        verbose_name="y1"
+    )
+    x2 = models.PositiveSmallIntegerField(
+        null=False,
+        verbose_name="x2"
+    )
+    y2 = models.PositiveSmallIntegerField(
+        null=False,
+        verbose_name="y2"
+    )
+    color = models.CharField(
+        blank=False,
+        null=False,
+        max_length=7,
+        verbose_name="color"
+    )
+    def __str__(self):
+        return self.text
+
+    class Meta:
+        verbose_name = "Línea"
+        verbose_name_plural = "Líneas"
+        ordering = ["page__id", "y1", "y2", "x1", "x2"]
+
 class Profile(models.Model):
     owner = models.OneToOneField(User, on_delete=models.CASCADE)
     code = models.CharField(
