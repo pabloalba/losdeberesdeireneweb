@@ -230,3 +230,16 @@ a {
 .errorlist {
   color: red;
 }
+
+#CookielawBanner {
+  background: lightsteelblue;
+  padding: 20px;
+  position: absolute;
+  bottom: 0;
+}
+
+#CookielawBanner .cookie-buttons{
+  margin-top: 20px;
+  text-align: center;
+}
+

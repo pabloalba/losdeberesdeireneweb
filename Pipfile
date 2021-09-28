@@ -9,6 +9,7 @@ django-pwa = "*"
 pillow = "*"
 pdf2image = "*"
 psycopg2-binary = "*"
+django-cookie-law = "*"
 
 [dev-packages]
 
