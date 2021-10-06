@@ -257,6 +257,7 @@
   }
 
   function init_page() {
+    console.log("init_page");
     items = document.getElementsByClassName("grid-item");
     if (items.length > 0){
       var width = window.innerWidth;
@@ -407,8 +408,8 @@
     selected_page = null;
   }
 
-  window.onload = init_page;
-  window.onresize = init_page;
+  window.onload = init_page();
+  window.onresize = init_page();  
 
 </script>
 {% endblock %}
