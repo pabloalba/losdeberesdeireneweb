@@ -461,7 +461,7 @@ function createLine() {
   lineElement.setAttribute("x2", tempLine.getAttribute("x2"));
   lineElement.setAttribute("y2", tempLine.getAttribute("y2"));  
   lineElement.setAttribute("stroke", tempLine.getAttribute("stroke"));
-  lineElement.setAttribute("stroke-width", 4);
+  lineElement.setAttribute("stroke-width", 8);
   lineElement.addEventListener("click", onClickLine);
   linesElement.appendChild(lineElement);
   return lineElement;
