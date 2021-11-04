@@ -177,6 +177,12 @@ function changeSize(event) {
   for (let labelElement of document.querySelectorAll(".page-label")) {
     labelElement.addEventListener("click", onClickLabel);
   }
+
+  if (currentLabel !=null){
+    currentLabel.setAttribute("data-font-size", currentFontSize);
+    currentLabel.setAttribute("style", "font-size: " + getFontSize(currentFontSize));
+    selectLabel(currentLabel);
+  }
 }
 
 
@@ -193,6 +199,11 @@ function changeColor(event) {
     tempCircle1.setAttribute("fill", currentColor);
     tempCircle2.setAttribute("fill", currentColor);
     sendUpdateLine(currentLine);
+  }
+
+  if (currentLabel !=null){
+    currentLabel.setAttribute("data-color", currentColor);
+    selectLabel(currentLabel);
   }
 }
 
@@ -241,11 +252,11 @@ function workOnLine(x, y){
     tempCircle1.setAttribute("cx", x);
     tempCircle1.setAttribute("cy", y);
     tempCircle1.setAttribute("fill", currentColor);
-    tempCircle1.setAttribute("r", 5);
+    tempCircle1.setAttribute("r", 10);
     tempCircle2.setAttribute("cx", x);
     tempCircle2.setAttribute("cy", y);
     tempCircle2.setAttribute("fill", currentColor);
-    tempCircle2.setAttribute("r", 5);
+    tempCircle2.setAttribute("r", 10);
     showTempLine = true;
   } else {
     const line = createLine();
@@ -364,11 +375,10 @@ function onKeyDown(e){
         e.preventDefault();
     } else if (37 == e.which || 39 == e.which){
         e.preventDefault();
-    } else if (46 == e.which && lineMode){
+    } else if ((46 == e.which || 8 == e.which) && lineMode){
       e.preventDefault();
       deleteLine();
-  }
-
+    }
 }
 
 function nextLabel(){
@@ -501,11 +511,11 @@ function selectLine(line){
   currentLine = line;
   tempCircle1.setAttribute("cx", currentLine.getAttribute("x1"));
   tempCircle1.setAttribute("cy", currentLine.getAttribute("y1"));
-  tempCircle1.setAttribute("r", 5);
+  tempCircle1.setAttribute("r", 10);
   tempCircle1.setAttribute("fill", currentLine.getAttribute("stroke"));
   tempCircle2.setAttribute("cx", currentLine.getAttribute("x2"));
   tempCircle2.setAttribute("cy", currentLine.getAttribute("y2"));
-  tempCircle2.setAttribute("r", 5);
+  tempCircle2.setAttribute("r", 10);
   tempCircle2.setAttribute("fill", currentLine.getAttribute("stroke"));
 }
 
