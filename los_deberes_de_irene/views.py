@@ -231,7 +231,7 @@ class StudentTeacherView(generic.View):
 class DeleteFolderView(generic.View):
     def get(self, request, folder_id):
         folder = _get_valid_folder(request.user, folder_id)
-        if not folder or folder_id == request.user.profile.root_folder.id:
+        if not folder or folder_id == folder.owner.profile.root_folder.id:
             return redirect("home")
         parent_id = folder.parent.id
         folder.delete()
