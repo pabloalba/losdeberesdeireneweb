@@ -16,7 +16,7 @@
     <div class="student_name">{{ user.profile.full_name }}</div>
     {% endif %}
     {% if back_folder %}
-      <span class= "folder-name" onclick="open_update_folder()">{{ parent_folder.name }}</span>
+      <span class= "folder-name" onclick="open_update_folder({{ parent_folder.id }}, '{{ parent_folder.name }}', '{{ parent_folder.icon }}', false)">{{ parent_folder.name }}</span>
     {% else %}
     &nbsp;
     {% endif %}
@@ -56,7 +56,7 @@
         </div>
       {% endif %}
       {% for folder in folders %}
-        <div class="grid-item folder" onmousedown="select_item(true, {{ folder.id }})">
+        <div class="grid-item folder" onmousedown="select_item(true, {{ folder.id }}, '{{ folder.name }}', '{{ folder.icon }}')">
             <div class="img-container">
                 <img src="{{ folder.icon }}" />
             </div>
@@ -68,7 +68,7 @@
         </div>
       {% endfor %}
       {% for page in pages %}
-        <div class="grid-item page" onmousedown="select_item(false, {{ page.id }})">
+        <div class="grid-item page" onmousedown="select_item(false, {{ page.id }}, '{{ page.name }}', '')">
             {% if page.labels %}
             <img src="{% static 'img/bookmark.png' %}" class="bookmark" />
             {% endif %}
@@ -112,7 +112,8 @@
        <div id="title-update-folder" class="title">Modificar carpeta</div>
        <form id="form-folder" class="main-form" method="POST" action="{% url 'add_folder'%}">
          {% csrf_token %}
-         <input type="hidden" name="parent_folder"  value="{{parent_folder.id}}">
+         <input id="id_current_folder" type="hidden" name="current_folder">
+         <input type="hidden" name="parent_folder" value="{{ parent_folder.id }}">
          <div class="entry">
            <label for="id_folder_name">Nombre de la carpeta</label>
            <input type="text" name="name" maxlength="150" autofocus="" required=""
@@ -129,7 +130,11 @@
              <span><img class="arrow" src="{% static 'img/right.png' %}" onclick="next_icon()" /></span>
            </div>
          </div>
-         <div class="buttons">
+         <div class="buttons" style="display:flex; justify-content: flex-end;">
+           <button type="button" id="button-delete-folder" class="special-button delete" style="margin-right: auto;" onclick="confirm_delete_folder()">
+            <img src="{% static 'img/delete.png' %}" alt="" />
+            Eliminar
+          </button>
           <button id="button-add-folder" type="submit" class="special-button">
             <img src="{% static 'img/create_folder_icon.png' %}" alt="" />
             Añadir
@@ -190,6 +195,8 @@
   var items = [];
   var current_icon = 0;
   var selected_folder = null;
+  var selected_name = '';
+  var selected_icon = '';
   var selected_page = null;
 
   var icons = [
@@ -327,21 +334,23 @@
     document.getElementById('title-update-folder').style.display='none';
     document.getElementById('button-add-folder').style.display='';
     document.getElementById('button-update-folder').style.display='none';
+    document.getElementById('button-delete-folder').style.display='none';
     document.getElementById('form-folder').action="{% url 'add_folder'%}";
     document.getElementById('add-folder-container').style.display='flex';
     document.getElementById('id_folder_name').focus();
   }
 
 
-  function open_update_folder(){
-    document.getElementById('id_folder_name').value = '{{ parent_folder.name }}';
+  function open_update_folder(folder_id, folder_name, folder_icon, can_delete){
+    document.getElementById('id_current_folder').value = folder_id;
+    document.getElementById('id_folder_name').value = folder_name;
     current_icon = 0;
     document.getElementById('title-add-folder').style.display='none';
     document.getElementById('title-update-folder').style.display='';
     document.getElementById('button-add-folder').style.display='none';
     document.getElementById('button-update-folder').style.display='';
     for (var i=0; i<icons.length; i++){
-        if (icons[i] == '{{ parent_folder.icon }}'){
+        if (icons[i] == folder_icon){
             current_icon = i;
             break;
         }
@@ -350,6 +359,13 @@
     show_icon();
     document.getElementById('form-folder').action="{% url 'update_folder'%}";
     document.getElementById('add-folder-container').style.display='flex';
+
+    if (can_delete) {
+        document.getElementById('button-delete-folder').style.display='';
+    } else {
+        document.getElementById('button-delete-folder').style.display='none';
+    }
+
     document.getElementById('id_folder_name').focus();
   }
 
@@ -358,12 +374,14 @@
     document.getElementById('loading-container').style.display='flex';
   }
 
-  function select_item(is_folder, item_id){
+  function select_item(is_folder, item_id, item_name, item_icon){
+    selected_name = item_name;
+    selected_icon = item_icon;
     if (is_folder){
       selected_page = null;
       selected_folder = item_id;
       setTimeout(() => {
-        delete_folder();
+        open_update_folder(selected_folder, selected_name, selected_icon, true);
       }, 1000)
     } else {
       selected_page = item_id;
@@ -384,7 +402,8 @@
     }
   }
 
-  function delete_folder(){
+
+  function confirm_delete_folder(){
     if (selected_folder != null){
       result = confirm("¿Seguro que quieres borrar esta carpeta? Esta acción no se puede deshacer");
       if (result){

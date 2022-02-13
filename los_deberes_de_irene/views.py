@@ -335,7 +335,7 @@ class AddFolderView(generic.View):
 class UpdateFolderView(generic.View):
 
     def post(self, request):
-        page_folder = _get_valid_folder(request.user, request.POST.get("parent_folder"))
+        page_folder = _get_valid_folder(request.user, request.POST.get("current_folder"))
         if not page_folder:
             return redirect("home")
 

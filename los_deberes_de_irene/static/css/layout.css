@@ -127,6 +127,10 @@ a {
   width: 40px;
 }
 
+.special-button.delete {
+    background-color: #F2484B;
+}
+
 
 .modal-container {
     width: 100%;
