@@ -93,8 +93,9 @@
         <button class="special-button img-only" onclick="open_add_document()">
           <img src="{% static 'img/document_icon.png' %}" alt="" />
         </button>
-
-
+        <button class="special-button img-only" onclick="open_rename_all()">
+          <img src="{% static 'img/rename.png' %}" alt="" />
+        </button>
     </div>
     <img class="paginator" id="next_page" src="{% static 'img/next_page.png' %}" onclick="next_page()"/>
   </div>
@@ -204,6 +205,39 @@
            <button type="submit" class="special-button">
              <img src="{% static 'img/document_update_icon.png' %}" alt="" />
              Modificar
+           </button>
+         </div>
+      </form>
+  </div>
+</div>
+
+<div id="rename-all-container" class="modal-container" onclick="document.getElementById('rename-all-container').style.display='none'">
+  <div id="rename-all-modal" class="modal-content"  onclick="event.stopPropagation();">
+      <div class="close">
+          <img src ="{% static 'img/close.png' %}" onclick="document.getElementById('rename-all-container').style.display='none'"/>
+      </div>
+       <div class="title">Renombrar todas las ficha</div>
+       <form class="main-form" method="POST" action="{% url 'rename_all'%}">
+         {% csrf_token %}
+         <input type="hidden" name="parent_folder"  value="{{parent_folder.id}}">
+         <div class="entry">
+           <label>Nombre de la ficha</label>
+           <input id="id-rename-name" type="text" name="name" maxlength="150" autofocus="" required=""
+                 placeholder="Introducir nombre" autofocus="" value="Página" oninput="show_rename_example()">
+         </div>
+         <div class="entry">
+           <label>Número inicial</label>
+           <input id="id-rename-number" type="number" name="number" maxlength="3" autofocus="" required=""
+                 placeholder="Introducir número incial" autofocus="" value="001" min="1" max="9999" oninput="show_rename_example()">
+         </div>
+           <div class="entry">
+             <label>Ejemplo</label>
+             <div class="example" id="id-rename-example"></div>
+         </div>
+         <div class="buttons">
+           <button type="submit" class="special-button">
+             <img src="{% static 'img/rename.png' %}" alt="" />
+             Renombrar todo
            </button>
          </div>
       </form>
@@ -404,6 +438,21 @@
     }
 
     document.getElementById('id_folder_name').focus();
+  }
+
+  function open_rename_all(){
+    document.getElementById('id-rename-name').value = "Página";
+    document.getElementById('id-rename-number').value = "1";
+    document.getElementById('rename-all-container').style.display='flex';
+    document.getElementById('id-rename-name').focus();
+    show_rename_example();
+  }
+
+  function show_rename_example(){
+    document.getElementById('id-rename-example').innerText =
+        document.getElementById('id-rename-name').value +
+        " " +
+        ("00"+document.getElementById('id-rename-number').value).slice(-3);
   }
 
   function show_loading(){

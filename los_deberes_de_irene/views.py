@@ -75,7 +75,6 @@ class HomeView(generic.View):
         return super().get(request)
 
 
-
 class BrowserView(generic.TemplateView):
     template_name = "los_deberes_de_irene/browser.html"
     page_folder = None
@@ -197,7 +196,6 @@ class StudentView(generic.TemplateView):
         form = PasswordChangeForm(self.request.user)
         context["form"] = form
 
-
         return context
 
 
@@ -225,6 +223,7 @@ class DeleteFolderView(generic.View):
         parent_id = folder.parent.id
         folder.delete()
         return redirect("browser", folder_id=parent_id)
+
 
 class DeletePageView(generic.View):
     def get(self, request, page_id):
@@ -270,6 +269,7 @@ class EditLabelView(generic.View):
         except Label.DoesNotExist as e:
             return HttpResponse(status=404)
 
+
 @method_decorator(csrf_exempt, name="dispatch")
 class EditLineView(generic.View):
     def post(self, request, page_id, line_id):
@@ -284,6 +284,7 @@ class EditLineView(generic.View):
             return JsonResponse("", safe=False)
         except Line.DoesNotExist as e:
             return HttpResponse(status=404)
+
 
 @method_decorator(csrf_exempt, name="dispatch")
 class LineView(generic.View):
@@ -304,6 +305,7 @@ class LineView(generic.View):
             return JsonResponse(data, safe=False)
         except IntegrityError as e:
             return HttpResponse(status=404)
+
 
 class AddFolderView(generic.View):
 
@@ -331,11 +333,28 @@ class UpdateFolderView(generic.View):
         page_folder.save()
         return redirect("browser", folder_id=request.POST.get("parent_folder"))
 
+
 class UpdatePageView(generic.View):
     def post(self, request):
         page = _get_valid_page(request.user, request.POST.get("current_page"))
         page.name = request.POST.get("name")
         page.save()
+        return redirect("browser", folder_id=request.POST.get("parent_folder"))
+
+
+class RenameAllView(generic.View):
+    def post(self, request):
+        self.page_folder = _get_valid_folder(request.user, request.POST.get("parent_folder"))
+        if not self.page_folder:
+            return redirect("home")
+
+        number = int(request.POST.get("number"))
+        pages = Page.objects.filter(folder=self.page_folder).order_by('name')
+        num_size = max(3, len(str(number + len(pages))))
+        for page in pages:
+            page.name = request.POST.get("name") + ' ' + str(number).zfill(num_size)
+            page.save()
+            number += 1
         return redirect("browser", folder_id=request.POST.get("parent_folder"))
 
 
@@ -386,7 +405,6 @@ class AddPageView(generic.View):
         return
 
 
-
 class FontView(generic.View):
 
     def post(self, request):
@@ -429,6 +447,7 @@ class UpdatePasswordView(generic.View):
             messages.error(request, 'No se ha podido cambiar la contraseña :(')
         request.session["tab"] = "password"
         return redirect("student")
+
 
 def _get_valid_folder(user, folder_id):
     page_folder = PageFolder.objects.filter(pk=folder_id).first()
@@ -481,9 +500,9 @@ def _is_teacher(user):
 
 def _send_email(to, subject, message):
     send_mail(
-            subject,
-            message,
-            'noreply@losdeberesdeirene.tk',
-            [to],
-            fail_silently=False,
-        )
+        subject,
+        message,
+        'noreply@losdeberesdeirene.tk',
+        [to],
+        fail_silently=False,
+    )
