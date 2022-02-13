@@ -181,6 +181,35 @@
   </div>
 </div>
 
+<div id="update-page-container" class="modal-container" onclick="document.getElementById('update-page-container').style.display='none'">
+  <div id="update-page-modal" class="modal-content"  onclick="event.stopPropagation();">
+      <div class="close">
+          <img src ="{% static 'img/close.png' %}" onclick="document.getElementById('update-page-container').style.display='none'"/>
+      </div>
+       <div class="title">Modificar ficha</div>
+       <form class="main-form" method="POST" action="{% url 'update_page'%}" enctype="multipart/form-data">
+         {% csrf_token %}
+         <input type="hidden" name="parent_folder"  value="{{parent_folder.id}}">
+           <input id="id_current_page" type="hidden" name="current_page">
+         <div class="entry">
+           <label for="id_current_page_name">Nombre de la ficha</label>
+           <input type="text" name="name" maxlength="150" autofocus="" required=""
+                 id="id_current_page_name" placeholder="Introducir nombre" autofocus="" >
+         </div>
+         <div class="buttons" style="display:flex; justify-content: flex-end;">
+          <button type="button" id="button-delete-page" class="special-button delete" style="margin-right: auto;" onclick="confirm_delete_page()">
+            <img src="{% static 'img/delete.png' %}" alt="" />
+            Eliminar
+          </button>
+           <button type="submit" class="special-button">
+             <img src="{% static 'img/document_update_icon.png' %}" alt="" />
+             Modificar
+           </button>
+         </div>
+      </form>
+  </div>
+</div>
+
 <div id="loading-container" class="modal-container">
     <div class="modal-content">
         <img src="{% static 'img/loading.gif' %}" alt="" />
@@ -198,6 +227,7 @@
   var selected_name = '';
   var selected_icon = '';
   var selected_page = null;
+  var updating = false;
 
   var icons = [
     '{% static 'img/subjects/ciencias de la naturaleza.png'%}',
@@ -326,6 +356,13 @@
     document.getElementById('id_page_name').focus();
   }
 
+  function open_update_document(){
+    document.getElementById('id_current_page').value = selected_page;
+    document.getElementById('id_current_page_name').value = selected_name;
+    document.getElementById('update-page-container').style.display='flex';
+    document.getElementById('id_current_page_name').focus();
+  }
+
   function open_add_folder(){
     document.getElementById('id_folder_name').value = '';
     current_icon = 0;
@@ -375,30 +412,35 @@
   }
 
   function select_item(is_folder, item_id, item_name, item_icon){
+    updating = false;
     selected_name = item_name;
     selected_icon = item_icon;
     if (is_folder){
       selected_page = null;
       selected_folder = item_id;
       setTimeout(() => {
+        updating = true;
         open_update_folder(selected_folder, selected_name, selected_icon, true);
       }, 1000)
     } else {
       selected_page = item_id;
       selected_folder = null;
       setTimeout(() => {
-        delete_page();
+        updating = true;
+        open_update_document();
       }, 1000)
     }
   }
 
-  function open_selected_item(){    
-    if (selected_folder != null){      
-      var url = "{% url 'browser' 0 %}".slice(0, -1);
-      window.location=url+selected_folder;
-    } else if (selected_page != null){
-      var url = "{% url 'page' 0 %}".slice(0, -1);
-      window.location=url+selected_page;
+  function open_selected_item(){
+    if (!updating) {
+        if (selected_folder != null){
+          var url = "{% url 'browser' 0 %}".slice(0, -1);
+          window.location=url+selected_folder;
+        } else if (selected_page != null){
+          var url = "{% url 'page' 0 %}".slice(0, -1);
+          window.location=url+selected_page;
+        }
     }
   }
 
@@ -415,7 +457,7 @@
     selected_page = null;
   }
 
-  function delete_page(){
+  function confirm_delete_page(){
     if (selected_page != null){
       result = confirm("¿Seguro que quieres borrar esta ficha? Esta acción no se puede deshacer");
       if (result){
@@ -428,7 +470,12 @@
   }
 
   window.onload = init_page();
-  window.onresize = init_page();  
+  window.onresize = init_page();
+
+  window.onbeforeunload = function(){
+    selected_folder = null;
+    selected_page = null;
+  };
 
 </script>
 {% endblock %}

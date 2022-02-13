@@ -123,18 +123,7 @@ class PageView(generic.TemplateView):
     page = None
 
     def get(self, request, page_id):
-        self.page = Page.objects.filter(pk=page_id).first()
-        if not self.page:
-            return redirect("home")
-
-        if _is_teacher(request.user):
-            # Only allow view folders of its students
-            if StudentTeacher.objects.filter(teacher=request.user, student=self.page.owner).count() == 0:
-                return redirect("home")
-        else:
-            if self.page.owner != request.user:
-                return redirect("home")
-
+        self.page = _get_valid_page(request.user, page_id)
         return super().get(request)
 
     def get_context_data(self, **kwargs):
@@ -239,9 +228,7 @@ class DeleteFolderView(generic.View):
 
 class DeletePageView(generic.View):
     def get(self, request, page_id):
-        page = Page.objects.filter(pk=page_id).first()
-        if not page:
-            return redirect("home")
+        page = _get_valid_page(request.user, page_id)
         parent_id = page.folder.id
         page.delete()
         return redirect("browser", folder_id=parent_id)
@@ -343,6 +330,14 @@ class UpdateFolderView(generic.View):
         page_folder.icon = request.POST.get("folder_icon")
         page_folder.save()
         return redirect("browser", folder_id=request.POST.get("parent_folder"))
+
+class UpdatePageView(generic.View):
+    def post(self, request):
+        page = _get_valid_page(request.user, request.POST.get("current_page"))
+        page.name = request.POST.get("name")
+        page.save()
+        return redirect("browser", folder_id=request.POST.get("parent_folder"))
+
 
 class AddPageView(generic.View):
 
@@ -449,6 +444,23 @@ def _get_valid_folder(user, folder_id):
             return None
 
     return page_folder
+
+
+def _get_valid_page(user, page_id):
+    page = Page.objects.filter(pk=page_id).first()
+    if not page:
+        return redirect("home")
+
+    if _is_teacher(user):
+        # Only allow view folders of its students
+        if StudentTeacher.objects.filter(teacher=user, student=page.owner).count() == 0:
+            return redirect("home")
+    else:
+        if page.owner != user:
+            return redirect("home")
+
+    return page
+
 
 def _generate_code():
     characters = ["c", "d", "e", "f", "h", "j", "k", "m", "n", "p", "r", "t", "v", "w", "x", "y", "2", "3", "4", "5",

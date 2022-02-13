@@ -30,6 +30,7 @@ urlpatterns = [
     path("add_folder", login_required(views.AddFolderView.as_view()), name='add_folder'),
     path("update_folder", login_required(views.UpdateFolderView.as_view()), name='update_folder'),
     path("add_page", login_required(views.AddPageView.as_view()), name='add_page'),
+    path("update_page", login_required(views.UpdatePageView.as_view()), name='update_page'),
     path("teacher", login_required(views.TeacherView.as_view()), name='teacher'),
     path("student", login_required(views.StudentView.as_view()), name='student'),
     path("delete_student_teacher", login_required(views.StudentTeacherView.as_view()), name='delete_student_teacher'),
