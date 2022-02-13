@@ -216,7 +216,7 @@
       <div class="close">
           <img src ="{% static 'img/close.png' %}" onclick="document.getElementById('rename-all-container').style.display='none'"/>
       </div>
-       <div class="title">Renombrar todas las ficha</div>
+       <div class="title">Renombrar todas las fichas</div>
        <form class="main-form" method="POST" action="{% url 'rename_all'%}">
          {% csrf_token %}
          <input type="hidden" name="parent_folder"  value="{{parent_folder.id}}">
