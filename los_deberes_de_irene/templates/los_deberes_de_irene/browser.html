@@ -35,7 +35,7 @@
 </div>
 
 
-<div class="browser-content" onmouseup="open_selected_item()">
+<div class="browser-content test01" onmouseup="open_selected_item()">
 
   <div class="browser-content-left">
     <div class="special-button-folder-container">
@@ -104,7 +104,7 @@
 
 {% block outside %}
 
-<div id="add-folder-container" class="modal-container" onclick="document.getElementById('add-folder-container').style.display='none'">
+<div id="add-folder-container" style="display:none" class="modal-container" onclick="document.getElementById('add-folder-container').style.display='none'">
   <div id="add-folder-modal" class="modal-content" onclick="event.stopPropagation();">
        <div class="close">
           <img src ="{% static 'img/close.png' %}" onclick="document.getElementById('add-folder-container').style.display='none'"/>
@@ -149,7 +149,7 @@
   </div>
 </div>
 
-<div id="add-page-container" class="modal-container" onclick="document.getElementById('add-page-container').style.display='none'">
+<div id="add-page-container" style="display:none" class="modal-container" onclick="document.getElementById('add-page-container').style.display='none'">
   <div id="add-page-modal" class="modal-content"  onclick="event.stopPropagation();">
       <div class="close">
           <img src ="{% static 'img/close.png' %}" onclick="document.getElementById('add-page-container').style.display='none'"/>
@@ -182,12 +182,12 @@
   </div>
 </div>
 
-<div id="update-page-container" class="modal-container" onclick="document.getElementById('update-page-container').style.display='none'">
+<div id="update-page-container" style="display:none" class="modal-container" onclick="document.getElementById('update-page-container').style.display='none'">
   <div id="update-page-modal" class="modal-content"  onclick="event.stopPropagation();">
       <div class="close">
           <img src ="{% static 'img/close.png' %}" onclick="document.getElementById('update-page-container').style.display='none'"/>
       </div>
-       <div class="title">Modificar ficha</div>
+       <div class="title">Modificar ficha1</div>
        <form class="main-form" method="POST" action="{% url 'update_page'%}" enctype="multipart/form-data">
          {% csrf_token %}
          <input type="hidden" name="parent_folder"  value="{{parent_folder.id}}">
@@ -211,12 +211,12 @@
   </div>
 </div>
 
-<div id="rename-all-container" class="modal-container" onclick="document.getElementById('rename-all-container').style.display='none'">
+<div id="rename-all-container" style="display:none" class="modal-container" onclick="document.getElementById('rename-all-container').style.display='none'">
   <div id="rename-all-modal" class="modal-content"  onclick="event.stopPropagation();">
       <div class="close">
           <img src ="{% static 'img/close.png' %}" onclick="document.getElementById('rename-all-container').style.display='none'"/>
       </div>
-       <div class="title">Renombrar todas las fichas</div>
+       <div class="title">Renombrar todas las ficha</div>
        <form class="main-form" method="POST" action="{% url 'rename_all'%}">
          {% csrf_token %}
          <input type="hidden" name="parent_folder"  value="{{parent_folder.id}}">
